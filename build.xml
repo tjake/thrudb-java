@@ -1,0 +1,45 @@
+
+<project name="thrudex" default="thrudex" basedir=".">
+
+	<description>Thrudb Tutorial</description>
+
+	<property name="src" location="src" />
+	<property name="gen" location="gen-java" />
+	<property name="build" location="build" />
+	<property name="cpath" location="lib/libthrift.jar;lib/lucene-core-2.4.1.jar" />
+
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${build}" />
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="${gen}" destdir="${build}" classpath="${cpath}">
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+		<javac srcdir="${src}" destdir="${build}" classpath="${cpath}:${gen}">
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+	</target>
+
+	<target name="thrudex.jar" depends="compile">
+		<jar jarfile="thrudex.jar" basedir="${build}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${build}" />
+		<delete file="thrudex.jar" />
+	</target>
+
+	<target name="thrudex" depends="thrudex.jar">
+		<java classname="org.thrudb.thrudex.ThrudexServer" fork="true" failonerror="true" maxmemory="128m">
+			<arg line="-f /Users/jake/projects/thrudb/tutorial/thrudex.conf" />
+			<classpath>
+				<pathelement location="thrudex.jar" />
+				<pathelement location="lib/libthrift.jar" />
+				<pathelement location="lib/lucene-core-2.4.1.jar" />
+			</classpath>
+		</java>
+	</target>
+
+</project>

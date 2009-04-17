@@ -42,7 +42,7 @@ public class SimpleLuceneIndex implements LuceneIndex {
 		File rootFile = new File(indexRoot);
 		
 		if(!rootFile.isDirectory())
-			throw new IOException("invalid indexRoot, check config");
+			throw new IOException("invalid index root: "+indexRoot);
 		
 		String indexLocation = indexRoot +"/" + indexName;
 		

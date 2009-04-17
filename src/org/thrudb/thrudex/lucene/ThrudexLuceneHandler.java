@@ -28,16 +28,17 @@ public class ThrudexLuceneHandler implements Iface {
 
 	private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
 	private Map<String,LuceneIndex> indexMap = new HashMap<String, LuceneIndex>();
+	private String indexRoot;
 	
+	public ThrudexLuceneHandler(String indexRoot){
+		this.indexRoot = indexRoot;
+	}
 	
 	public String admin(String op, String data) throws ThrudexException,
 			TException {
 		
 		if(op.equals("create_index"))
-			addIndex(data);
-
-		
-		
+			addIndex(data);	
 		
 		return "ok";
 	}
@@ -51,7 +52,7 @@ public class ThrudexLuceneHandler implements Iface {
 			return;
 			
 		try{
-			indexMap.put(name, new SimpleLuceneIndex("/tmp",name));
+			indexMap.put(name, new SimpleLuceneIndex(indexRoot,name));
 		}catch(IOException e){
 			throw new ThrudexException(e.toString());
 		}
