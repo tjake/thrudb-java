@@ -42,7 +42,7 @@ public class SimpleLuceneIndex implements LuceneIndex {
 		File rootFile = new File(indexRoot);
 		
 		if(!rootFile.isDirectory())
-			throw new IOException("invalid index root: "+indexRoot);
+			throw new IOException("invalid index root: " + indexRoot);
 		
 		String indexLocation = indexRoot +"/" + indexName;
 		
@@ -167,6 +167,14 @@ public class SimpleLuceneIndex implements LuceneIndex {
 			throw new ThrudexException(e.toString());
 		}
 			
+	}
+	
+	public void optimize() throws ThrudexException{
+		try{
+			this.writer.optimize();
+		}catch(IOException e){
+			throw new ThrudexException(e.toString());
+		}
 	}
 
 }

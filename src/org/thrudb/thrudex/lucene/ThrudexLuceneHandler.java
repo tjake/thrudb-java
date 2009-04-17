@@ -40,6 +40,17 @@ public class ThrudexLuceneHandler implements Iface {
 		if(op.equals("create_index"))
 			addIndex(data);	
 		
+		if(op.equals("optimize")){
+			if(indexMap.containsKey(data)){
+				try{
+					indexMap.get(data).optimize();
+				}catch(ThrudexException e){
+					return e.toString();
+				}
+			}
+				
+		}
+		
 		return "ok";
 	}
 	

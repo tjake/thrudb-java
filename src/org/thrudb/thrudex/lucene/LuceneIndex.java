@@ -19,5 +19,6 @@ public interface LuceneIndex {
 	void            put(String key, Document document) throws ThrudexException;
 	void            remove(String key) throws ThrudexException;
 	SearchResponse  search(SearchQuery query) throws ThrudexException;
+	void            optimize() throws ThrudexException;
 	
 }
