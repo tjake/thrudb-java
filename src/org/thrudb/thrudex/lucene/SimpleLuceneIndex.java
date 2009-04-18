@@ -7,6 +7,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.FieldSelector;
+import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
@@ -74,6 +76,7 @@ public class SimpleLuceneIndex implements LuceneIndex {
 		try{
 			
 			writer.updateDocument(term, document);
+		
 			hasWrite.set(true);
 			
 		}catch(IOException e){
@@ -147,12 +150,23 @@ public class SimpleLuceneIndex implements LuceneIndex {
 			SearchResponse response = new SearchResponse();
 			response.setTotal(result.totalHits);
 			
+			FieldSelector fieldSelector;
+			if(query.isPayload()){
+				fieldSelector = new MapFieldSelector(new String[]{DOCUMENT_KEY,PAYLOAD_KEY});
+			}else{
+				fieldSelector = new MapFieldSelector(new String[]{DOCUMENT_KEY});
+			}
+			
+			
 			for(int i=query.offset; i<result.totalHits && i<(query.offset + query.limit); i++){
 				
 				Element el = new Element();
 				el.setIndex(query.index);
 				
-				Document d = mySearcher.doc(result.scoreDocs[i].doc);
+				
+				
+				
+				Document d = mySearcher.doc(result.scoreDocs[i].doc,fieldSelector);
 				el.setKey(d.get(DOCUMENT_KEY));
 				
 				if(query.isSetPayload() && query.payload)
