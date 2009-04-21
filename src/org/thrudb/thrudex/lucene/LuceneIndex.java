@@ -21,4 +21,6 @@ public interface LuceneIndex {
 	SearchResponse  search(SearchQuery query) throws ThrudexException;
 	void            optimize() throws ThrudexException;
 	
+	void            shutdown(); 
+	
 }

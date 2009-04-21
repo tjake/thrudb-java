@@ -32,6 +32,8 @@ public class ThrudexLuceneHandler implements Iface {
 	
 	public ThrudexLuceneHandler(String indexRoot){
 		this.indexRoot = indexRoot;
+		
+		Runtime.getRuntime().addShutdownHook(new IndexShutdownHandler(indexMap));
 	}
 	
 	public String admin(String op, String data) throws ThrudexException,
@@ -63,7 +65,8 @@ public class ThrudexLuceneHandler implements Iface {
 			return;
 			
 		try{
-			indexMap.put(name, new SimpleLuceneIndex(indexRoot,name));
+			//indexMap.put(name, new SimpleLuceneIndex(indexRoot,name));
+			indexMap.put(name, new RealTimeLuceneIndex(indexRoot,name));
 		}catch(IOException e){
 			throw new ThrudexException(e.toString());
 		}

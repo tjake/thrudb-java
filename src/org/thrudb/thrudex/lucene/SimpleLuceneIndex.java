@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -39,6 +40,7 @@ public class SimpleLuceneIndex implements LuceneIndex {
 	QueryParser   queryParser = new QueryParser(DOCUMENT_KEY,analyzer);
 	AtomicBoolean hasWrite = new AtomicBoolean(false);
 	
+	Logger logger = Logger.getLogger(getClass());
 	
 	public SimpleLuceneIndex(String indexRoot, String indexName) throws IOException {
 		File rootFile = new File(indexRoot);
@@ -162,9 +164,7 @@ public class SimpleLuceneIndex implements LuceneIndex {
 				
 				Element el = new Element();
 				el.setIndex(query.index);
-				
-				
-				
+										
 				
 				Document d = mySearcher.doc(result.scoreDocs[i].doc,fieldSelector);
 				el.setKey(d.get(DOCUMENT_KEY));
@@ -189,6 +189,10 @@ public class SimpleLuceneIndex implements LuceneIndex {
 		}catch(IOException e){
 			throw new ThrudexException(e.toString());
 		}
+	}
+	
+	public void shutdown() {
+		
 	}
 
 }

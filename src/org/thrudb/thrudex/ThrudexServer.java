@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.server.THsHaServer;
 import org.apache.thrift.server.TServer;
@@ -75,7 +76,7 @@ public class ThrudexServer {
 	 */
 	public static void main(String[] args) {
 	
-		File       propFile;
+		File       propFile   = null;
 		Properties properties = new Properties();
 		
 		//check args
@@ -109,6 +110,8 @@ public class ThrudexServer {
 			System.out.println("Thrudex [-h] [-f thrudex.properties]");
 			System.exit(-1);
 		}
+		
+		PropertyConfigurator.configure(propFile.getAbsolutePath());
 		
 		ThrudexServer thrudexServer = new ThrudexServer();
 		
