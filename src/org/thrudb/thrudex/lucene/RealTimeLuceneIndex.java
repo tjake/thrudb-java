@@ -109,11 +109,11 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 		
 		try{
 			
-			ramWriter.updateDocument(term, document);
-			
+			ramWriter.updateDocument(term, document,analyzer);
+	
 			if(diskFilter.hideTerm(term))
 				deletedDocuments.add(term);
-				
+					
 			hasWrite.set(true);
 			
 		}catch(IOException e){
@@ -157,12 +157,12 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 				//Commit any prev writes
 				if(hasWrite.getAndSet(false)){
 					ramWriter.commit();
-			
+					
 					//Reopen index reader
 					IndexReader newReader = ramReader.reopen();
 					if(ramReader != newReader){	
-						//reader.close();
-						//ramSearcher.close();
+						//ramReader.close();
+						ramSearcher.close();
 						ramReader   = newReader;			
 						ramSearcher = new IndexSearcher(ramReader);
 					}				
@@ -171,6 +171,7 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 				
 				Searchable searchers[];
 				
+		
 				if(prevRamSearcher == null)
 					searchers = new Searchable[]{ramSearcher, diskSearcher};
 				else
@@ -179,7 +180,8 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 				multiSearcher = new ParallelMultiSearcher(searchers);
 				
 				myFilter      = diskFilter;
-				
+			
+			
 				//parse query
 				//TODO: Cache?
 				try{
@@ -276,9 +278,7 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 						prevRamSearcher.close();
 						prevRamReader = newReader;			
 						prevRamSearcher = new IndexSearcher(prevRamReader);
-					}			
-					
-				
+					}						
 				}
 				
 				
@@ -290,11 +290,12 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 						diskWriter.deleteDocuments(term);
 					}
 					
-					deletedDocuments.clear();
+					deletedDocuments.clear();					
 				}
 				
 				logger.debug("Writing "+prevRamReader.numDocs() + " docs to disk");
 				//now merge the indexes
+				
 				diskWriter.addIndexesNoOptimize(new Directory[]{prevRamDirectory});
 				
 				synchronized(this){			

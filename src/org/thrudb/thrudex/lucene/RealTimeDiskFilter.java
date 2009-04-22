@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.TermDocs;
@@ -22,20 +23,24 @@ public class RealTimeDiskFilter extends Filter {
 	private IndexReader diskReader = null;
 	private OpenBitSet  diskFilter = null;
 	private Map<Term,Boolean>   termSet    = null;
+	private Logger logger = Logger.getLogger(getClass());
+	
 	
 	public RealTimeDiskFilter(IndexReader diskReader) {
 		this.diskReader = diskReader;
-		diskFilter      = new OpenBitSet(diskReader.numDocs());
-		
+		diskFilter      = new OpenBitSet(diskReader.maxDoc());
+		diskFilter.set(0, diskReader.maxDoc());
 		termSet = new HashMap<Term,Boolean>();
 	}
 	
 	
 	@Override
 	public DocIdSet getDocIdSet(IndexReader reader) throws IOException {
-		if(reader != diskReader){
-			OpenBitSet rset = new OpenBitSet(reader.numDocs());
 			
+		if(reader != diskReader){
+			OpenBitSet rset = new OpenBitSet(reader.maxDoc());
+			rset.set(0, reader.maxDoc());
+		
 			return rset;
 		}
 		
@@ -59,13 +64,16 @@ public class RealTimeDiskFilter extends Filter {
 			return false;
 		}
 
-		while(termDocs.next())
-			diskFilter.set(termDocs.doc());
+		boolean found = false;
 		
+		while(termDocs.next()){
+			diskFilter.clear(termDocs.doc());
+			found = true;
+		}
 	
 		//add this term to the termSet
-		termSet.put(term, new Boolean(true));
-		return true;		
+		termSet.put(term, new Boolean(found));
+		return found;		
 	}
 	
 	public Set<Term> getTermSet(){
