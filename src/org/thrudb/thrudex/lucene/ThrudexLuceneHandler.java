@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 import org.thrudb.thrudex.Document;
 import org.thrudb.thrudex.Element;
@@ -154,6 +154,7 @@ public class ThrudexLuceneHandler implements Iface {
 			
 			//Create sortable field?
 			if(field.isSetSortable() && field.sortable){
+				
 				luceneDocument.add(
 						new org.apache.lucene.document.Field(
 								field.key+"_sort", field.value,

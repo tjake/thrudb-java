@@ -2,7 +2,9 @@ package org.thrudb.thrudex.lucene;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -21,9 +23,9 @@ import org.apache.lucene.search.ParallelMultiSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searchable;
 import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.TopFieldDocs;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.thrudb.thrudex.Element;
 import org.thrudb.thrudex.SearchQuery;
@@ -73,9 +75,9 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 		
 		if(createIndex){
 			diskWriter   = new IndexWriter(indexLocation,analyzer,createIndex,IndexWriter.MaxFieldLength.UNLIMITED);			
-			diskDirectory = FSDirectory.getDirectory(indexLocation);
+			diskDirectory = NIOFSDirectory.getDirectory(indexLocation);
 		}else{
-			diskDirectory = FSDirectory.getDirectory(indexLocation);
+			diskDirectory = NIOFSDirectory.getDirectory(indexLocation);
 			
 			if(IndexWriter.isLocked(indexLocation)){
 				logger.warn("Removing lock on "+indexName);	
@@ -144,7 +146,7 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 		
 		//Parse Query
 		Query parsedQuery;
-		
+		SearchResponse response = new SearchResponse();
 		
 		//Construct the multiSearcher
 		ParallelMultiSearcher multiSearcher = null;
@@ -169,15 +171,23 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 				}
 				
 				
-				Searchable searchers[];
+				List<Searchable> searchersList = new ArrayList<Searchable>();
 				
-		
-				if(prevRamSearcher == null)
-					searchers = new Searchable[]{ramSearcher, diskSearcher};
-				else
-					searchers = new Searchable[]{ramSearcher,prevRamSearcher,diskSearcher};
+				if(ramSearcher.maxDoc() > 0)
+					searchersList.add(ramSearcher);
 				
-				multiSearcher = new ParallelMultiSearcher(searchers);
+				if(prevRamSearcher != null && prevRamSearcher.maxDoc() > 0)
+					searchersList.add(prevRamSearcher);
+				
+				if(diskSearcher.maxDoc() > 0)
+					searchersList.add(diskSearcher);
+				
+				//empty index
+				if(searchersList.size() == 0)
+					return response;
+				
+				Searchable[] searchers = new Searchable[]{};
+				multiSearcher = new ParallelMultiSearcher(searchersList.toArray(searchers));
 				
 				myFilter      = diskFilter;
 			
@@ -202,9 +212,14 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 		
 			
 			//Search		
-			TopFieldDocs result = multiSearcher.search(parsedQuery,myFilter,query.offset + query.limit,sortBy);
+			TopDocs result = null;
+			try{
+				result = multiSearcher.search(parsedQuery,myFilter,query.offset + query.limit,sortBy);
+			}catch(Exception e){
+				logger.debug("Sortby failed, trying non sorted search");
+				result = multiSearcher.search(parsedQuery,myFilter,query.offset + query.limit);
+			}
 			
-			SearchResponse response = new SearchResponse();
 			response.setTotal(result.totalHits);
 			
 			FieldSelector fieldSelector;
@@ -220,7 +235,6 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 				Element el = new Element();
 				el.setIndex(query.index);
 										
-				
 				Document d = multiSearcher.doc(result.scoreDocs[i].doc,fieldSelector);
 				el.setKey(d.get(DOCUMENT_KEY));
 				
