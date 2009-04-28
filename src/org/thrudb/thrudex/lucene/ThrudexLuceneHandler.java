@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.lucene.index.IndexReader;
 import org.apache.thrift.TException;
 import org.thrudb.thrudex.Document;
 import org.thrudb.thrudex.Element;
@@ -27,7 +28,7 @@ import org.thrudb.thrudex.Thrudex.Iface;
 public class ThrudexLuceneHandler implements Iface {
 
 	private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
-	private Map<String,LuceneIndex> indexMap = new HashMap<String, LuceneIndex>();
+	private volatile Map<String,LuceneIndex> indexMap = new HashMap<String, LuceneIndex>();
 	private String indexRoot;
 	
 	public ThrudexLuceneHandler(String indexRoot){
@@ -92,7 +93,7 @@ public class ThrudexLuceneHandler implements Iface {
 	public void put(Document d) throws ThrudexException, TException {
 		
 		//make sure index is valid
-		if(!indexMap.containsKey(d.index))
+		if(!isValidIndex(d.index))
 			throw new ThrudexExceptionImpl("No Index Found: "+d.index);	
 		
 		//make sure document has a key
@@ -212,7 +213,7 @@ public class ThrudexLuceneHandler implements Iface {
 	public void remove(Element el) throws ThrudexException, TException {
 		
 		//make sure index is valid
-		if(!indexMap.containsKey(el.index))
+		if(!isValidIndex(el.index))
 			throw new ThrudexExceptionImpl("No Index Found: "+el.index);	
 		
 		//make sure document has a key
@@ -250,7 +251,7 @@ public class ThrudexLuceneHandler implements Iface {
 	public SearchResponse search(SearchQuery s) throws ThrudexException,
 			TException {
 		//make sure index is valid
-		if(!indexMap.containsKey(s.index))
+		if(!isValidIndex(s.index))
 			throw new ThrudexExceptionImpl("No Index Found: "+s.index);	
 		
 		return indexMap.get(s.index).search(s);
@@ -266,6 +267,28 @@ public class ThrudexLuceneHandler implements Iface {
 		}
 		
 		return responses;
+	}
+	
+	
+	public boolean isValidIndex(String indexName) throws ThrudexException{
+		if(indexMap.containsKey(indexName))
+			return true;
+		
+		synchronized(indexMap){
+			
+			//double lock check
+			if(indexMap.containsKey(indexName))
+				return true;
+		
+			String indexLocation = indexRoot + "/" + indexName;
+		
+			if(IndexReader.indexExists(indexLocation)){
+				addIndex(indexName); //really just reopening
+				return true;
+			}else{
+				return false;
+			}
+		}	
 	}
 
 }
