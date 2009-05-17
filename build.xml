@@ -6,7 +6,7 @@
         <property name="src" location="src" />
         <property name="gen" location="gen-java" />
         <property name="build" location="build" />
-        <property name="cpath" location="lib/libthrift.jar;lib/lucene-core-2.4.1.jar:lib/log4j-1.2.15.jar" />
+        <property name="cpath" location="lib/libthrift.jar;lib/lucene-core-2.4.1.jar;lib/log4j-1.2.15.jar;lib/tokyocabinet.jar" />
 
         <target name="init">
                 <tstamp />
@@ -22,23 +22,35 @@
                 </javac>
         </target>
 
-        <target name="thrudex.jar" depends="compile">
-                <jar jarfile="thrudex.jar" basedir="${build}" />
+        <target name="thrudb.jar" depends="compile">
+                <jar jarfile="thrudb.jar" basedir="${build}" />
         </target>
 
         <target name="clean">
                 <delete dir="${build}" />
-                <delete file="thrudex.jar" />
+                <delete file="thrudb.jar" />
         </target>
 
-        <target name="thrudex" depends="thrudex.jar">
-                <java classname="org.thrudb.thrudex.ThrudexServer" fork="true" failonerror="true" maxmemory="128m">
+        <target name="thrudex" depends="thrudb.jar">
+                <java classname="org.thrudb.thrudex.ThrudexServer" fork="true" spawn="true" maxmemory="128m">
                         <arg line="-f /Users/jake/projects/thrudb/tutorial/thrudex.conf" />
                         <classpath>
-                                <pathelement location="thrudex.jar" />
+                                <pathelement location="thrudb.jar" />
                                 <pathelement location="lib/libthrift.jar" />
                                 <pathelement location="lib/log4j-1.2.15.jar" />
                                 <pathelement location="lib/lucene-core-2.4.1.jar" />
+                        </classpath>
+                </java>
+        </target>
+
+        <target name="thrudoc" depends="thrudb.jar">
+                <java classname="org.thrudb.thrudoc.ThrudocServer" fork="true" spawn="true" maxmemory="128m">
+                        <arg line="-f /Users/jake/projects/thrudb/tutorial/thrudoc.conf" />
+                        <classpath>
+                                <pathelement location="thrudb.jar" />
+                                <pathelement location="lib/libthrift.jar" />
+                                <pathelement location="lib/log4j-1.2.15.jar" />
+                                <pathelement location="lib/tokyocabinet.jar" />
                         </classpath>
                 </java>
         </target>

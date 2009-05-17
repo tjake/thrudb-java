@@ -6,12 +6,10 @@
 package org.thrudb.thrudex;
 
 
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
-import org.apache.thrift.IntRangeSet;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.thrift.IntRangeSet;
 
 public class FieldType {
   public static final int KEYWORD = 1;

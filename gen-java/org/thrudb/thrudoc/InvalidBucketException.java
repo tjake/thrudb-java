@@ -17,28 +17,28 @@ import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
 import org.apache.thrift.protocol.*;
 
-public class ThrudocException extends Exception implements TBase, java.io.Serializable, Cloneable {
-  private static final TStruct STRUCT_DESC = new TStruct("ThrudocException");
+public class InvalidBucketException extends Exception implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("InvalidBucketException");
 
   public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
   }});
 
   static {
-    FieldMetaData.addStructMetaDataMap(ThrudocException.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(InvalidBucketException.class, metaDataMap);
   }
 
-  public ThrudocException() {
+  public InvalidBucketException() {
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ThrudocException(ThrudocException other) {
+  public InvalidBucketException(InvalidBucketException other) {
   }
 
   @Override
-  public ThrudocException clone() {
-    return new ThrudocException(this);
+  public InvalidBucketException clone() {
+    return new InvalidBucketException(this);
   }
 
   public void setFieldValue(int fieldID, Object value) {
@@ -67,12 +67,12 @@ public class ThrudocException extends Exception implements TBase, java.io.Serial
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof ThrudocException)
-      return this.equals((ThrudocException)that);
+    if (that instanceof InvalidBucketException)
+      return this.equals((InvalidBucketException)that);
     return false;
   }
 
-  public boolean equals(ThrudocException that) {
+  public boolean equals(InvalidBucketException that) {
     if (that == null)
       return false;
 
@@ -118,7 +118,7 @@ public class ThrudocException extends Exception implements TBase, java.io.Serial
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("ThrudocException(");
+    StringBuilder sb = new StringBuilder("InvalidBucketException(");
     boolean first = true;
 
     sb.append(")");
