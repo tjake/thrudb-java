@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
@@ -54,11 +56,11 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 	RealTimeDiskFilter diskFilter;
 	Set<Term>     deletedDocuments; //disk only
 	
-	QueryParser   queryParser = new QueryParser(DOCUMENT_KEY,analyzer);
-	AtomicBoolean hasWrite    = new AtomicBoolean(false);
+	QueryParser    queryParser = new QueryParser(DOCUMENT_KEY,new SimpleAnalyzer());
+	AtomicBoolean  hasWrite    = new AtomicBoolean(false);
+	CountDownLatch shutdownLatch;
 	
 	Thread  monitor;
-	boolean shuttingdown = false;
 	
 	Logger logger = Logger.getLogger(getClass());
 	
@@ -260,12 +262,11 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 				logger.debug("ram dir size: "+ramDirectory.sizeInBytes());
 				
 				//do nothing until we have enough changes
-				if(ramDirectory.sizeInBytes() < 1024*1024*1){	
+				if(ramDirectory.sizeInBytes() < 1024*1024*1 && shutdownLatch == null){	
 					Thread.currentThread().sleep(10000);
 					continue;
 				}
-				
-				
+						
 				
 				//We need to merge the indexes together and reopen
 				synchronized(this){
@@ -340,16 +341,24 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 			}catch(Exception e){
 				logger.info(e);
 			}
+			
+			if(shutdownLatch != null){
+				shutdownLatch.countDown();
+				logger.info("index sync complete");
+				break;
+			}
 		}
 	}
 	
-	public synchronized void shutdown() {
-		shuttingdown = true;
+	public void shutdown() {
+		shutdownLatch = new CountDownLatch(1);
 		try{
-			monitor.wait();
+			shutdownLatch.await();
 		}catch(InterruptedException e){
-			logger.error(e);
+			Thread.currentThread().interrupt();
 		}
+		
+		logger.info("Index shutdown complete");
 	}
 	
 	public void optimize() throws ThrudexException{
