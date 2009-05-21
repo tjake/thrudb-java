@@ -5,29 +5,17 @@
  */
 package org.thrudb.thrudex;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Collections;
 
-import org.apache.thrift.TApplicationException;
-import org.apache.thrift.TBase;
-import org.apache.thrift.TException;
-import org.apache.thrift.TFieldRequirementType;
-import org.apache.thrift.TProcessor;
-import org.apache.thrift.meta_data.FieldMetaData;
-import org.apache.thrift.meta_data.FieldValueMetaData;
-import org.apache.thrift.meta_data.ListMetaData;
-import org.apache.thrift.meta_data.StructMetaData;
-import org.apache.thrift.protocol.TField;
-import org.apache.thrift.protocol.TList;
-import org.apache.thrift.protocol.TMessage;
-import org.apache.thrift.protocol.TMessageType;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.protocol.TProtocolUtil;
-import org.apache.thrift.protocol.TStruct;
-import org.apache.thrift.protocol.TType;
+import org.apache.thrift.*;
+import org.apache.thrift.meta_data.*;
+import org.apache.thrift.protocol.*;
 
 public class Thrudex {
 
@@ -1113,13 +1101,13 @@ public class Thrudex {
           case SUCCESS:
             if (field.type == TType.LIST) {
               {
-                TList _list8 = iprot.readListBegin();
-                this.success = new ArrayList<String>(_list8.size);
-                for (int _i9 = 0; _i9 < _list8.size; ++_i9)
+                TList _list12 = iprot.readListBegin();
+                this.success = new ArrayList<String>(_list12.size);
+                for (int _i13 = 0; _i13 < _list12.size; ++_i13)
                 {
-                  String _elem10;
-                  _elem10 = iprot.readString();
-                  this.success.add(_elem10);
+                  String _elem14;
+                  _elem14 = iprot.readString();
+                  this.success.add(_elem14);
                 }
                 iprot.readListEnd();
               }
@@ -1147,8 +1135,8 @@ public class Thrudex {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.success.size()));
-          for (String _iter11 : this.success)          {
-            oprot.writeString(_iter11);
+          for (String _iter15 : this.success)          {
+            oprot.writeString(_iter15);
           }
           oprot.writeListEnd();
         }
@@ -1383,10 +1371,10 @@ public class Thrudex {
 
   public static class put_result implements TBase, java.io.Serializable, Cloneable   {
     private static final TStruct STRUCT_DESC = new TStruct("put_result");
-    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)-1);
+    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public ThrudexException ex;
-    public static final int EX = -1;
+    public static final int EX = 1;
 
     private final Isset __isset = new Isset();
     private static final class Isset implements java.io.Serializable {
@@ -1782,10 +1770,10 @@ public class Thrudex {
 
   public static class remove_result implements TBase, java.io.Serializable, Cloneable   {
     private static final TStruct STRUCT_DESC = new TStruct("remove_result");
-    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)-1);
+    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public ThrudexException ex;
-    public static final int EX = -1;
+    public static final int EX = 1;
 
     private final Isset __isset = new Isset();
     private static final class Isset implements java.io.Serializable {
@@ -2182,12 +2170,12 @@ public class Thrudex {
   public static class search_result implements TBase, java.io.Serializable, Cloneable   {
     private static final TStruct STRUCT_DESC = new TStruct("search_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
-    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)-1);
+    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public SearchResponse success;
     public static final int SUCCESS = 0;
     public ThrudexException ex;
-    public static final int EX = -1;
+    public static final int EX = 1;
 
     private final Isset __isset = new Isset();
     private static final class Isset implements java.io.Serializable {
@@ -2619,14 +2607,14 @@ public class Thrudex {
           case DOCUMENTS:
             if (field.type == TType.LIST) {
               {
-                TList _list12 = iprot.readListBegin();
-                this.documents = new ArrayList<Document>(_list12.size);
-                for (int _i13 = 0; _i13 < _list12.size; ++_i13)
+                TList _list16 = iprot.readListBegin();
+                this.documents = new ArrayList<Document>(_list16.size);
+                for (int _i17 = 0; _i17 < _list16.size; ++_i17)
                 {
-                  Document _elem14;
-                  _elem14 = new Document();
-                  _elem14.read(iprot);
-                  this.documents.add(_elem14);
+                  Document _elem18;
+                  _elem18 = new Document();
+                  _elem18.read(iprot);
+                  this.documents.add(_elem18);
                 }
                 iprot.readListEnd();
               }
@@ -2655,8 +2643,8 @@ public class Thrudex {
         oprot.writeFieldBegin(DOCUMENTS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.documents.size()));
-          for (Document _iter15 : this.documents)          {
-            _iter15.write(oprot);
+          for (Document _iter19 : this.documents)          {
+            _iter19.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -2692,12 +2680,12 @@ public class Thrudex {
   public static class putList_result implements TBase, java.io.Serializable, Cloneable   {
     private static final TStruct STRUCT_DESC = new TStruct("putList_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.LIST, (short)0);
-    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)-1);
+    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public List<ThrudexException> success;
     public static final int SUCCESS = 0;
     public ThrudexException ex;
-    public static final int EX = -1;
+    public static final int EX = 1;
 
     private final Isset __isset = new Isset();
     private static final class Isset implements java.io.Serializable {
@@ -2910,14 +2898,14 @@ public class Thrudex {
           case SUCCESS:
             if (field.type == TType.LIST) {
               {
-                TList _list16 = iprot.readListBegin();
-                this.success = new ArrayList<ThrudexException>(_list16.size);
-                for (int _i17 = 0; _i17 < _list16.size; ++_i17)
+                TList _list20 = iprot.readListBegin();
+                this.success = new ArrayList<ThrudexException>(_list20.size);
+                for (int _i21 = 0; _i21 < _list20.size; ++_i21)
                 {
-                  ThrudexException _elem18;
-                  _elem18 = new ThrudexException();
-                  _elem18.read(iprot);
-                  this.success.add(_elem18);
+                  ThrudexException _elem22;
+                  _elem22 = new ThrudexException();
+                  _elem22.read(iprot);
+                  this.success.add(_elem22);
                 }
                 iprot.readListEnd();
               }
@@ -2953,8 +2941,8 @@ public class Thrudex {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.success.size()));
-          for (ThrudexException _iter19 : this.success)          {
-            _iter19.write(oprot);
+          for (ThrudexException _iter23 : this.success)          {
+            _iter23.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -3165,14 +3153,14 @@ public class Thrudex {
           case ELEMENTS:
             if (field.type == TType.LIST) {
               {
-                TList _list20 = iprot.readListBegin();
-                this.elements = new ArrayList<Element>(_list20.size);
-                for (int _i21 = 0; _i21 < _list20.size; ++_i21)
+                TList _list24 = iprot.readListBegin();
+                this.elements = new ArrayList<Element>(_list24.size);
+                for (int _i25 = 0; _i25 < _list24.size; ++_i25)
                 {
-                  Element _elem22;
-                  _elem22 = new Element();
-                  _elem22.read(iprot);
-                  this.elements.add(_elem22);
+                  Element _elem26;
+                  _elem26 = new Element();
+                  _elem26.read(iprot);
+                  this.elements.add(_elem26);
                 }
                 iprot.readListEnd();
               }
@@ -3201,8 +3189,8 @@ public class Thrudex {
         oprot.writeFieldBegin(ELEMENTS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.elements.size()));
-          for (Element _iter23 : this.elements)          {
-            _iter23.write(oprot);
+          for (Element _iter27 : this.elements)          {
+            _iter27.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -3238,12 +3226,12 @@ public class Thrudex {
   public static class removeList_result implements TBase, java.io.Serializable, Cloneable   {
     private static final TStruct STRUCT_DESC = new TStruct("removeList_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.LIST, (short)0);
-    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)-1);
+    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public List<ThrudexException> success;
     public static final int SUCCESS = 0;
     public ThrudexException ex;
-    public static final int EX = -1;
+    public static final int EX = 1;
 
     private final Isset __isset = new Isset();
     private static final class Isset implements java.io.Serializable {
@@ -3456,14 +3444,14 @@ public class Thrudex {
           case SUCCESS:
             if (field.type == TType.LIST) {
               {
-                TList _list24 = iprot.readListBegin();
-                this.success = new ArrayList<ThrudexException>(_list24.size);
-                for (int _i25 = 0; _i25 < _list24.size; ++_i25)
+                TList _list28 = iprot.readListBegin();
+                this.success = new ArrayList<ThrudexException>(_list28.size);
+                for (int _i29 = 0; _i29 < _list28.size; ++_i29)
                 {
-                  ThrudexException _elem26;
-                  _elem26 = new ThrudexException();
-                  _elem26.read(iprot);
-                  this.success.add(_elem26);
+                  ThrudexException _elem30;
+                  _elem30 = new ThrudexException();
+                  _elem30.read(iprot);
+                  this.success.add(_elem30);
                 }
                 iprot.readListEnd();
               }
@@ -3499,8 +3487,8 @@ public class Thrudex {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.success.size()));
-          for (ThrudexException _iter27 : this.success)          {
-            _iter27.write(oprot);
+          for (ThrudexException _iter31 : this.success)          {
+            _iter31.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -3711,14 +3699,14 @@ public class Thrudex {
           case Q:
             if (field.type == TType.LIST) {
               {
-                TList _list28 = iprot.readListBegin();
-                this.q = new ArrayList<SearchQuery>(_list28.size);
-                for (int _i29 = 0; _i29 < _list28.size; ++_i29)
+                TList _list32 = iprot.readListBegin();
+                this.q = new ArrayList<SearchQuery>(_list32.size);
+                for (int _i33 = 0; _i33 < _list32.size; ++_i33)
                 {
-                  SearchQuery _elem30;
-                  _elem30 = new SearchQuery();
-                  _elem30.read(iprot);
-                  this.q.add(_elem30);
+                  SearchQuery _elem34;
+                  _elem34 = new SearchQuery();
+                  _elem34.read(iprot);
+                  this.q.add(_elem34);
                 }
                 iprot.readListEnd();
               }
@@ -3747,8 +3735,8 @@ public class Thrudex {
         oprot.writeFieldBegin(Q_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.q.size()));
-          for (SearchQuery _iter31 : this.q)          {
-            _iter31.write(oprot);
+          for (SearchQuery _iter35 : this.q)          {
+            _iter35.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -3784,12 +3772,12 @@ public class Thrudex {
   public static class searchList_result implements TBase, java.io.Serializable, Cloneable   {
     private static final TStruct STRUCT_DESC = new TStruct("searchList_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.LIST, (short)0);
-    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)-1);
+    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public List<SearchResponse> success;
     public static final int SUCCESS = 0;
     public ThrudexException ex;
-    public static final int EX = -1;
+    public static final int EX = 1;
 
     private final Isset __isset = new Isset();
     private static final class Isset implements java.io.Serializable {
@@ -4002,14 +3990,14 @@ public class Thrudex {
           case SUCCESS:
             if (field.type == TType.LIST) {
               {
-                TList _list32 = iprot.readListBegin();
-                this.success = new ArrayList<SearchResponse>(_list32.size);
-                for (int _i33 = 0; _i33 < _list32.size; ++_i33)
+                TList _list36 = iprot.readListBegin();
+                this.success = new ArrayList<SearchResponse>(_list36.size);
+                for (int _i37 = 0; _i37 < _list36.size; ++_i37)
                 {
-                  SearchResponse _elem34;
-                  _elem34 = new SearchResponse();
-                  _elem34.read(iprot);
-                  this.success.add(_elem34);
+                  SearchResponse _elem38;
+                  _elem38 = new SearchResponse();
+                  _elem38.read(iprot);
+                  this.success.add(_elem38);
                 }
                 iprot.readListEnd();
               }
@@ -4045,8 +4033,8 @@ public class Thrudex {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.success.size()));
-          for (SearchResponse _iter35 : this.success)          {
-            _iter35.write(oprot);
+          for (SearchResponse _iter39 : this.success)          {
+            _iter39.write(oprot);
           }
           oprot.writeListEnd();
         }
@@ -4368,12 +4356,12 @@ public class Thrudex {
   public static class admin_result implements TBase, java.io.Serializable, Cloneable   {
     private static final TStruct STRUCT_DESC = new TStruct("admin_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
-    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)-1);
+    private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public String success;
     public static final int SUCCESS = 0;
     public ThrudexException ex;
-    public static final int EX = -1;
+    public static final int EX = 1;
 
     private final Isset __isset = new Isset();
     private static final class Isset implements java.io.Serializable {

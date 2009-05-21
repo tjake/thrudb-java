@@ -5,25 +5,17 @@
  */
 package org.thrudb.thrudex;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Collections;
 
-import org.apache.thrift.TBase;
-import org.apache.thrift.TException;
-import org.apache.thrift.TFieldRequirementType;
-import org.apache.thrift.meta_data.FieldMetaData;
-import org.apache.thrift.meta_data.FieldValueMetaData;
-import org.apache.thrift.meta_data.ListMetaData;
-import org.apache.thrift.meta_data.StructMetaData;
-import org.apache.thrift.protocol.TField;
-import org.apache.thrift.protocol.TList;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.protocol.TProtocolUtil;
-import org.apache.thrift.protocol.TStruct;
-import org.apache.thrift.protocol.TType;
+import org.apache.thrift.*;
+import org.apache.thrift.meta_data.*;
+import org.apache.thrift.protocol.*;
 
 public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("SearchResponse");
@@ -311,14 +303,14 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
         case ELEMENTS:
           if (field.type == TType.LIST) {
             {
-              TList _list4 = iprot.readListBegin();
-              this.elements = new ArrayList<Element>(_list4.size);
-              for (int _i5 = 0; _i5 < _list4.size; ++_i5)
+              TList _list8 = iprot.readListBegin();
+              this.elements = new ArrayList<Element>(_list8.size);
+              for (int _i9 = 0; _i9 < _list8.size; ++_i9)
               {
-                Element _elem6;
-                _elem6 = new Element();
-                _elem6.read(iprot);
-                this.elements.add(_elem6);
+                Element _elem10;
+                _elem10 = new Element();
+                _elem10.read(iprot);
+                this.elements.add(_elem10);
               }
               iprot.readListEnd();
             }
@@ -358,8 +350,8 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(ELEMENTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.elements.size()));
-        for (Element _iter7 : this.elements)        {
-          _iter7.write(oprot);
+        for (Element _iter11 : this.elements)        {
+          _iter11.write(oprot);
         }
         oprot.writeListEnd();
       }

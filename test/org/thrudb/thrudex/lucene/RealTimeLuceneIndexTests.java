@@ -48,12 +48,13 @@ public class RealTimeLuceneIndexTests extends TestCase {
 		try {
 			Document d1 = this.newDocument("doc1");
 			this.addField(d1, "title", "title number 1", FieldType.TEXT);
-			this.addField(d1, "category", "science_fiction", FieldType.UNSTORED);
+			this.addField(d1, "category", "science_fiction", FieldType.KEYWORD);
 
 			index.put(d1);
 
 			SearchQuery search = new SearchQuery();
 			search.setIndex(INDEX_NAME);
+			search.addToKeyword_fields("category");
 			
 			search.setQuery("category:\"science_fiction\"");
 			

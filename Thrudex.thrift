@@ -56,7 +56,8 @@ struct SearchQuery
 
         6: bool    desc      = 0,
         7: bool    randomize = 0,
-        8: bool    payload   = 0
+        8: bool    payload   = 0,
+        9: list<string> keyword_fields;   #flag fields that should not be tokenized
 }
 
 struct SearchResponse
@@ -71,16 +72,16 @@ service Thrudex
         void           ping(),
         list<string>   getIndices(),
 
-        void           put   (1:Document d)       throws(ThrudexException ex),
-        void           remove(1:Element  e)       throws(ThrudexException ex),
-        SearchResponse search(1:SearchQuery s)    throws(ThrudexException ex),
+        void           put   (1:Document d)       throws(1:ThrudexException ex),
+        void           remove(1:Element  e)       throws(1:ThrudexException ex),
+        SearchResponse search(1:SearchQuery s)    throws(1:ThrudexException ex),
 
-        list<ThrudexException>  putList   (1:list<Document> documents) throws(ThrudexException ex),
-        list<ThrudexException>  removeList(1:list<Element>  elements)  throws(ThrudexException ex),
-        list<SearchResponse>    searchList(1:list<SearchQuery>     q)  throws(ThrudexException ex)
+        list<ThrudexException>  putList   (1:list<Document> documents) throws(1:ThrudexException ex),
+        list<ThrudexException>  removeList(1:list<Element>  elements)  throws(1:ThrudexException ex),
+        list<SearchResponse>    searchList(1:list<SearchQuery>     q)  throws(1:ThrudexException ex)
 
 
         # the following is protected api, it us only to be used by administrative
         # programs and people who really know what they're doing.
-        string         admin(1:string op, 2:string data)          throws(ThrudexException ex)
+        string         admin(1:string op, 2:string data)          throws(1:ThrudexException ex)
 }

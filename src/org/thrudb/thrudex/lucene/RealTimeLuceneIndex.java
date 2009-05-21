@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.KeywordAnalyzer;
+import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -38,7 +40,7 @@ import org.thrudb.thrudex.ThrudexExceptionImpl;
 public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 
 	Analyzer      analyzer = new StandardAnalyzer();
-	
+	Analyzer      kwAnalyzer = new KeywordAnalyzer();
 	
 	IndexWriter   ramWriter;
 	IndexReader   ramReader;
@@ -56,7 +58,6 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 	RealTimeDiskFilter diskFilter;
 	Set<Term>     deletedDocuments; //disk only
 	
-	QueryParser    queryParser = new QueryParser(DOCUMENT_KEY,new SimpleAnalyzer());
 	AtomicBoolean  hasWrite    = new AtomicBoolean(false);
 	CountDownLatch shutdownLatch;
 	
@@ -194,17 +195,26 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 				myFilter      = diskFilter;
 			
 			
-				//parse query
-				//TODO: Cache?
-				try{
-					parsedQuery = queryParser.parse(query.getQuery());
-				}catch(org.apache.lucene.queryParser.ParseException e){
-					throw new ThrudexExceptionImpl(e.toString());
-				}
-			
 			}
 			
-		
+			PerFieldAnalyzerWrapper qAnalyzer = new PerFieldAnalyzerWrapper(analyzer);
+			QueryParser    queryParser = new QueryParser(DOCUMENT_KEY,qAnalyzer);
+			
+			//add any keyword fields
+			if(query.isSetKeyword_fields()){			
+				for(String field : query.keyword_fields)
+					qAnalyzer.addAnalyzer(field, kwAnalyzer);
+			}
+			
+			//parse query
+			//TODO: Cache?
+			try{
+				parsedQuery = queryParser.parse(query.getQuery());
+			}catch(org.apache.lucene.queryParser.ParseException e){
+				throw new ThrudexExceptionImpl(e.toString());
+			}
+			
+	
 			
 			//Set Sort
 			Sort    sortBy = new Sort();

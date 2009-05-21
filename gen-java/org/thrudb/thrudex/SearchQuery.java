@@ -5,20 +5,17 @@
  */
 package org.thrudb.thrudex;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Collections;
 
-import org.apache.thrift.TBase;
-import org.apache.thrift.TException;
-import org.apache.thrift.TFieldRequirementType;
-import org.apache.thrift.meta_data.FieldMetaData;
-import org.apache.thrift.meta_data.FieldValueMetaData;
-import org.apache.thrift.protocol.TField;
-import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.protocol.TProtocolUtil;
-import org.apache.thrift.protocol.TStruct;
-import org.apache.thrift.protocol.TType;
+import org.apache.thrift.*;
+import org.apache.thrift.meta_data.*;
+import org.apache.thrift.protocol.*;
 
 public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
   private static final TStruct STRUCT_DESC = new TStruct("SearchQuery");
@@ -30,6 +27,7 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
   private static final TField DESC_FIELD_DESC = new TField("desc", TType.BOOL, (short)6);
   private static final TField RANDOMIZE_FIELD_DESC = new TField("randomize", TType.BOOL, (short)7);
   private static final TField PAYLOAD_FIELD_DESC = new TField("payload", TType.BOOL, (short)8);
+  private static final TField KEYWORD_FIELDS_FIELD_DESC = new TField("keyword_fields", TType.LIST, (short)9);
 
   public String index;
   public static final int INDEX = 1;
@@ -47,6 +45,8 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
   public static final int RANDOMIZE = 7;
   public boolean payload;
   public static final int PAYLOAD = 8;
+  public List<String> keyword_fields;
+  public static final int KEYWORD_FIELDS = 9;
 
   private final Isset __isset = new Isset();
   private static final class Isset implements java.io.Serializable {
@@ -74,6 +74,9 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
         new FieldValueMetaData(TType.BOOL)));
     put(PAYLOAD, new FieldMetaData("payload", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
+    put(KEYWORD_FIELDS, new FieldMetaData("keyword_fields", TFieldRequirementType.DEFAULT, 
+        new ListMetaData(TType.LIST, 
+            new FieldValueMetaData(TType.STRING))));
   }});
 
   static {
@@ -101,7 +104,8 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     int offset,
     boolean desc,
     boolean randomize,
-    boolean payload)
+    boolean payload,
+    List<String> keyword_fields)
   {
     this();
     this.index = index;
@@ -117,6 +121,7 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     this.__isset.randomize = true;
     this.payload = payload;
     this.__isset.payload = true;
+    this.keyword_fields = keyword_fields;
   }
 
   /**
@@ -142,6 +147,13 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     this.randomize = other.randomize;
     __isset.payload = other.__isset.payload;
     this.payload = other.payload;
+    if (other.isSetKeyword_fields()) {
+      List<String> __this__keyword_fields = new ArrayList<String>();
+      for (String other_element : other.keyword_fields) {
+        __this__keyword_fields.add(other_element);
+      }
+      this.keyword_fields = __this__keyword_fields;
+    }
   }
 
   @Override
@@ -328,6 +340,44 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     this.__isset.payload = value;
   }
 
+  public int getKeyword_fieldsSize() {
+    return (this.keyword_fields == null) ? 0 : this.keyword_fields.size();
+  }
+
+  public java.util.Iterator<String> getKeyword_fieldsIterator() {
+    return (this.keyword_fields == null) ? null : this.keyword_fields.iterator();
+  }
+
+  public void addToKeyword_fields(String elem) {
+    if (this.keyword_fields == null) {
+      this.keyword_fields = new ArrayList<String>();
+    }
+    this.keyword_fields.add(elem);
+  }
+
+  public List<String> getKeyword_fields() {
+    return this.keyword_fields;
+  }
+
+  public void setKeyword_fields(List<String> keyword_fields) {
+    this.keyword_fields = keyword_fields;
+  }
+
+  public void unsetKeyword_fields() {
+    this.keyword_fields = null;
+  }
+
+  // Returns true if field keyword_fields is set (has been asigned a value) and false otherwise
+  public boolean isSetKeyword_fields() {
+    return this.keyword_fields != null;
+  }
+
+  public void setKeyword_fieldsIsSet(boolean value) {
+    if (!value) {
+      this.keyword_fields = null;
+    }
+  }
+
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
     case INDEX:
@@ -394,6 +444,14 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
+    case KEYWORD_FIELDS:
+      if (value == null) {
+        unsetKeyword_fields();
+      } else {
+        setKeyword_fields((List<String>)value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -425,6 +483,9 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     case PAYLOAD:
       return new Boolean(isPayload());
 
+    case KEYWORD_FIELDS:
+      return getKeyword_fields();
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -449,6 +510,8 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
       return isSetRandomize();
     case PAYLOAD:
       return isSetPayload();
+    case KEYWORD_FIELDS:
+      return isSetKeyword_fields();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -539,6 +602,15 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
         return false;
     }
 
+    boolean this_present_keyword_fields = true && this.isSetKeyword_fields();
+    boolean that_present_keyword_fields = true && that.isSetKeyword_fields();
+    if (this_present_keyword_fields || that_present_keyword_fields) {
+      if (!(this_present_keyword_fields && that_present_keyword_fields))
+        return false;
+      if (!this.keyword_fields.equals(that.keyword_fields))
+        return false;
+    }
+
     return true;
   }
 
@@ -619,6 +691,23 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
+        case KEYWORD_FIELDS:
+          if (field.type == TType.LIST) {
+            {
+              TList _list4 = iprot.readListBegin();
+              this.keyword_fields = new ArrayList<String>(_list4.size);
+              for (int _i5 = 0; _i5 < _list4.size; ++_i5)
+              {
+                String _elem6;
+                _elem6 = iprot.readString();
+                this.keyword_fields.add(_elem6);
+              }
+              iprot.readListEnd();
+            }
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, field.type);
           break;
@@ -666,6 +755,17 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     oprot.writeFieldBegin(PAYLOAD_FIELD_DESC);
     oprot.writeBool(this.payload);
     oprot.writeFieldEnd();
+    if (this.keyword_fields != null) {
+      oprot.writeFieldBegin(KEYWORD_FIELDS_FIELD_DESC);
+      {
+        oprot.writeListBegin(new TList(TType.STRING, this.keyword_fields.size()));
+        for (String _iter7 : this.keyword_fields)        {
+          oprot.writeString(_iter7);
+        }
+        oprot.writeListEnd();
+      }
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -717,6 +817,14 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     if (!first) sb.append(", ");
     sb.append("payload:");
     sb.append(this.payload);
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("keyword_fields:");
+    if (this.keyword_fields == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.keyword_fields);
+    }
     first = false;
     sb.append(")");
     return sb.toString();
