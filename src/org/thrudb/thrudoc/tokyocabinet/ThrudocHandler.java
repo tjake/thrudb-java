@@ -81,10 +81,7 @@ public class ThrudocHandler implements Iface {
 		return bucketMap.get(bucket).get(key);
 	}
 
-	public Set<String> getBuckets() throws ThrudocException, TException {
-		return bucketMap.keySet();
-	}
-
+	
 	public int incr(String bucket, String key, int amount) throws TException, InvalidBucketException {
 		if(!isValidBucket(bucket))
 			throw new InvalidBucketException();
@@ -196,6 +193,30 @@ public class ThrudocHandler implements Iface {
 		
 		
 		return bucketMap.get(bucket).scan(seed,count);	
+	}
+
+	public void create_bucket(String bucket) throws ThrudocException,
+			TException {
+		
+		if(!bucketMap.containsKey(bucket)){		
+			bucketMap.put(bucket, new TokyoCabinetDB(docRoot,bucket));
+		}
+		
+	}
+
+	public void delete_bucket(String bucket) throws ThrudocException,
+			TException {
+		
+		//make sure it's loaded
+		create_bucket(bucket);
+		
+		bucketMap.get(bucket).erase();
+		
+		bucketMap.remove(bucket);
+	}
+
+	public Set<String> get_bucket_list() throws ThrudocException, TException {
+		return bucketMap.keySet();
 	}
 
 }
