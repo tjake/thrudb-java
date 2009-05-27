@@ -63,12 +63,10 @@ public class TokyoCabinetTests extends TestCase {
 			//re-Retrieve
 			for(int i=0; i<100; i++){
 				
-				try{
-					tdb.get("key"+Integer.toString(i));
+				
+				if(tdb.get("key"+Integer.toString(i)) != null)
 					fail("key still exists after removed");
-				}catch(InvalidKeyException ex){
-					//this is good
-				}
+				
 			}
 			
 		}catch(Throwable t){

@@ -5,21 +5,33 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 import org.apache.log4j.PropertyConfigurator;
-import org.apache.lucene.store.FSDirectory;
 import org.apache.thrift.TProcessor;
+import org.apache.thrift.TProcessorFactory;
+import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.THsHaServer;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.THsHaServer.Options;
 import org.apache.thrift.transport.TNonblockingServerSocket;
 import org.apache.thrift.transport.TNonblockingServerTransport;
-import org.thrudb.thrudoc.tokyocabinet.ThrudocHandler;
+import org.thrudb.thrift.TPeekingTransportFactory;
 
 public class ThrudocServer {
 
 	private String docRoot;
+	private String propertyName;
+	
+	public String getLogRoot() {
+		return propertyName;
+	}
+
+	public void setLogRoot(String logRoot) {
+		this.propertyName = logRoot;
+	}
+
+
 	private int    port;
 	private int    threadCount;
-	
+	private TServer server;
 	
 	public String getDocRoot() {
 		return docRoot;
@@ -56,21 +68,64 @@ public class ThrudocServer {
 			
 			//Processor
 			TProcessor  processor = 
-				new Thrudoc.Processor(new ThrudocHandler(docRoot)); 
+				new ThrudocLoggingProcessor(new ThrudocHandler(docRoot)); 
 			
 			Options opt = new Options();
 			opt.maxWorkerThreads = threadCount;
 			
-			//Server
-			TServer server = new THsHaServer(processor,serverSocket);
+			TPeekingTransportFactory peekFactory = new TPeekingTransportFactory(propertyName,"thrudoc_log");
 			
-			//Serve
+			//Server
+			//TServer server = new THsHaServer(processor,serverSocket);
+			server = new THsHaServer( new TProcessorFactory(processor), serverSocket,
+                    peekFactory, peekFactory,
+                    new TBinaryProtocol.Factory(),
+                    new TBinaryProtocol.Factory(),
+                    opt);
+			
+			
+			//Server
 			server.serve();
+			
 			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
+	
+	public void stop(){
+		server.stop();
+	}
+	
+	public static String checkDirProperty(Properties properties, String propertyName){
+		String property = properties.getProperty(propertyName);
+		
+		if(property == null){
+			System.err.println(propertyName+" missing from property file");
+			System.exit(0);
+		}
+		
+		File log = new File(property);
+		if(!log.exists()){
+			if(log.mkdirs()){
+				System.out.println("Created dir: "+property);
+			}else{
+				System.err.println("Failed to create dir:"+property);
+				System.exit(0);
+			}
+		}else if(!log.isDirectory()) {
+			System.err.println("exists but not a directory:"+property);
+			System.exit(0);
+		}else if(!log.canWrite()) {
+			System.err.println("dir exists but not writable:"+property);
+			System.exit(0);
+		}else{
+			System.out.println(propertyName+": "+property);
+		}
+		
+		return propertyName;
+	}
+	
 	
 	/**
 	 * @param args
@@ -116,33 +171,12 @@ public class ThrudocServer {
 		
 		ThrudocServer thrudocServer = new ThrudocServer();
 		
-		if(!properties.containsKey("DOC_ROOT")){
-			System.out.println("DOC_ROOT Property Required");
-			System.exit(0);
-		}
-		
-		//make sure root exits
-		String docRoot = properties.getProperty("DOC_ROOT");
-		File doc = new File(docRoot);
-		if(!doc.exists()){
-			if(doc.mkdirs()){
-				System.out.println("Created doc root: "+docRoot);
-			}else{
-				System.err.println("Failed to create doc root:"+docRoot);
-				System.exit(0);
-			}
-		}else if(!doc.isDirectory()) {
-			System.err.println("doc root exists but not a directory:"+docRoot);
-			System.exit(0);
-		}else if(!doc.canWrite()) {
-			System.err.println("doc root exists but not writable:"+docRoot);
-			System.exit(0);
-		}else{
-			System.out.println("doc root: "+docRoot);
-		}
-		
+		String docRoot = checkDirProperty(properties, "DOC_ROOT");
 		thrudocServer.setDocRoot(docRoot);
 		
+		String logRoot = checkDirProperty(properties, "LOG_ROOT");
+		thrudocServer.setLogRoot(logRoot);
+
 		
 		int port = Integer.valueOf(properties.getProperty("SERVER_PORT","9090"));
 		System.out.println("service port: "+port);	

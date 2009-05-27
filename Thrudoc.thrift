@@ -6,14 +6,16 @@ namespace ruby Thrudoc
 
 
 exception ThrudocException{}
-exception InvalidKeyException{}
 exception InvalidBucketException{}
+exception InvalidKeyException{}
 exception InvalidParametersException{}
 
 
 service Thrudoc
 {
-    set<string> getBuckets()                                         throws(1:ThrudocException ex1),
+	void         create_bucket(1: string bucket)                    throws(1:ThrudocException ex1),
+    void         delete_bucket(1: string bucket)                    throws(1:ThrudocException ex1),
+    set<string>  get_bucket_list()                                  throws(1:ThrudocException ex1),         
 
     i32          incr(1:string bucket, 2:string key, 3:i32 amount=1) throws(1:ThrudocException ex1, 2:InvalidBucketException ex2),
     i32          decr(1:string bucket, 2:string key, 3:i32 amount=1) throws(1:ThrudocException ex1, 2:InvalidBucketException ex2),

@@ -21,7 +21,11 @@ public class Thrudoc {
 
   public interface Iface {
 
-    public Set<String> getBuckets() throws ThrudocException, TException;
+    public void create_bucket(String bucket) throws ThrudocException, TException;
+
+    public void delete_bucket(String bucket) throws ThrudocException, TException;
+
+    public Set<String> get_bucket_list() throws ThrudocException, TException;
 
     public int incr(String bucket, String key, int amount) throws ThrudocException, InvalidBucketException, TException;
 
@@ -86,22 +90,23 @@ public class Thrudoc {
       return this.oprot_;
     }
 
-    public Set<String> getBuckets() throws ThrudocException, TException
+    public void create_bucket(String bucket) throws ThrudocException, TException
     {
-      send_getBuckets();
-      return recv_getBuckets();
+      send_create_bucket(bucket);
+      recv_create_bucket();
     }
 
-    public void send_getBuckets() throws TException
+    public void send_create_bucket(String bucket) throws TException
     {
-      oprot_.writeMessageBegin(new TMessage("getBuckets", TMessageType.CALL, seqid_));
-      getBuckets_args args = new getBuckets_args();
+      oprot_.writeMessageBegin(new TMessage("create_bucket", TMessageType.CALL, seqid_));
+      create_bucket_args args = new create_bucket_args();
+      args.bucket = bucket;
       args.write(oprot_);
       oprot_.writeMessageEnd();
       oprot_.getTransport().flush();
     }
 
-    public Set<String> recv_getBuckets() throws ThrudocException, TException
+    public void recv_create_bucket() throws ThrudocException, TException
     {
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
@@ -109,7 +114,72 @@ public class Thrudoc {
         iprot_.readMessageEnd();
         throw x;
       }
-      getBuckets_result result = new getBuckets_result();
+      create_bucket_result result = new create_bucket_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      if (result.ex1 != null) {
+        throw result.ex1;
+      }
+      return;
+    }
+
+    public void delete_bucket(String bucket) throws ThrudocException, TException
+    {
+      send_delete_bucket(bucket);
+      recv_delete_bucket();
+    }
+
+    public void send_delete_bucket(String bucket) throws TException
+    {
+      oprot_.writeMessageBegin(new TMessage("delete_bucket", TMessageType.CALL, seqid_));
+      delete_bucket_args args = new delete_bucket_args();
+      args.bucket = bucket;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+    }
+
+    public void recv_delete_bucket() throws ThrudocException, TException
+    {
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      delete_bucket_result result = new delete_bucket_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      if (result.ex1 != null) {
+        throw result.ex1;
+      }
+      return;
+    }
+
+    public Set<String> get_bucket_list() throws ThrudocException, TException
+    {
+      send_get_bucket_list();
+      return recv_get_bucket_list();
+    }
+
+    public void send_get_bucket_list() throws TException
+    {
+      oprot_.writeMessageBegin(new TMessage("get_bucket_list", TMessageType.CALL, seqid_));
+      get_bucket_list_args args = new get_bucket_list_args();
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+    }
+
+    public Set<String> recv_get_bucket_list() throws ThrudocException, TException
+    {
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      get_bucket_list_result result = new get_bucket_list_result();
       result.read(iprot_);
       iprot_.readMessageEnd();
       if (result.isSetSuccess()) {
@@ -118,7 +188,7 @@ public class Thrudoc {
       if (result.ex1 != null) {
         throw result.ex1;
       }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "getBuckets failed: unknown result");
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "get_bucket_list failed: unknown result");
     }
 
     public int incr(String bucket, String key, int amount) throws ThrudocException, InvalidBucketException, TException
@@ -802,7 +872,9 @@ public class Thrudoc {
     public Processor(Iface iface)
     {
       iface_ = iface;
-      processMap_.put("getBuckets", new getBuckets());
+      processMap_.put("create_bucket", new create_bucket());
+      processMap_.put("delete_bucket", new delete_bucket());
+      processMap_.put("get_bucket_list", new get_bucket_list());
       processMap_.put("incr", new incr());
       processMap_.put("decr", new decr());
       processMap_.put("put", new put());
@@ -847,19 +919,59 @@ public class Thrudoc {
       return true;
     }
 
-    private class getBuckets implements ProcessFunction {
+    private class create_bucket implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
-        getBuckets_args args = new getBuckets_args();
+        create_bucket_args args = new create_bucket_args();
         args.read(iprot);
         iprot.readMessageEnd();
-        getBuckets_result result = new getBuckets_result();
+        create_bucket_result result = new create_bucket_result();
         try {
-          result.success = iface_.getBuckets();
+          iface_.create_bucket(args.bucket);
         } catch (ThrudocException ex1) {
           result.ex1 = ex1;
         }
-        oprot.writeMessageBegin(new TMessage("getBuckets", TMessageType.REPLY, seqid));
+        oprot.writeMessageBegin(new TMessage("create_bucket", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+      }
+
+    }
+
+    private class delete_bucket implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
+      {
+        delete_bucket_args args = new delete_bucket_args();
+        args.read(iprot);
+        iprot.readMessageEnd();
+        delete_bucket_result result = new delete_bucket_result();
+        try {
+          iface_.delete_bucket(args.bucket);
+        } catch (ThrudocException ex1) {
+          result.ex1 = ex1;
+        }
+        oprot.writeMessageBegin(new TMessage("delete_bucket", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+      }
+
+    }
+
+    private class get_bucket_list implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
+      {
+        get_bucket_list_args args = new get_bucket_list_args();
+        args.read(iprot);
+        iprot.readMessageEnd();
+        get_bucket_list_result result = new get_bucket_list_result();
+        try {
+          result.success = iface_.get_bucket_list();
+        } catch (ThrudocException ex1) {
+          result.ex1 = ex1;
+        }
+        oprot.writeMessageBegin(new TMessage("get_bucket_list", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
@@ -1246,28 +1358,824 @@ public class Thrudoc {
 
   }
 
-  public static class getBuckets_args implements TBase, java.io.Serializable, Cloneable   {
-    private static final TStruct STRUCT_DESC = new TStruct("getBuckets_args");
+  public static class create_bucket_args implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("create_bucket_args");
+    private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
+
+    public String bucket;
+    public static final int BUCKET = 1;
+
+    private final Isset __isset = new Isset();
+    private static final class Isset implements java.io.Serializable {
+    }
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
-      FieldMetaData.addStructMetaDataMap(getBuckets_args.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(create_bucket_args.class, metaDataMap);
     }
 
-    public getBuckets_args() {
+    public create_bucket_args() {
+    }
+
+    public create_bucket_args(
+      String bucket)
+    {
+      this();
+      this.bucket = bucket;
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public getBuckets_args(getBuckets_args other) {
+    public create_bucket_args(create_bucket_args other) {
+      if (other.isSetBucket()) {
+        this.bucket = other.bucket;
+      }
     }
 
     @Override
-    public getBuckets_args clone() {
-      return new getBuckets_args(this);
+    public create_bucket_args clone() {
+      return new create_bucket_args(this);
+    }
+
+    public String getBucket() {
+      return this.bucket;
+    }
+
+    public void setBucket(String bucket) {
+      this.bucket = bucket;
+    }
+
+    public void unsetBucket() {
+      this.bucket = null;
+    }
+
+    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    public boolean isSetBucket() {
+      return this.bucket != null;
+    }
+
+    public void setBucketIsSet(boolean value) {
+      if (!value) {
+        this.bucket = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case BUCKET:
+        if (value == null) {
+          unsetBucket();
+        } else {
+          setBucket((String)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case BUCKET:
+        return getBucket();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case BUCKET:
+        return isSetBucket();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof create_bucket_args)
+        return this.equals((create_bucket_args)that);
+      return false;
+    }
+
+    public boolean equals(create_bucket_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_bucket = true && this.isSetBucket();
+      boolean that_present_bucket = true && that.isSetBucket();
+      if (this_present_bucket || that_present_bucket) {
+        if (!(this_present_bucket && that_present_bucket))
+          return false;
+        if (!this.bucket.equals(that.bucket))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin();
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case BUCKET:
+            if (field.type == TType.STRING) {
+              this.bucket = iprot.readString();
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.bucket != null) {
+        oprot.writeFieldBegin(BUCKET_FIELD_DESC);
+        oprot.writeString(this.bucket);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("create_bucket_args(");
+      boolean first = true;
+
+      sb.append("bucket:");
+      if (this.bucket == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.bucket);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class create_bucket_result implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("create_bucket_result");
+    private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
+
+    public ThrudocException ex1;
+    public static final int EX1 = 1;
+
+    private final Isset __isset = new Isset();
+    private static final class Isset implements java.io.Serializable {
+    }
+
+    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRUCT)));
+    }});
+
+    static {
+      FieldMetaData.addStructMetaDataMap(create_bucket_result.class, metaDataMap);
+    }
+
+    public create_bucket_result() {
+    }
+
+    public create_bucket_result(
+      ThrudocException ex1)
+    {
+      this();
+      this.ex1 = ex1;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public create_bucket_result(create_bucket_result other) {
+      if (other.isSetEx1()) {
+        this.ex1 = new ThrudocException(other.ex1);
+      }
+    }
+
+    @Override
+    public create_bucket_result clone() {
+      return new create_bucket_result(this);
+    }
+
+    public ThrudocException getEx1() {
+      return this.ex1;
+    }
+
+    public void setEx1(ThrudocException ex1) {
+      this.ex1 = ex1;
+    }
+
+    public void unsetEx1() {
+      this.ex1 = null;
+    }
+
+    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    public boolean isSetEx1() {
+      return this.ex1 != null;
+    }
+
+    public void setEx1IsSet(boolean value) {
+      if (!value) {
+        this.ex1 = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case EX1:
+        if (value == null) {
+          unsetEx1();
+        } else {
+          setEx1((ThrudocException)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case EX1:
+        return getEx1();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case EX1:
+        return isSetEx1();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof create_bucket_result)
+        return this.equals((create_bucket_result)that);
+      return false;
+    }
+
+    public boolean equals(create_bucket_result that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_ex1 = true && this.isSetEx1();
+      boolean that_present_ex1 = true && that.isSetEx1();
+      if (this_present_ex1 || that_present_ex1) {
+        if (!(this_present_ex1 && that_present_ex1))
+          return false;
+        if (!this.ex1.equals(that.ex1))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin();
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case EX1:
+            if (field.type == TType.STRUCT) {
+              this.ex1 = new ThrudocException();
+              this.ex1.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetEx1()) {
+        oprot.writeFieldBegin(EX1_FIELD_DESC);
+        this.ex1.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("create_bucket_result(");
+      boolean first = true;
+
+      sb.append("ex1:");
+      if (this.ex1 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex1);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class delete_bucket_args implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("delete_bucket_args");
+    private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
+
+    public String bucket;
+    public static final int BUCKET = 1;
+
+    private final Isset __isset = new Isset();
+    private static final class Isset implements java.io.Serializable {
+    }
+
+    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
+    }});
+
+    static {
+      FieldMetaData.addStructMetaDataMap(delete_bucket_args.class, metaDataMap);
+    }
+
+    public delete_bucket_args() {
+    }
+
+    public delete_bucket_args(
+      String bucket)
+    {
+      this();
+      this.bucket = bucket;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public delete_bucket_args(delete_bucket_args other) {
+      if (other.isSetBucket()) {
+        this.bucket = other.bucket;
+      }
+    }
+
+    @Override
+    public delete_bucket_args clone() {
+      return new delete_bucket_args(this);
+    }
+
+    public String getBucket() {
+      return this.bucket;
+    }
+
+    public void setBucket(String bucket) {
+      this.bucket = bucket;
+    }
+
+    public void unsetBucket() {
+      this.bucket = null;
+    }
+
+    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    public boolean isSetBucket() {
+      return this.bucket != null;
+    }
+
+    public void setBucketIsSet(boolean value) {
+      if (!value) {
+        this.bucket = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case BUCKET:
+        if (value == null) {
+          unsetBucket();
+        } else {
+          setBucket((String)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case BUCKET:
+        return getBucket();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case BUCKET:
+        return isSetBucket();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof delete_bucket_args)
+        return this.equals((delete_bucket_args)that);
+      return false;
+    }
+
+    public boolean equals(delete_bucket_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_bucket = true && this.isSetBucket();
+      boolean that_present_bucket = true && that.isSetBucket();
+      if (this_present_bucket || that_present_bucket) {
+        if (!(this_present_bucket && that_present_bucket))
+          return false;
+        if (!this.bucket.equals(that.bucket))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin();
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case BUCKET:
+            if (field.type == TType.STRING) {
+              this.bucket = iprot.readString();
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.bucket != null) {
+        oprot.writeFieldBegin(BUCKET_FIELD_DESC);
+        oprot.writeString(this.bucket);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("delete_bucket_args(");
+      boolean first = true;
+
+      sb.append("bucket:");
+      if (this.bucket == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.bucket);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class delete_bucket_result implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("delete_bucket_result");
+    private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
+
+    public ThrudocException ex1;
+    public static final int EX1 = 1;
+
+    private final Isset __isset = new Isset();
+    private static final class Isset implements java.io.Serializable {
+    }
+
+    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRUCT)));
+    }});
+
+    static {
+      FieldMetaData.addStructMetaDataMap(delete_bucket_result.class, metaDataMap);
+    }
+
+    public delete_bucket_result() {
+    }
+
+    public delete_bucket_result(
+      ThrudocException ex1)
+    {
+      this();
+      this.ex1 = ex1;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public delete_bucket_result(delete_bucket_result other) {
+      if (other.isSetEx1()) {
+        this.ex1 = new ThrudocException(other.ex1);
+      }
+    }
+
+    @Override
+    public delete_bucket_result clone() {
+      return new delete_bucket_result(this);
+    }
+
+    public ThrudocException getEx1() {
+      return this.ex1;
+    }
+
+    public void setEx1(ThrudocException ex1) {
+      this.ex1 = ex1;
+    }
+
+    public void unsetEx1() {
+      this.ex1 = null;
+    }
+
+    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    public boolean isSetEx1() {
+      return this.ex1 != null;
+    }
+
+    public void setEx1IsSet(boolean value) {
+      if (!value) {
+        this.ex1 = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case EX1:
+        if (value == null) {
+          unsetEx1();
+        } else {
+          setEx1((ThrudocException)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case EX1:
+        return getEx1();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case EX1:
+        return isSetEx1();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof delete_bucket_result)
+        return this.equals((delete_bucket_result)that);
+      return false;
+    }
+
+    public boolean equals(delete_bucket_result that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_ex1 = true && this.isSetEx1();
+      boolean that_present_ex1 = true && that.isSetEx1();
+      if (this_present_ex1 || that_present_ex1) {
+        if (!(this_present_ex1 && that_present_ex1))
+          return false;
+        if (!this.ex1.equals(that.ex1))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin();
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case EX1:
+            if (field.type == TType.STRUCT) {
+              this.ex1 = new ThrudocException();
+              this.ex1.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetEx1()) {
+        oprot.writeFieldBegin(EX1_FIELD_DESC);
+        this.ex1.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("delete_bucket_result(");
+      boolean first = true;
+
+      sb.append("ex1:");
+      if (this.ex1 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.ex1);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class get_bucket_list_args implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("get_bucket_list_args");
+
+    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+    }});
+
+    static {
+      FieldMetaData.addStructMetaDataMap(get_bucket_list_args.class, metaDataMap);
+    }
+
+    public get_bucket_list_args() {
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public get_bucket_list_args(get_bucket_list_args other) {
+    }
+
+    @Override
+    public get_bucket_list_args clone() {
+      return new get_bucket_list_args(this);
     }
 
     public void setFieldValue(int fieldID, Object value) {
@@ -1296,12 +2204,12 @@ public class Thrudoc {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof getBuckets_args)
-        return this.equals((getBuckets_args)that);
+      if (that instanceof get_bucket_list_args)
+        return this.equals((get_bucket_list_args)that);
       return false;
     }
 
-    public boolean equals(getBuckets_args that) {
+    public boolean equals(get_bucket_list_args that) {
       if (that == null)
         return false;
 
@@ -1347,7 +2255,7 @@ public class Thrudoc {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("getBuckets_args(");
+      StringBuilder sb = new StringBuilder("get_bucket_list_args(");
       boolean first = true;
 
       sb.append(")");
@@ -1361,8 +2269,8 @@ public class Thrudoc {
 
   }
 
-  public static class getBuckets_result implements TBase, java.io.Serializable, Cloneable   {
-    private static final TStruct STRUCT_DESC = new TStruct("getBuckets_result");
+  public static class get_bucket_list_result implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("get_bucket_list_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.SET, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
 
@@ -1384,13 +2292,13 @@ public class Thrudoc {
     }});
 
     static {
-      FieldMetaData.addStructMetaDataMap(getBuckets_result.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(get_bucket_list_result.class, metaDataMap);
     }
 
-    public getBuckets_result() {
+    public get_bucket_list_result() {
     }
 
-    public getBuckets_result(
+    public get_bucket_list_result(
       Set<String> success,
       ThrudocException ex1)
     {
@@ -1402,7 +2310,7 @@ public class Thrudoc {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public getBuckets_result(getBuckets_result other) {
+    public get_bucket_list_result(get_bucket_list_result other) {
       if (other.isSetSuccess()) {
         Set<String> __this__success = new HashSet<String>();
         for (String other_element : other.success) {
@@ -1416,8 +2324,8 @@ public class Thrudoc {
     }
 
     @Override
-    public getBuckets_result clone() {
-      return new getBuckets_result(this);
+    public get_bucket_list_result clone() {
+      return new get_bucket_list_result(this);
     }
 
     public int getSuccessSize() {
@@ -1533,12 +2441,12 @@ public class Thrudoc {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof getBuckets_result)
-        return this.equals((getBuckets_result)that);
+      if (that instanceof get_bucket_list_result)
+        return this.equals((get_bucket_list_result)that);
       return false;
     }
 
-    public boolean equals(getBuckets_result that) {
+    public boolean equals(get_bucket_list_result that) {
       if (that == null)
         return false;
 
@@ -1641,7 +2549,7 @@ public class Thrudoc {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("getBuckets_result(");
+      StringBuilder sb = new StringBuilder("get_bucket_list_result(");
       boolean first = true;
 
       sb.append("success:");
