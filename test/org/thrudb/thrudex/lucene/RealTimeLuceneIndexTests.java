@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 import org.apache.thrift.TException;
 import org.thrudb.thrudex.Document;
 import org.thrudb.thrudex.Field;
-import org.thrudb.thrudex.FieldType;
+import org.thrudb.thrudex.Analyzer;
 import org.thrudb.thrudex.SearchQuery;
 import org.thrudb.thrudex.SearchResponse;
 import org.thrudb.thrudex.ThrudexException;
@@ -47,14 +47,14 @@ public class RealTimeLuceneIndexTests extends TestCase {
 
 		try {
 			Document d1 = this.newDocument("doc1");
-			this.addField(d1, "title", "title number 1", FieldType.TEXT);
-			this.addField(d1, "category", "science_fiction", FieldType.KEYWORD);
+			this.addField(d1, "title", "title number 1", true, Analyzer.STANDARD);
+			this.addField(d1, "category", "science_fiction", true, Analyzer.KEYWORD);
 
 			index.put(d1);
 
 			SearchQuery search = new SearchQuery();
 			search.setIndex(INDEX_NAME);
-			search.addToKeyword_fields("category");
+			search.putToFieldAnalyzers("category", Analyzer.KEYWORD);
 			
 			search.setQuery("category:\"science_fiction\"");
 			
@@ -78,12 +78,12 @@ public class RealTimeLuceneIndexTests extends TestCase {
 		return d;
 	}
 
-	private void addField(Document doc, String key, String value, int type) {
+	private void addField(Document doc, String key, String value, boolean store, int analyzer) {
 		Field field = new Field();
 		field.setKey(key);
 		field.setValue(value);
-		field.setType(type);
-
+		field.setStore(store);
+		field.setAnalyzer(analyzer);
 		doc.getFields().add(field);
 	}
 

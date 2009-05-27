@@ -71,13 +71,13 @@ public class SimpleLuceneIndex implements LuceneIndex {
 		searcher = new IndexSearcher(reader);
 	}
 	
-	public void put(String key, Document document) throws ThrudexException{
+	public void put(String key, Document document, Analyzer analyzer) throws ThrudexException{
 		
 		Term term = new Term(DOCUMENT_KEY,key);
 		
 		try{
 			
-			writer.updateDocument(term, document);
+			writer.updateDocument(term, document, analyzer);
 		
 			hasWrite.set(true);
 			
@@ -99,7 +99,7 @@ public class SimpleLuceneIndex implements LuceneIndex {
 		}
 	}
 
-	public SearchResponse search(SearchQuery query) throws ThrudexException {
+	public SearchResponse search(SearchQuery query, Analyzer analyzer) throws ThrudexException {
 		
 		if(!query.isSetQuery() || query.query.trim().equals(""))
 			throw new ThrudexExceptionImpl("Empty Query");

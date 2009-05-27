@@ -303,14 +303,14 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
         case ELEMENTS:
           if (field.type == TType.LIST) {
             {
-              TList _list8 = iprot.readListBegin();
-              this.elements = new ArrayList<Element>(_list8.size);
-              for (int _i9 = 0; _i9 < _list8.size; ++_i9)
+              TList _list9 = iprot.readListBegin();
+              this.elements = new ArrayList<Element>(_list9.size);
+              for (int _i10 = 0; _i10 < _list9.size; ++_i10)
               {
-                Element _elem10;
-                _elem10 = new Element();
-                _elem10.read(iprot);
-                this.elements.add(_elem10);
+                Element _elem11;
+                _elem11 = new Element();
+                _elem11.read(iprot);
+                this.elements.add(_elem11);
               }
               iprot.readListEnd();
             }
@@ -350,8 +350,8 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(ELEMENTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.elements.size()));
-        for (Element _iter11 : this.elements)        {
-          _iter11.write(oprot);
+        for (Element _iter12 : this.elements)        {
+          _iter12.write(oprot);
         }
         oprot.writeListEnd();
       }

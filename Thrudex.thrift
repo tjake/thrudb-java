@@ -11,11 +11,13 @@ exception ThrudexException
         1: string what
 }
 
-enum FieldType
+enum Analyzer
 {
-        KEYWORD  = 1,  #Fixed string, not analyzed
-        TEXT     = 2,  #Analyzed text, Stored
-        UNSTORED = 3   #Analyzed text
+        STANDARD = 1,  # org.apache.lucene.analysis.standard.StandardAnalyzer
+        KEYWORD = 2,   # org.apache.lucene.analysis.KeywordAnalyzer
+        SIMPLE = 3,    # org.apache.lucene.analysis.SimpleAnalyzer
+        STOP = 4,      # org.apache.lucene.analysis.StopAnalyzer
+        WHITESPACE = 5 # org.apache.lucene.analysis.WhitespaceAnalyzer
 }
 
 struct Field
@@ -23,9 +25,10 @@ struct Field
         1: string    key,
         2: string    value,
 
-        3: FieldType type       = TEXT,
+        3: bool      store      = 1,
         4: i32       weight     = 1,
-        5: bool      sortable   = 0
+        5: bool      sortable   = 0,
+        6: Analyzer  analyzer = STANDARD
 }
 
 struct Document
@@ -46,18 +49,19 @@ struct Element
 
 struct SearchQuery
 {
-        1: string  index,
+        1: string                 index,
 
-        2: string  query,
-        3: string  sortby,
+        2: string                 query,
+        3: string                 sortby,
 
-        4: i32     limit     = 10,
-        5: i32     offset    = 0,
+        4: i32                    limit     = 10,
+        5: i32                    offset    = 0,
 
-        6: bool    desc      = 0,
-        7: bool    randomize = 0,
-        8: bool    payload   = 0,
-        9: list<string> keyword_fields;   #flag fields that should not be tokenized
+        6: bool                   desc      = 0,
+        7: bool                   randomize = 0,
+        8: bool                   payload   = 0,
+        9: Analyzer               defaultAnalyzer = STANDARD,
+        10: map<string, Analyzer> fieldAnalyzers = {}
 }
 
 struct SearchResponse

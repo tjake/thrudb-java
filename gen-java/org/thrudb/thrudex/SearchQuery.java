@@ -27,7 +27,8 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
   private static final TField DESC_FIELD_DESC = new TField("desc", TType.BOOL, (short)6);
   private static final TField RANDOMIZE_FIELD_DESC = new TField("randomize", TType.BOOL, (short)7);
   private static final TField PAYLOAD_FIELD_DESC = new TField("payload", TType.BOOL, (short)8);
-  private static final TField KEYWORD_FIELDS_FIELD_DESC = new TField("keyword_fields", TType.LIST, (short)9);
+  private static final TField DEFAULT_ANALYZER_FIELD_DESC = new TField("defaultAnalyzer", TType.I32, (short)9);
+  private static final TField FIELD_ANALYZERS_FIELD_DESC = new TField("fieldAnalyzers", TType.MAP, (short)10);
 
   public String index;
   public static final int INDEX = 1;
@@ -45,8 +46,10 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
   public static final int RANDOMIZE = 7;
   public boolean payload;
   public static final int PAYLOAD = 8;
-  public List<String> keyword_fields;
-  public static final int KEYWORD_FIELDS = 9;
+  public int defaultAnalyzer;
+  public static final int DEFAULTANALYZER = 9;
+  public Map<String,Integer> fieldAnalyzers;
+  public static final int FIELDANALYZERS = 10;
 
   private final Isset __isset = new Isset();
   private static final class Isset implements java.io.Serializable {
@@ -55,6 +58,7 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     public boolean desc = false;
     public boolean randomize = false;
     public boolean payload = false;
+    public boolean defaultAnalyzer = false;
   }
 
   public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
@@ -74,9 +78,12 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
         new FieldValueMetaData(TType.BOOL)));
     put(PAYLOAD, new FieldMetaData("payload", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
-    put(KEYWORD_FIELDS, new FieldMetaData("keyword_fields", TFieldRequirementType.DEFAULT, 
-        new ListMetaData(TType.LIST, 
-            new FieldValueMetaData(TType.STRING))));
+    put(DEFAULTANALYZER, new FieldMetaData("defaultAnalyzer", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.I32)));
+    put(FIELDANALYZERS, new FieldMetaData("fieldAnalyzers", TFieldRequirementType.DEFAULT, 
+        new MapMetaData(TType.MAP, 
+            new FieldValueMetaData(TType.STRING), 
+            new FieldValueMetaData(TType.I32))));
   }});
 
   static {
@@ -94,6 +101,10 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
 
     this.payload = false;
 
+    this.defaultAnalyzer = 1;
+
+    this.fieldAnalyzers = new HashMap<String,Integer>();
+
   }
 
   public SearchQuery(
@@ -105,7 +116,8 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     boolean desc,
     boolean randomize,
     boolean payload,
-    List<String> keyword_fields)
+    int defaultAnalyzer,
+    Map<String,Integer> fieldAnalyzers)
   {
     this();
     this.index = index;
@@ -121,7 +133,9 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     this.__isset.randomize = true;
     this.payload = payload;
     this.__isset.payload = true;
-    this.keyword_fields = keyword_fields;
+    this.defaultAnalyzer = defaultAnalyzer;
+    this.__isset.defaultAnalyzer = true;
+    this.fieldAnalyzers = fieldAnalyzers;
   }
 
   /**
@@ -147,12 +161,22 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     this.randomize = other.randomize;
     __isset.payload = other.__isset.payload;
     this.payload = other.payload;
-    if (other.isSetKeyword_fields()) {
-      List<String> __this__keyword_fields = new ArrayList<String>();
-      for (String other_element : other.keyword_fields) {
-        __this__keyword_fields.add(other_element);
+    __isset.defaultAnalyzer = other.__isset.defaultAnalyzer;
+    this.defaultAnalyzer = other.defaultAnalyzer;
+    if (other.isSetFieldAnalyzers()) {
+      Map<String,Integer> __this__fieldAnalyzers = new HashMap<String,Integer>();
+      for (Map.Entry<String, Integer> other_element : other.fieldAnalyzers.entrySet()) {
+
+        String other_element_key = other_element.getKey();
+        Integer other_element_value = other_element.getValue();
+
+        String __this__fieldAnalyzers_copy_key = other_element_key;
+
+        Integer __this__fieldAnalyzers_copy_value = other_element_value;
+
+        __this__fieldAnalyzers.put(__this__fieldAnalyzers_copy_key, __this__fieldAnalyzers_copy_value);
       }
-      this.keyword_fields = __this__keyword_fields;
+      this.fieldAnalyzers = __this__fieldAnalyzers;
     }
   }
 
@@ -340,41 +364,59 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     this.__isset.payload = value;
   }
 
-  public int getKeyword_fieldsSize() {
-    return (this.keyword_fields == null) ? 0 : this.keyword_fields.size();
+  public int getDefaultAnalyzer() {
+    return this.defaultAnalyzer;
   }
 
-  public java.util.Iterator<String> getKeyword_fieldsIterator() {
-    return (this.keyword_fields == null) ? null : this.keyword_fields.iterator();
+  public void setDefaultAnalyzer(int defaultAnalyzer) {
+    this.defaultAnalyzer = defaultAnalyzer;
+    this.__isset.defaultAnalyzer = true;
   }
 
-  public void addToKeyword_fields(String elem) {
-    if (this.keyword_fields == null) {
-      this.keyword_fields = new ArrayList<String>();
+  public void unsetDefaultAnalyzer() {
+    this.__isset.defaultAnalyzer = false;
+  }
+
+  // Returns true if field defaultAnalyzer is set (has been asigned a value) and false otherwise
+  public boolean isSetDefaultAnalyzer() {
+    return this.__isset.defaultAnalyzer;
+  }
+
+  public void setDefaultAnalyzerIsSet(boolean value) {
+    this.__isset.defaultAnalyzer = value;
+  }
+
+  public int getFieldAnalyzersSize() {
+    return (this.fieldAnalyzers == null) ? 0 : this.fieldAnalyzers.size();
+  }
+
+  public void putToFieldAnalyzers(String key, int val) {
+    if (this.fieldAnalyzers == null) {
+      this.fieldAnalyzers = new HashMap<String,Integer>();
     }
-    this.keyword_fields.add(elem);
+    this.fieldAnalyzers.put(key, val);
   }
 
-  public List<String> getKeyword_fields() {
-    return this.keyword_fields;
+  public Map<String,Integer> getFieldAnalyzers() {
+    return this.fieldAnalyzers;
   }
 
-  public void setKeyword_fields(List<String> keyword_fields) {
-    this.keyword_fields = keyword_fields;
+  public void setFieldAnalyzers(Map<String,Integer> fieldAnalyzers) {
+    this.fieldAnalyzers = fieldAnalyzers;
   }
 
-  public void unsetKeyword_fields() {
-    this.keyword_fields = null;
+  public void unsetFieldAnalyzers() {
+    this.fieldAnalyzers = null;
   }
 
-  // Returns true if field keyword_fields is set (has been asigned a value) and false otherwise
-  public boolean isSetKeyword_fields() {
-    return this.keyword_fields != null;
+  // Returns true if field fieldAnalyzers is set (has been asigned a value) and false otherwise
+  public boolean isSetFieldAnalyzers() {
+    return this.fieldAnalyzers != null;
   }
 
-  public void setKeyword_fieldsIsSet(boolean value) {
+  public void setFieldAnalyzersIsSet(boolean value) {
     if (!value) {
-      this.keyword_fields = null;
+      this.fieldAnalyzers = null;
     }
   }
 
@@ -444,11 +486,19 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
       }
       break;
 
-    case KEYWORD_FIELDS:
+    case DEFAULTANALYZER:
       if (value == null) {
-        unsetKeyword_fields();
+        unsetDefaultAnalyzer();
       } else {
-        setKeyword_fields((List<String>)value);
+        setDefaultAnalyzer((Integer)value);
+      }
+      break;
+
+    case FIELDANALYZERS:
+      if (value == null) {
+        unsetFieldAnalyzers();
+      } else {
+        setFieldAnalyzers((Map<String,Integer>)value);
       }
       break;
 
@@ -483,8 +533,11 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     case PAYLOAD:
       return new Boolean(isPayload());
 
-    case KEYWORD_FIELDS:
-      return getKeyword_fields();
+    case DEFAULTANALYZER:
+      return getDefaultAnalyzer();
+
+    case FIELDANALYZERS:
+      return getFieldAnalyzers();
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -510,8 +563,10 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
       return isSetRandomize();
     case PAYLOAD:
       return isSetPayload();
-    case KEYWORD_FIELDS:
-      return isSetKeyword_fields();
+    case DEFAULTANALYZER:
+      return isSetDefaultAnalyzer();
+    case FIELDANALYZERS:
+      return isSetFieldAnalyzers();
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -602,12 +657,21 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
         return false;
     }
 
-    boolean this_present_keyword_fields = true && this.isSetKeyword_fields();
-    boolean that_present_keyword_fields = true && that.isSetKeyword_fields();
-    if (this_present_keyword_fields || that_present_keyword_fields) {
-      if (!(this_present_keyword_fields && that_present_keyword_fields))
+    boolean this_present_defaultAnalyzer = true;
+    boolean that_present_defaultAnalyzer = true;
+    if (this_present_defaultAnalyzer || that_present_defaultAnalyzer) {
+      if (!(this_present_defaultAnalyzer && that_present_defaultAnalyzer))
         return false;
-      if (!this.keyword_fields.equals(that.keyword_fields))
+      if (this.defaultAnalyzer != that.defaultAnalyzer)
+        return false;
+    }
+
+    boolean this_present_fieldAnalyzers = true && this.isSetFieldAnalyzers();
+    boolean that_present_fieldAnalyzers = true && that.isSetFieldAnalyzers();
+    if (this_present_fieldAnalyzers || that_present_fieldAnalyzers) {
+      if (!(this_present_fieldAnalyzers && that_present_fieldAnalyzers))
+        return false;
+      if (!this.fieldAnalyzers.equals(that.fieldAnalyzers))
         return false;
     }
 
@@ -691,18 +755,28 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case KEYWORD_FIELDS:
-          if (field.type == TType.LIST) {
+        case DEFAULTANALYZER:
+          if (field.type == TType.I32) {
+            this.defaultAnalyzer = iprot.readI32();
+            this.__isset.defaultAnalyzer = true;
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
+        case FIELDANALYZERS:
+          if (field.type == TType.MAP) {
             {
-              TList _list4 = iprot.readListBegin();
-              this.keyword_fields = new ArrayList<String>(_list4.size);
-              for (int _i5 = 0; _i5 < _list4.size; ++_i5)
+              TMap _map4 = iprot.readMapBegin();
+              this.fieldAnalyzers = new HashMap<String,Integer>(2*_map4.size);
+              for (int _i5 = 0; _i5 < _map4.size; ++_i5)
               {
-                String _elem6;
-                _elem6 = iprot.readString();
-                this.keyword_fields.add(_elem6);
+                String _key6;
+                int _val7;
+                _key6 = iprot.readString();
+                _val7 = iprot.readI32();
+                this.fieldAnalyzers.put(_key6, _val7);
               }
-              iprot.readListEnd();
+              iprot.readMapEnd();
             }
           } else { 
             TProtocolUtil.skip(iprot, field.type);
@@ -755,14 +829,18 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     oprot.writeFieldBegin(PAYLOAD_FIELD_DESC);
     oprot.writeBool(this.payload);
     oprot.writeFieldEnd();
-    if (this.keyword_fields != null) {
-      oprot.writeFieldBegin(KEYWORD_FIELDS_FIELD_DESC);
+    oprot.writeFieldBegin(DEFAULT_ANALYZER_FIELD_DESC);
+    oprot.writeI32(this.defaultAnalyzer);
+    oprot.writeFieldEnd();
+    if (this.fieldAnalyzers != null) {
+      oprot.writeFieldBegin(FIELD_ANALYZERS_FIELD_DESC);
       {
-        oprot.writeListBegin(new TList(TType.STRING, this.keyword_fields.size()));
-        for (String _iter7 : this.keyword_fields)        {
-          oprot.writeString(_iter7);
+        oprot.writeMapBegin(new TMap(TType.STRING, TType.I32, this.fieldAnalyzers.size()));
+        for (Map.Entry<String, Integer> _iter8 : this.fieldAnalyzers.entrySet())        {
+          oprot.writeString(_iter8.getKey());
+          oprot.writeI32(_iter8.getValue());
         }
-        oprot.writeListEnd();
+        oprot.writeMapEnd();
       }
       oprot.writeFieldEnd();
     }
@@ -819,11 +897,23 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     sb.append(this.payload);
     first = false;
     if (!first) sb.append(", ");
-    sb.append("keyword_fields:");
-    if (this.keyword_fields == null) {
+    sb.append("defaultAnalyzer:");
+    String defaultAnalyzer_name = Analyzer.VALUES_TO_NAMES.get(this.defaultAnalyzer);
+    if (defaultAnalyzer_name != null) {
+      sb.append(defaultAnalyzer_name);
+      sb.append(" (");
+    }
+    sb.append(this.defaultAnalyzer);
+    if (defaultAnalyzer_name != null) {
+      sb.append(")");
+    }
+    first = false;
+    if (!first) sb.append(", ");
+    sb.append("fieldAnalyzers:");
+    if (this.fieldAnalyzers == null) {
       sb.append("null");
     } else {
-      sb.append(this.keyword_fields);
+      sb.append(this.fieldAnalyzers);
     }
     first = false;
     sb.append(")");
@@ -833,6 +923,9 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
   public void validate() throws TException {
     // check for required fields
     // check that fields of type enum have valid values
+    if (isSetDefaultAnalyzer() && !Analyzer.VALID_VALUES.contains(defaultAnalyzer)){
+      throw new TProtocolException("The field 'defaultAnalyzer' has been assigned the invalid value " + defaultAnalyzer);
+    }
   }
 
 }

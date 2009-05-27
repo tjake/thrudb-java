@@ -11,9 +11,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.KeywordAnalyzer;
-import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
-import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
@@ -40,7 +37,6 @@ import org.thrudb.thrudex.ThrudexExceptionImpl;
 public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 
 	Analyzer      analyzer = new StandardAnalyzer();
-	Analyzer      kwAnalyzer = new KeywordAnalyzer();
 	
 	IndexWriter   ramWriter;
 	IndexReader   ramReader;
@@ -66,7 +62,7 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 	Logger logger = Logger.getLogger(getClass());
 	
 	
-	RealTimeLuceneIndex(String indexRoot, String indexName) throws IOException {
+	RealTimeLuceneIndex(String indexRoot, String indexName) throws IOException, ThrudexException {
 		File rootFile = new File(indexRoot);
 		
 		if(!rootFile.isDirectory())
@@ -108,13 +104,12 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 		
 	}
 	
-	public synchronized void put(String key, Document document) throws ThrudexException{
+	public synchronized void put(String key, Document document, Analyzer analyzer) throws ThrudexException{
 		
 		Term term = new Term(DOCUMENT_KEY,key);
 		
 		try{
-			
-			ramWriter.updateDocument(term, document,analyzer);
+			ramWriter.updateDocument(term, document, analyzer);
 	
 			if(diskFilter.hideTerm(term))
 				deletedDocuments.add(term);
@@ -143,7 +138,7 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 		}
 	}
 
-	public SearchResponse search(SearchQuery query) throws ThrudexException {
+	public SearchResponse search(SearchQuery query, Analyzer analyzer) throws ThrudexException {
 		if(!query.isSetQuery() || query.query.trim().equals(""))
 			throw new ThrudexExceptionImpl("Empty Query");
 		
@@ -197,14 +192,14 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 			
 			}
 			
-			PerFieldAnalyzerWrapper qAnalyzer = new PerFieldAnalyzerWrapper(analyzer);
-			QueryParser    queryParser = new QueryParser(DOCUMENT_KEY,qAnalyzer);
-			
-			//add any keyword fields
-			if(query.isSetKeyword_fields()){			
-				for(String field : query.keyword_fields)
-					qAnalyzer.addAnalyzer(field, kwAnalyzer);
+/*			Analyzer defaultAnalyzer = getAnalyzer(query.getDefaultAnalyzer());
+			PerFieldAnalyzerWrapper qAnalyzer = new PerFieldAnalyzerWrapper(defaultAnalyzer);
+			if(query.isSetFieldAnalyzers()){
+				for(String field : query.fieldAnalyzers.keySet())
+					qAnalyzer.addAnalyzer(field, getAnalyzer(query.fieldAnalyzers.get(field)));
 			}
+*/			
+			QueryParser    queryParser = new QueryParser(DOCUMENT_KEY, analyzer);
 			
 			//parse query
 			//TODO: Cache?
@@ -378,6 +373,4 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 			throw new ThrudexException(e.toString());
 		}*/
 	}
-
-
 }
