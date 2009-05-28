@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
-import org.thrudb.thrudoc.InvalidKeyException;
 import org.thrudb.thrudoc.ThrudocBackend;
 
 import tokyocabinet.BDB;
@@ -69,14 +68,10 @@ public class TokyoCabinetDB implements ThrudocBackend {
 	 * 
 	 * @param key the key name
 	 * @return the value for this key (binary)
-	 * @throws InvalidKeyException
 	 */
-	public byte[] get(String key) throws InvalidKeyException {
+	public byte[] get(String key) {
 		
 		byte[] value = bdb.get(key.getBytes());
-		
-		if(value == null)
-			throw new InvalidKeyException();
 		
 		return value;
 	}

@@ -33,7 +33,7 @@ public class Thrudoc {
 
     public void put(String bucket, String key, byte[] value) throws ThrudocException, InvalidBucketException, TException;
 
-    public byte[] get(String bucket, String key) throws ThrudocException, InvalidBucketException, InvalidKeyException, TException;
+    public byte[] get(String bucket, String key) throws ThrudocException, InvalidBucketException, TException;
 
     public void remove(String bucket, String key) throws ThrudocException, InvalidBucketException, TException;
 
@@ -311,7 +311,7 @@ public class Thrudoc {
       return;
     }
 
-    public byte[] get(String bucket, String key) throws ThrudocException, InvalidBucketException, InvalidKeyException, TException
+    public byte[] get(String bucket, String key) throws ThrudocException, InvalidBucketException, TException
     {
       send_get(bucket, key);
       return recv_get();
@@ -328,7 +328,7 @@ public class Thrudoc {
       oprot_.getTransport().flush();
     }
 
-    public byte[] recv_get() throws ThrudocException, InvalidBucketException, InvalidKeyException, TException
+    public byte[] recv_get() throws ThrudocException, InvalidBucketException, TException
     {
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
@@ -347,9 +347,6 @@ public class Thrudoc {
       }
       if (result.ex2 != null) {
         throw result.ex2;
-      }
-      if (result.ex3 != null) {
-        throw result.ex3;
       }
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "get failed: unknown result");
     }
@@ -1060,8 +1057,6 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
-        } catch (InvalidKeyException ex3) {
-          result.ex3 = ex3;
         }
         oprot.writeMessageBegin(new TMessage("get", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -4868,7 +4863,6 @@ public class Thrudoc {
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
-    private static final TField EX3_FIELD_DESC = new TField("ex3", TType.STRUCT, (short)3);
 
     public byte[] success;
     public static final int SUCCESS = 0;
@@ -4876,8 +4870,6 @@ public class Thrudoc {
     public static final int EX1 = 1;
     public InvalidBucketException ex2;
     public static final int EX2 = 2;
-    public InvalidKeyException ex3;
-    public static final int EX3 = 3;
 
     private final Isset __isset = new Isset();
     private static final class Isset implements java.io.Serializable {
@@ -4889,8 +4881,6 @@ public class Thrudoc {
       put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
       put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
-          new FieldValueMetaData(TType.STRUCT)));
-      put(EX3, new FieldMetaData("ex3", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
@@ -4904,14 +4894,12 @@ public class Thrudoc {
     public get_result(
       byte[] success,
       ThrudocException ex1,
-      InvalidBucketException ex2,
-      InvalidKeyException ex3)
+      InvalidBucketException ex2)
     {
       this();
       this.success = success;
       this.ex1 = ex1;
       this.ex2 = ex2;
-      this.ex3 = ex3;
     }
 
     /**
@@ -4927,9 +4915,6 @@ public class Thrudoc {
       }
       if (other.isSetEx2()) {
         this.ex2 = new InvalidBucketException(other.ex2);
-      }
-      if (other.isSetEx3()) {
-        this.ex3 = new InvalidKeyException(other.ex3);
       }
     }
 
@@ -5007,29 +4992,6 @@ public class Thrudoc {
       }
     }
 
-    public InvalidKeyException getEx3() {
-      return this.ex3;
-    }
-
-    public void setEx3(InvalidKeyException ex3) {
-      this.ex3 = ex3;
-    }
-
-    public void unsetEx3() {
-      this.ex3 = null;
-    }
-
-    // Returns true if field ex3 is set (has been asigned a value) and false otherwise
-    public boolean isSetEx3() {
-      return this.ex3 != null;
-    }
-
-    public void setEx3IsSet(boolean value) {
-      if (!value) {
-        this.ex3 = null;
-      }
-    }
-
     public void setFieldValue(int fieldID, Object value) {
       switch (fieldID) {
       case SUCCESS:
@@ -5056,14 +5018,6 @@ public class Thrudoc {
         }
         break;
 
-      case EX3:
-        if (value == null) {
-          unsetEx3();
-        } else {
-          setEx3((InvalidKeyException)value);
-        }
-        break;
-
       default:
         throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
@@ -5080,9 +5034,6 @@ public class Thrudoc {
       case EX2:
         return getEx2();
 
-      case EX3:
-        return getEx3();
-
       default:
         throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
@@ -5097,8 +5048,6 @@ public class Thrudoc {
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      case EX3:
-        return isSetEx3();
       default:
         throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
@@ -5144,15 +5093,6 @@ public class Thrudoc {
           return false;
       }
 
-      boolean this_present_ex3 = true && this.isSetEx3();
-      boolean that_present_ex3 = true && that.isSetEx3();
-      if (this_present_ex3 || that_present_ex3) {
-        if (!(this_present_ex3 && that_present_ex3))
-          return false;
-        if (!this.ex3.equals(that.ex3))
-          return false;
-      }
-
       return true;
     }
 
@@ -5195,14 +5135,6 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX3:
-            if (field.type == TType.STRUCT) {
-              this.ex3 = new InvalidKeyException();
-              this.ex3.read(iprot);
-            } else { 
-              TProtocolUtil.skip(iprot, field.type);
-            }
-            break;
           default:
             TProtocolUtil.skip(iprot, field.type);
             break;
@@ -5230,10 +5162,6 @@ public class Thrudoc {
       } else if (this.isSetEx2()) {
         oprot.writeFieldBegin(EX2_FIELD_DESC);
         this.ex2.write(oprot);
-        oprot.writeFieldEnd();
-      } else if (this.isSetEx3()) {
-        oprot.writeFieldBegin(EX3_FIELD_DESC);
-        this.ex3.write(oprot);
         oprot.writeFieldEnd();
       }
       oprot.writeFieldStop();
@@ -5271,14 +5199,6 @@ public class Thrudoc {
         sb.append("null");
       } else {
         sb.append(this.ex2);
-      }
-      first = false;
-      if (!first) sb.append(", ");
-      sb.append("ex3:");
-      if (this.ex3 == null) {
-        sb.append("null");
-      } else {
-        sb.append(this.ex3);
       }
       first = false;
       sb.append(")");

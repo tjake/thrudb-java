@@ -8,7 +8,7 @@ import tokyocabinet.BDBCUR;
 
 public interface ThrudocBackend {
 
-	byte[] get(String key) throws InvalidKeyException;
+	byte[] get(String key);
 	
 	void put(String key, byte[] value);
 	

@@ -88,8 +88,9 @@ public class ThrudocServer {
 			server.serve();
 			
 			
-		}catch(Exception e){
-			e.printStackTrace();
+		}catch(Throwable t){
+			t.printStackTrace();
+			server.stop();
 		}
 	}
 	

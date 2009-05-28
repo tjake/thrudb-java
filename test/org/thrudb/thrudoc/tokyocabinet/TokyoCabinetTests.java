@@ -4,8 +4,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.thrudb.thrudoc.InvalidKeyException;
-
 public class TokyoCabinetTests extends TestCase {
 	TokyoCabinetDB tdb;
 	

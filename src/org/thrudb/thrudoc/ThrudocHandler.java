@@ -8,9 +8,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
-import org.thrudb.thrudoc.InvalidBucketException;
-import org.thrudb.thrudoc.InvalidKeyException;
-import org.thrudb.thrudoc.ThrudocException;
 import org.thrudb.thrudoc.Thrudoc.Iface;
 import org.thrudb.thrudoc.tokyocabinet.TokyoCabinetDB;
 
@@ -70,12 +67,17 @@ public class ThrudocHandler implements Iface {
 	/**
 	 * Get's a key from the bucket
 	 */
-	public byte[] get(String bucket, String key) throws InvalidKeyException, InvalidBucketException, TException {
+	public byte[] get(String bucket, String key) throws InvalidBucketException, TException {
 		
 		if(!isValidBucket(bucket))
 			throw new InvalidBucketException();
 		
-		return bucketMap.get(bucket).get(key);
+		byte[] value = bucketMap.get(bucket).get(key);
+		
+		if(value == null)
+			value = new byte[]{};
+		
+		return value;
 	}
 
 	public void create_bucket(String bucket) throws ThrudocException,

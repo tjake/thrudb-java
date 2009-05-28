@@ -22,7 +22,7 @@ service Thrudoc
 
     #map operations
     void         put(1:string bucket, 2:string key, 3:binary value)   throws(1:ThrudocException ex1, 2:InvalidBucketException ex2),
-    binary       get(1:string bucket, 2:string key)                   throws(1:ThrudocException ex1, 2:InvalidBucketException ex2, 3:InvalidKeyException ex3),
+    binary       get(1:string bucket, 2:string key)                   throws(1:ThrudocException ex1, 2:InvalidBucketException ex2),
     void         remove(1:string bucket, 2:string key)                throws(1:ThrudocException ex1, 2:InvalidBucketException ex2),
 
     #list operations

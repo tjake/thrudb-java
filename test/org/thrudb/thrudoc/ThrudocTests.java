@@ -52,8 +52,10 @@ public class ThrudocTests extends TestCase {
 			try{
 				
 				thrudocServer.setDocRoot(".");
+				thrudocServer.setLogRoot(".");
 				thrudocServer.setPort(11291);
 				thrudocServer.setThreadCount(5);
+			
 				thrudocServer.start();
 			}catch(Throwable t){
 				thrudocServer.stop();
@@ -70,10 +72,11 @@ public class ThrudocTests extends TestCase {
 			client.delete_bucket(bucket);
 			client.create_bucket(bucket);
 			
-			try{
-				client.get(bucket, "key");
+			
+			byte[] value = client.get(bucket, "key");
+			if(value.length > 0)	
 				fail("key should not exist");
-			}catch(InvalidKeyException e){}
+		
 			
 			client.put(bucket, "key", "value".getBytes());
 			
