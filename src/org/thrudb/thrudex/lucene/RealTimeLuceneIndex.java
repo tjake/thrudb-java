@@ -191,14 +191,7 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 			
 			
 			}
-			
-/*			Analyzer defaultAnalyzer = getAnalyzer(query.getDefaultAnalyzer());
-			PerFieldAnalyzerWrapper qAnalyzer = new PerFieldAnalyzerWrapper(defaultAnalyzer);
-			if(query.isSetFieldAnalyzers()){
-				for(String field : query.fieldAnalyzers.keySet())
-					qAnalyzer.addAnalyzer(field, getAnalyzer(query.fieldAnalyzers.get(field)));
-			}
-*/			
+						
 			QueryParser    queryParser = new QueryParser(DOCUMENT_KEY, analyzer);
 			
 			//parse query
