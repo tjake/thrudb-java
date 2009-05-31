@@ -1,6 +1,7 @@
 package org.thrudb.thrift;
 
 import org.apache.log4j.Logger;
+import org.apache.thrift.TApplicationException;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
@@ -30,7 +31,7 @@ public class TPeekingTransport extends TFramedTransport {
 	
 	private boolean logging    = false;
 	private HDB     log;
-	private int     nextLogId  = -1;
+	private String  nextLogId  = "-1";
 	
 
 	public TPeekingTransport(TTransport baseTransport, HDB log) {
@@ -63,17 +64,19 @@ public class TPeekingTransport extends TFramedTransport {
 
 	@Override
 	public int read(byte[] buf, int off, int len) throws TTransportException {
+		int sz = 0;
+		
 		if (replayMode && replayPos + len <= replayEnd ) {
 			
 			System.arraycopy(peekBuffer, replayPos, buf, 0, len);
 			
 			replayPos += len;
 			
-			return len;
+			sz = len;
 			
 		}else{
 			
-			int sz = super.read(buf, off, len);
+			sz = super.read(buf, off, len);
 			
 			// Add to peek buffer
 			if (recording && sz > 0) {
@@ -85,9 +88,15 @@ public class TPeekingTransport extends TFramedTransport {
 				peekBuffer = newPeekBuffer;							
 			}
 			
-			return sz;
 		}
 		
+		if(logging){
+			if(!log.putcat(nextLogId.getBytes(), buf)){
+				throw new TTransportException("Log message"+nextLogId+" is corrupt");
+			}
+		}
+		
+		return sz;
 	}
 
 	@Override
@@ -148,14 +157,43 @@ public class TPeekingTransport extends TFramedTransport {
 		return logging;
 	}
 
-	public void setLogging(boolean logging) {
+	public void setLogging(boolean logging) throws TTransportException {
 		this.logging = logging;
 		
 		//get new log in sequence
 		if(logging){
-			nextLogId = log.addint("LSN", 1);
+			int lsn = log.addint("LSN", 1);
+			if(lsn == Integer.MIN_VALUE){
+				throw new TTransportException("Logging error:"+log.errmsg());
+			}else{
+				logger.info("LSN is now "+lsn);
+			}
+			
+			nextLogId = String.valueOf(lsn)+";";
 		}
 	
+	}
+	
+	/**
+	 * Removes the log message
+	 */
+	public void rollback() throws TTransportException{
+		if(logging){
+			//log.out(String.valueOf(nextLogId));
+			if(!log.put(nextLogId+"r", "e")){
+				throw new TTransportException("Logging rollback err:"+log.errmsg());
+			}
+			log.sync();
+		}
+	}
+	
+	public void commit() throws TTransportException{
+		if(logging){
+			if(!log.put(nextLogId+"r", "c")){
+				throw new TTransportException("Logging commit err:"+log.errmsg());
+			}
+			log.sync();
+		}	
 	}
 }
 

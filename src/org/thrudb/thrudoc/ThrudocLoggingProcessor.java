@@ -54,6 +54,7 @@ public class ThrudocLoggingProcessor extends Processor {
 		
 		peekTrans.setReplayMode(true);
 		
+		
 		boolean result = super.process(iprot, oprot);
 	
 		//only log operations that alter the db
@@ -63,10 +64,12 @@ public class ThrudocLoggingProcessor extends Processor {
 			msg = oprot.readMessageBegin();
 			
 			//dont log operations that caused an exceptions
-			if(msg.type != TMessageType.EXCEPTION){
-				byte[] log = peekTrans.getBuffer();
+			if(msg.type == TMessageType.EXCEPTION){
 				
-				//writeLog(log);
+				//roll back message
+				peekTrans.rollback();
+			} else {
+				peekTrans.commit();
 			}
 			
 		}

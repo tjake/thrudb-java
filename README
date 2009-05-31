@@ -1,0 +1,15 @@
+============================================
+Thrudb - Document Oriented Database Services
+============================================
+
+Thrudb is a set of simple services built on top of the Apache Thrift RPC 
+project that provides indexing and document storage services for 
+building and scaling websites. Its purpose is to offer web developers 
+flexible, fast and easy-to-use services that can enhance or 
+replace traditional data storage and access layers.
+
+Thrudb contains two services:
+
+Thrudoc   - Document storage service
+Thrudex   - Indexing and search service
+
