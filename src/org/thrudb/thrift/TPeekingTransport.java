@@ -143,6 +143,7 @@ public class TPeekingTransport extends TFramedTransport {
 		replayPos  = 0;
 		replayMode = false;
 	    recording  = false;
+	    logging    = false;
 	    
 	    writeBuffer = new byte[] {};
 		writePos    = 0;
@@ -175,7 +176,7 @@ public class TPeekingTransport extends TFramedTransport {
 	}
 	
 	/**
-	 * Removes the log message
+	 * marks this message as having failed and should not be replicated
 	 */
 	public void rollback() throws TTransportException{
 		if(logging){
@@ -187,6 +188,10 @@ public class TPeekingTransport extends TFramedTransport {
 		}
 	}
 	
+	/**
+	 * marks this message as a success
+	 * @throws TTransportException
+	 */
 	public void commit() throws TTransportException{
 		if(logging){
 			if(!log.put(nextLogId+"r", "c")){

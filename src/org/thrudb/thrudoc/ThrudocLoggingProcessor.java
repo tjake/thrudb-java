@@ -19,8 +19,6 @@ public class ThrudocLoggingProcessor extends Processor {
 
 	private Set<String> writeOps;
 	private Logger logger = Logger.getLogger(getClass());
-
-	
 	
 	public ThrudocLoggingProcessor(Iface iface) {
 		super(iface);
@@ -64,12 +62,10 @@ public class ThrudocLoggingProcessor extends Processor {
 			msg = oprot.readMessageBegin();
 			
 			//dont log operations that caused an exceptions
-			if(msg.type == TMessageType.EXCEPTION){
-				
-				//roll back message
-				peekTrans.rollback();
+			if(msg.type == TMessageType.EXCEPTION){		
+				peekTrans.rollback(); 
 			} else {
-				peekTrans.commit();
+				peekTrans.commit(); 
 			}
 			
 		}
@@ -77,10 +73,7 @@ public class ThrudocLoggingProcessor extends Processor {
 		
 		peekTrans.reset();
 		
-		
-		
 		return result;
-	
 	}
 	
 	private void writeLog(byte[] logMessage){
