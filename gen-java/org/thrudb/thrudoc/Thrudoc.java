@@ -19,7 +19,7 @@ import org.apache.thrift.protocol.*;
 
 public class Thrudoc {
 
-  public interface Iface {
+  public interface Iface extends org.thrudb.Thrudb.Iface {
 
     public void create_bucket(String bucket) throws ThrudocException, TException;
 
@@ -63,7 +63,7 @@ public class Thrudoc {
 
   }
 
-  public static class Client implements Iface {
+  public static class Client extends org.thrudb.Thrudb.Client implements Iface {
     public Client(TProtocol prot)
     {
       this(prot, prot);
@@ -71,23 +71,7 @@ public class Thrudoc {
 
     public Client(TProtocol iprot, TProtocol oprot)
     {
-      iprot_ = iprot;
-      oprot_ = oprot;
-    }
-
-    protected TProtocol iprot_;
-    protected TProtocol oprot_;
-
-    protected int seqid_;
-
-    public TProtocol getInputProtocol()
-    {
-      return this.iprot_;
-    }
-
-    public TProtocol getOutputProtocol()
-    {
-      return this.oprot_;
+      super(iprot, oprot);
     }
 
     public void create_bucket(String bucket) throws ThrudocException, TException
@@ -865,9 +849,10 @@ public class Thrudoc {
     }
 
   }
-  public static class Processor implements TProcessor {
+  public static class Processor extends org.thrudb.Thrudb.Processor implements TProcessor {
     public Processor(Iface iface)
     {
+      super(iface);
       iface_ = iface;
       processMap_.put("create_bucket", new create_bucket());
       processMap_.put("delete_bucket", new delete_bucket());
@@ -891,12 +876,7 @@ public class Thrudoc {
       processMap_.put("admin", new admin());
     }
 
-    protected static interface ProcessFunction {
-      public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException;
-    }
-
     private Iface iface_;
-    protected final HashMap<String,ProcessFunction> processMap_ = new HashMap<String,ProcessFunction>();
 
     public boolean process(TProtocol iprot, TProtocol oprot) throws TException
     {
