@@ -158,19 +158,19 @@ public class TPeekingTransport extends TFramedTransport {
 		return logging;
 	}
 
-	public void setLogging(boolean logging) throws TTransportException {
+	public void setLogging(boolean logging, String bucket) throws TTransportException {
 		this.logging = logging;
 		
 		//get new log in sequence
 		if(logging){
-			int lsn = log.addint("LSN", 1);
+			int lsn = log.addint("LSN_"+bucket, 1);
 			if(lsn == Integer.MIN_VALUE){
 				throw new TTransportException("Logging error:"+log.errmsg());
 			}else{
-				logger.info("LSN is now "+lsn);
+				logger.info("LSN is now "+lsn+" for "+bucket);
 			}
 			
-			nextLogId = String.valueOf(lsn)+";";
+			nextLogId = bucket+"_"+String.valueOf(lsn)+"_";
 		}
 	
 	}

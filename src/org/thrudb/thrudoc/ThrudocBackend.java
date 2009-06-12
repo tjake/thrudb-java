@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.apache.thrift.TException;
 
-import tokyocabinet.BDBCUR;
-
 public interface ThrudocBackend {
 
+	static String SPECIAL_KEY = "__DBID__";
+	
 	byte[] get(String key);
 	
 	void put(String key, byte[] value);

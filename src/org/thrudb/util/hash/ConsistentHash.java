@@ -9,6 +9,8 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 
 /**
+ * Consisteny
+ * 
  * Based on information from libketama and
  * http://code.google.com/p/spymemcached/
  * 

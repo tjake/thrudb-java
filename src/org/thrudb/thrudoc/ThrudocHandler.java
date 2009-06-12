@@ -8,18 +8,26 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
+import org.thrudb.logEntry;
 import org.thrudb.thrudoc.Thrudoc.Iface;
 import org.thrudb.thrudoc.tokyocabinet.TokyoCabinetDB;
 
 
 public class ThrudocHandler implements Iface {
 
+
 	private Logger logger = Logger.getLogger(getClass());
 	private volatile Map<String,TokyoCabinetDB> bucketMap = new HashMap<String,TokyoCabinetDB>(); 
 	private String docRoot;
 	
-	public ThrudocHandler(String docRoot){
+	public ThrudocHandler(String docRoot) throws ThrudocException, TException {
 		this.docRoot = docRoot;
+		
+		if(!isValidBucket("thrudb")){
+			logger.warn("thrudb is not initialized. initializing...");
+			this.create_bucket("thrudb");
+			
+		}
 	}
 	
 	public boolean isValidBucket(String bucketName) throws TException {
@@ -222,6 +230,22 @@ public class ThrudocHandler implements Iface {
 		
 		
 		return bucketMap.get(bucket).scan(seed,count);	
+	}
+	
+
+	public List<logEntry> getLogFrom(String lsn, int kbLimit) throws TException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Map<String, Long> getServiceStats() throws TException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void ping() throws TException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

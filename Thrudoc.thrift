@@ -4,6 +4,7 @@ namespace perl Thrudoc
 namespace java org.thrudb.thrudoc
 namespace ruby Thrudoc
 
+include "Thrudb.thrift"
 
 exception ThrudocException{}
 exception InvalidBucketException{}
@@ -11,7 +12,7 @@ exception InvalidKeyException{}
 exception InvalidParametersException{}
 
 
-service Thrudoc
+service Thrudoc extends Thrudb.Thrudb
 {
 	void         create_bucket(1: string bucket)                    throws(1:ThrudocException ex1),
     void         delete_bucket(1: string bucket)                    throws(1:ThrudocException ex1),

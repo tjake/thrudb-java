@@ -10,5 +10,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="lib/tokyocabinet.jar"/>
 	<classpathentry kind="lib" path="config"/>
+	<classpathentry kind="lib" path="lib/zookeeper-dev.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
@@ -52,14 +53,22 @@ public class TokyoCabinetDB implements ThrudocBackend {
 		if(dbFile.isDirectory())
 			throw new TException(dbFileName+" should not be a directory");
 		
-		if(!dbFile.exists())
-			bdbFlags |= BDB.OCREAT; 
 		
+		boolean newDatabase = false;
+		if(!dbFile.exists()){
+			bdbFlags   |= BDB.OCREAT; 
+			newDatabase = true;
+		}
 		
 		bdb = new BDB();
 		if(!bdb.open(dbFileName,bdbFlags)){
 			throw new TException(bdb.errmsg());
 		}		
+		
+		//create a uuid
+		if(newDatabase){
+			this.put(SPECIAL_KEY, UUID.randomUUID().toString().getBytes());
+		}
 	}
 	
 	
