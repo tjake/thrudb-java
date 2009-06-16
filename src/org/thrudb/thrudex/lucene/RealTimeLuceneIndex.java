@@ -20,6 +20,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.ParallelMultiSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searchable;
@@ -321,17 +322,31 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 					deletedDocuments.clear();
 					
 					diskWriter.commit();
-					
-					diskReader   = diskReader.reopen();
-					diskSearcher = new IndexSearcher(diskReader);
+				}
+				
+				
+				//Prime the index reader since it can be v-slow
+				IndexReader    primeReader    = diskReader.reopen();
+				IndexSearcher  primeSearcher  = new IndexSearcher(primeReader);
+				
+				try{
+					TopDocs result = primeSearcher.search(new MatchAllDocsQuery(),100);
+					logger.debug("primed index: "+result.totalHits);
+				}catch(Exception e){
+					logger.error("error priming searcher"+e.getLocalizedMessage());
+				}
+				
+				//hot swap
+				synchronized(this){
+					diskReader   = primeReader;
+					diskSearcher = primeSearcher;
 					diskFilter   = new RealTimeDiskFilter(diskReader);
 					
 					logger.debug("Have "+diskReader.numDocs()+" docs on disk");
 					
 					prevRamSearcher = null;
 					prevRamReader   = null;
-					prevRamDirectory= null;
-					
+					prevRamDirectory= null;					
 				}
 				
 				logger.debug("finsihed updating disk");
