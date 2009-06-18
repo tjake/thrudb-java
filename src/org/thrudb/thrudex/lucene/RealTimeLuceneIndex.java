@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
@@ -55,8 +56,9 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 	RealTimeDiskFilter diskFilter;
 	Set<Term>     deletedDocuments; //disk only
 	
-	AtomicBoolean  hasWrite    = new AtomicBoolean(false);
-	CountDownLatch shutdownLatch;
+	AtomicBoolean  hasWrite      = new AtomicBoolean(false);
+	CountDownLatch shutdownLatch     = new CountDownLatch(1); //forces sync
+	CountDownLatch shutdownSyncLatch = new CountDownLatch(1); //counted down on final sync()
 	
 	Thread  monitor;
 	
@@ -261,11 +263,11 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 				logger.debug("ram dir size: "+ramDirectory.sizeInBytes());
 				
 				//do nothing until we have enough changes
-				if(ramDirectory.sizeInBytes() < 1024*1024*1 && shutdownLatch == null){	
-					Thread.currentThread().sleep(10000);
+				if(ramDirectory.sizeInBytes() < 1024*1024*1 && !shutdownLatch.await(10, TimeUnit.SECONDS)){	
 					continue;
 				}
 						
+			
 				
 				//We need to merge the indexes together and reopen
 				synchronized(this){
@@ -355,18 +357,19 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 				logger.info(e);
 			}
 			
-			if(shutdownLatch != null){
-				shutdownLatch.countDown();
-				logger.info("index sync complete");
+			if(shutdownLatch.getCount() == 0){
+				shutdownSyncLatch.countDown();
+				logger.info("final index sync complete");
 				break;
 			}
 		}
 	}
 	
 	public void shutdown() {
-		shutdownLatch = new CountDownLatch(1);
-		try{
-			shutdownLatch.await();
+
+		try{		
+			shutdownLatch.countDown();
+			shutdownSyncLatch.await();
 		}catch(InterruptedException e){
 			Thread.currentThread().interrupt();
 		}
@@ -375,10 +378,10 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 	}
 	
 	public void optimize() throws ThrudexException{
-		/*try{
-			this.writer.optimize();
+		try{
+			diskWriter.optimize();
 		}catch(IOException e){
 			throw new ThrudexException(e.toString());
-		}*/
+		}
 	}
 }
