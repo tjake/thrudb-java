@@ -17,21 +17,35 @@ import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
 import org.apache.thrift.protocol.*;
 
-public class logEntry implements TBase, java.io.Serializable, Cloneable {
-  private static final TStruct STRUCT_DESC = new TStruct("logEntry");
-  private static final TField LSN_FIELD_DESC = new TField("lsn", TType.STRING, (short)1);
-  private static final TField MESSAGE_FIELD_DESC = new TField("message", TType.STRING, (short)2);
+/**
+ * <pre>Represents a single log entry.
+ * 
+ * This is captured off the wire so is the in the Thrift protocol used
+ * during transfer
+ * 
+ * @lsn     - the log sequence number of the message
+ * @message - the message itself.</pre>
+ */
+public class LogEntry implements TBase, java.io.Serializable, Cloneable {
+  private static final TStruct STRUCT_DESC = new TStruct("LogEntry");
+  private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
+  private static final TField LSN_FIELD_DESC = new TField("lsn", TType.STRING, (short)2);
+  private static final TField MESSAGE_FIELD_DESC = new TField("message", TType.STRING, (short)3);
 
+  public String bucket;
+  public static final int BUCKET = 1;
   public String lsn;
-  public static final int LSN = 1;
+  public static final int LSN = 2;
   public byte[] message;
-  public static final int MESSAGE = 2;
+  public static final int MESSAGE = 3;
 
   private final Isset __isset = new Isset();
   private static final class Isset implements java.io.Serializable {
   }
 
   public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+    put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+        new FieldValueMetaData(TType.STRING)));
     put(LSN, new FieldMetaData("lsn", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
     put(MESSAGE, new FieldMetaData("message", TFieldRequirementType.DEFAULT, 
@@ -39,17 +53,19 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable {
   }});
 
   static {
-    FieldMetaData.addStructMetaDataMap(logEntry.class, metaDataMap);
+    FieldMetaData.addStructMetaDataMap(LogEntry.class, metaDataMap);
   }
 
-  public logEntry() {
+  public LogEntry() {
   }
 
-  public logEntry(
+  public LogEntry(
+    String bucket,
     String lsn,
     byte[] message)
   {
     this();
+    this.bucket = bucket;
     this.lsn = lsn;
     this.message = message;
   }
@@ -57,7 +73,10 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable {
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public logEntry(logEntry other) {
+  public LogEntry(LogEntry other) {
+    if (other.isSetBucket()) {
+      this.bucket = other.bucket;
+    }
     if (other.isSetLsn()) {
       this.lsn = other.lsn;
     }
@@ -68,8 +87,31 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable {
   }
 
   @Override
-  public logEntry clone() {
-    return new logEntry(this);
+  public LogEntry clone() {
+    return new LogEntry(this);
+  }
+
+  public String getBucket() {
+    return this.bucket;
+  }
+
+  public void setBucket(String bucket) {
+    this.bucket = bucket;
+  }
+
+  public void unsetBucket() {
+    this.bucket = null;
+  }
+
+  // Returns true if field bucket is set (has been asigned a value) and false otherwise
+  public boolean isSetBucket() {
+    return this.bucket != null;
+  }
+
+  public void setBucketIsSet(boolean value) {
+    if (!value) {
+      this.bucket = null;
+    }
   }
 
   public String getLsn() {
@@ -120,6 +162,14 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable {
 
   public void setFieldValue(int fieldID, Object value) {
     switch (fieldID) {
+    case BUCKET:
+      if (value == null) {
+        unsetBucket();
+      } else {
+        setBucket((String)value);
+      }
+      break;
+
     case LSN:
       if (value == null) {
         unsetLsn();
@@ -143,6 +193,9 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable {
 
   public Object getFieldValue(int fieldID) {
     switch (fieldID) {
+    case BUCKET:
+      return getBucket();
+
     case LSN:
       return getLsn();
 
@@ -157,6 +210,8 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable {
   // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
   public boolean isSet(int fieldID) {
     switch (fieldID) {
+    case BUCKET:
+      return isSetBucket();
     case LSN:
       return isSetLsn();
     case MESSAGE:
@@ -170,14 +225,23 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable {
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof logEntry)
-      return this.equals((logEntry)that);
+    if (that instanceof LogEntry)
+      return this.equals((LogEntry)that);
     return false;
   }
 
-  public boolean equals(logEntry that) {
+  public boolean equals(LogEntry that) {
     if (that == null)
       return false;
+
+    boolean this_present_bucket = true && this.isSetBucket();
+    boolean that_present_bucket = true && that.isSetBucket();
+    if (this_present_bucket || that_present_bucket) {
+      if (!(this_present_bucket && that_present_bucket))
+        return false;
+      if (!this.bucket.equals(that.bucket))
+        return false;
+    }
 
     boolean this_present_lsn = true && this.isSetLsn();
     boolean that_present_lsn = true && that.isSetLsn();
@@ -216,6 +280,13 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable {
       }
       switch (field.id)
       {
+        case BUCKET:
+          if (field.type == TType.STRING) {
+            this.bucket = iprot.readString();
+          } else { 
+            TProtocolUtil.skip(iprot, field.type);
+          }
+          break;
         case LSN:
           if (field.type == TType.STRING) {
             this.lsn = iprot.readString();
@@ -247,6 +318,11 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable {
     validate();
 
     oprot.writeStructBegin(STRUCT_DESC);
+    if (this.bucket != null) {
+      oprot.writeFieldBegin(BUCKET_FIELD_DESC);
+      oprot.writeString(this.bucket);
+      oprot.writeFieldEnd();
+    }
     if (this.lsn != null) {
       oprot.writeFieldBegin(LSN_FIELD_DESC);
       oprot.writeString(this.lsn);
@@ -263,9 +339,17 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("logEntry(");
+    StringBuilder sb = new StringBuilder("LogEntry(");
     boolean first = true;
 
+    sb.append("bucket:");
+    if (this.bucket == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.bucket);
+    }
+    first = false;
+    if (!first) sb.append(", ");
     sb.append("lsn:");
     if (this.lsn == null) {
       sb.append("null");
