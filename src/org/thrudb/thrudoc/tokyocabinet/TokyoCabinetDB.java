@@ -67,8 +67,12 @@ public class TokyoCabinetDB implements ThrudocBackend {
 		
 		//create a uuid
 		if(newDatabase){
-			this.put(SPECIAL_KEY, UUID.randomUUID().toString().getBytes());
+			byte[] uuid =  UUID.randomUUID().toString().getBytes();
+			this.put(SPECIAL_KEY,uuid);
+			bdb.sync();
 		}
+		
+	
 	}
 	
 	
@@ -94,6 +98,7 @@ public class TokyoCabinetDB implements ThrudocBackend {
 	public void put(String key, byte[] value) {			
 		
 		bdb.put(key.getBytes(), value);
+		
 	}
 	
 	/**
@@ -421,5 +426,11 @@ public class TokyoCabinetDB implements ThrudocBackend {
 	public boolean erase(){
 		return bdb.vanish();
 	}
+	
+	public void shutdown(){
+		bdb.close();
+	}
+	
+	
 	
 }

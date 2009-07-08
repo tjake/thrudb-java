@@ -12,6 +12,18 @@ import org.thrudb.thrudoc.Thrudoc;
 import org.thrudb.thrudoc.ThrudocException;
 import org.thrudb.thrudoc.Thrudoc.Iface;
 
+
+/**
+ * Simple backend that retries a certain class of failures.
+ * 
+ * For example if we have a stale connection to another service. it will reconnect and retry.
+ * 
+ * I know this breaks the "fail fast" concept however i think it's worth a try, rather than making the 
+ * client work harder.
+ * 
+ * @author jake
+ *
+ */
 public class RetryBackend implements Iface {
 
 	private int maxRetries;
@@ -42,7 +54,7 @@ public class RetryBackend implements Iface {
 
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				delegateBackend.create_bucket(bucket);
 				return;
@@ -57,7 +69,7 @@ public class RetryBackend implements Iface {
 		
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.decr(bucket, key, amount);
 				
@@ -74,7 +86,7 @@ public class RetryBackend implements Iface {
 			
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				delegateBackend.delete_bucket(bucket);
 				return;
@@ -90,7 +102,7 @@ public class RetryBackend implements Iface {
 			InvalidBucketException, TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.get(bucket, key);
 				
@@ -105,7 +117,7 @@ public class RetryBackend implements Iface {
 	public Set<String> get_bucket_list() throws ThrudocException, TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.get_bucket_list();
 				
@@ -121,7 +133,7 @@ public class RetryBackend implements Iface {
 			throws ThrudocException, InvalidBucketException, TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.incr(bucket, key, amount);
 				
@@ -138,7 +150,7 @@ public class RetryBackend implements Iface {
 
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				delegateBackend.insert_at(bucket, key, value, pos);
 				return;
@@ -153,7 +165,7 @@ public class RetryBackend implements Iface {
 			InvalidBucketException, TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.length(bucket, key);
 				
@@ -169,7 +181,7 @@ public class RetryBackend implements Iface {
 			InvalidBucketException, TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.pop_back(bucket, key);
 				
@@ -186,7 +198,7 @@ public class RetryBackend implements Iface {
 		
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.pop_front(bucket, key);
 				
@@ -202,7 +214,7 @@ public class RetryBackend implements Iface {
 			throws ThrudocException, InvalidBucketException, TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				delegateBackend.push_back(bucket, key, value);
 				return;
@@ -218,7 +230,7 @@ public class RetryBackend implements Iface {
 			throws ThrudocException, InvalidBucketException, TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				delegateBackend.push_front(bucket, key, value);
 				return;
@@ -234,7 +246,7 @@ public class RetryBackend implements Iface {
 			throws ThrudocException, InvalidBucketException, TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				delegateBackend.put(bucket, key, value);
 				return;
@@ -249,7 +261,7 @@ public class RetryBackend implements Iface {
 			throws ThrudocException, InvalidBucketException, TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.range(bucket, key, start, end);
 				
@@ -265,7 +277,7 @@ public class RetryBackend implements Iface {
 		
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				delegateBackend.remove(bucket, key);
 				return;
@@ -281,7 +293,7 @@ public class RetryBackend implements Iface {
 			throws ThrudocException, InvalidBucketException, TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.remove_at(bucket, key, pos);
 				
@@ -298,7 +310,7 @@ public class RetryBackend implements Iface {
 		
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				delegateBackend.replace_at(bucket, key, value, pos);
 				return;
@@ -314,7 +326,7 @@ public class RetryBackend implements Iface {
 			throws ThrudocException, InvalidBucketException, TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.retrieve_at(bucket, key, pos);
 				
@@ -330,7 +342,7 @@ public class RetryBackend implements Iface {
 			throws ThrudocException, InvalidBucketException, TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.scan(bucket, seed, limit);
 				
@@ -345,7 +357,7 @@ public class RetryBackend implements Iface {
 	public List<String> getAvailibleServers() throws TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.getAvailibleServers();
 				
@@ -360,7 +372,7 @@ public class RetryBackend implements Iface {
 			throws TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.getLogSince(bucket, lsn, kbLimit);
 				
@@ -375,7 +387,7 @@ public class RetryBackend implements Iface {
 	public Map<String, Long> getServiceStats() throws TException {
 		int tries = 0;
 
-		while (++tries < maxRetries) {
+		while (++tries <= maxRetries) {
 			try {
 				return delegateBackend.getServiceStats();
 				

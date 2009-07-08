@@ -8,110 +8,132 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
-import org.thrudb.logEntry;
+import org.thrudb.LogEntry;
 import org.thrudb.thrudoc.Thrudoc.Iface;
 import org.thrudb.thrudoc.tokyocabinet.TokyoCabinetDB;
 
-
 public class ThrudocHandler implements Iface {
 
-
 	private Logger logger = Logger.getLogger(getClass());
-	private volatile Map<String,TokyoCabinetDB> bucketMap = new HashMap<String,TokyoCabinetDB>(); 
+	private volatile Map<String, ThrudocBackend> bucketMap = new HashMap<String, ThrudocBackend>();
 	private String docRoot;
-	
+	private final String dbFileSuffix = ".tcb";
+
 	public ThrudocHandler(String docRoot) throws ThrudocException, TException {
 		this.docRoot = docRoot;
-		
-		if(!isValidBucket("thrudb")){
+
+		if (!isValidBucket("thrudb")) {
 			logger.warn("thrudb is not initialized. initializing...");
 			this.create_bucket("thrudb");
-			
 		}
+
+		// load local bucket names
+		this.primeBucketList();
+
+		Runtime.getRuntime().addShutdownHook(new DBShutdownHandler(bucketMap));
 	}
-	
+
+	private void primeBucketList() {
+		File docRootFile = new File(docRoot);
+
+		if (!docRootFile.exists() || !docRootFile.isDirectory()) {
+			throw new IllegalArgumentException(docRoot);
+		}
+
+		String[] list = docRootFile.list();
+		for (String file : list) {
+			if (file.endsWith(dbFileSuffix)) {
+				String bucket = file.substring(0, file.indexOf(dbFileSuffix));
+
+				if (!bucketMap.containsKey(bucket)) {
+					bucketMap.put(bucket, null);
+				}
+			}
+		}
+
+	}
+
 	public boolean isValidBucket(String bucketName) throws TException {
-		
-		if(bucketMap.containsKey(bucketName))
+
+		if (bucketMap.get(bucketName) != null)
 			return true;
 
-		synchronized(bucketMap){
-			
-			//double lock check
-			if(bucketMap.containsKey(bucketName))
+		synchronized (bucketMap) {
+
+			// double lock check
+			if (bucketMap.get(bucketName) != null)
 				return true;
-	
-			String dbFileName = docRoot+File.separatorChar+bucketName+".tcb";
-			File   dbFile     = new File(dbFileName);
-			
-			//open this index if it already exists
-			if(dbFile.isFile() && dbFile.canWrite()){
-				bucketMap.put(bucketName, new TokyoCabinetDB(docRoot,bucketName));
+
+			String dbFileName = docRoot + File.separatorChar + bucketName
+					+ dbFileSuffix;
+			File dbFile = new File(dbFileName);
+
+			// open this index if it already exists
+			if (dbFile.isFile() && dbFile.canWrite()) {
+				bucketMap.put(bucketName, new TokyoCabinetDB(docRoot,
+						bucketName));
 				return true;
-			}else{
+			} else {
 				return false;
 			}
 		}
 	}
-	
+
 	public String admin(String op, String data) throws ThrudocException,
 			TException {
-		
-		
-		
+
 		return "ok";
 	}
 
-	
-	public int decr(String bucket, String key, int amount) throws InvalidBucketException, TException {
-		
-		if(!isValidBucket(bucket))
+	public int decr(String bucket, String key, int amount)
+			throws InvalidBucketException, TException {
+
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
+
 		return 0;
 	}
 
-	
 	/**
 	 * Get's a key from the bucket
 	 */
-	public byte[] get(String bucket, String key) throws InvalidBucketException, TException {
-		
-		if(!isValidBucket(bucket))
+	public byte[] get(String bucket, String key) throws InvalidBucketException,
+			TException {
+
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
+
 		byte[] value = bucketMap.get(bucket).get(key);
-		
-		if(value == null)
-			value = new byte[]{};
-		
+
+		if (value == null)
+			value = new byte[] {};
+
 		return value;
 	}
 
 	public void create_bucket(String bucket) throws ThrudocException,
 			TException {
-		
-		if(bucketMap.containsKey(bucket))
+
+		if (bucketMap.containsKey(bucket))
 			return;
-				
-		bucketMap.put(bucket, new TokyoCabinetDB(docRoot,bucket));
-		
+
+		bucketMap.put(bucket, new TokyoCabinetDB(docRoot, bucket));
+
 	}
 
 	public void delete_bucket(String bucket) throws ThrudocException,
 			TException {
-		
-		if(!isValidBucket(bucket))
+
+		if (!isValidBucket(bucket))
 			this.create_bucket(bucket);
-		
-		
-		TokyoCabinetDB db = bucketMap.get(bucket);
-		
-		if(db == null)
-			return; //this can't happen
-		
+
+		ThrudocBackend db = bucketMap.get(bucket);
+
+		if (db == null)
+			return; // this can't happen
+
 		db.erase();
-		
+
 		bucketMap.remove(bucket);
 	}
 
@@ -119,124 +141,126 @@ public class ThrudocHandler implements Iface {
 		return bucketMap.keySet();
 	}
 
-	public int incr(String bucket, String key, int amount) throws TException, InvalidBucketException {
-		if(!isValidBucket(bucket))
+	public int incr(String bucket, String key, int amount) throws TException,
+			InvalidBucketException {
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
+
 		return bucketMap.get(bucket).incr(key, amount);
 	}
 
-	public int length(String bucket, String key) throws TException, InvalidBucketException {
-		if(!isValidBucket(bucket))
+	public int length(String bucket, String key) throws TException,
+			InvalidBucketException {
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
+
 		return bucketMap.get(bucket).length(key);
 	}
 
-	public byte[] pop_back(String bucket, String key) throws TException, InvalidBucketException {
-		if(!isValidBucket(bucket))
+	public byte[] pop_back(String bucket, String key) throws TException,
+			InvalidBucketException {
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
+
 		return bucketMap.get(bucket).pop_back(key);
 	}
 
-	public byte[] pop_front(String bucket, String key) throws TException, InvalidBucketException {
-		if(!isValidBucket(bucket))
+	public byte[] pop_front(String bucket, String key) throws TException,
+			InvalidBucketException {
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
+
 		return bucketMap.get(bucket).pop_front(key);
 	}
 
 	public void push_back(String bucket, String key, byte[] value)
 			throws ThrudocException, InvalidBucketException, TException {
-		
-		if(!isValidBucket(bucket))
+
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
+
 		bucketMap.get(bucket).push_back(key, value);
-		
+
 	}
 
 	public void push_front(String bucket, String key, byte[] value)
 			throws ThrudocException, TException, InvalidBucketException {
-		
-		if(!isValidBucket(bucket))
+
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
+
 		bucketMap.get(bucket).push_front(key, value);
-		
+
 	}
 
-	public void put(String bucket, String key, byte[] value) throws InvalidBucketException, TException {
-		if(!isValidBucket(bucket))
+	public void put(String bucket, String key, byte[] value)
+			throws InvalidBucketException, TException {
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
-		bucketMap.get(bucket).put(key,value);
-		
+
+		bucketMap.get(bucket).put(key, value);
+
 	}
 
 	public List<byte[]> range(String bucket, String key, int start, int end)
 			throws TException, InvalidBucketException {
-		if(!isValidBucket(bucket))
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
+
 		return bucketMap.get(bucket).range(key, start, end);
 	}
 
 	public byte[] remove_at(String bucket, String key, int pos)
 			throws TException, InvalidBucketException {
-		if(!isValidBucket(bucket))
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
+
 		return bucketMap.get(bucket).remove_at(key, pos);
 	}
 
-	public void remove(String bucket, String key) throws InvalidBucketException, TException {
-		if(!isValidBucket(bucket))
+	public void remove(String bucket, String key)
+			throws InvalidBucketException, TException {
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
+
 		bucketMap.get(bucket).remove(key);
 	}
 
 	public void insert_at(String bucket, String key, byte[] value, int pos)
 			throws ThrudocException, InvalidBucketException, TException {
 
-		if(!isValidBucket(bucket))
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
-		bucketMap.get(bucket).insert_at(key, value, pos);		
+
+		bucketMap.get(bucket).insert_at(key, value, pos);
 	}
 
 	public void replace_at(String bucket, String key, byte[] value, int pos)
 			throws ThrudocException, InvalidBucketException, TException {
-		
-		if(!isValidBucket(bucket))
+
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
-		bucketMap.get(bucket).replace_at(key, value, pos);		
+
+		bucketMap.get(bucket).replace_at(key, value, pos);
 	}
 
 	public byte[] retrieve_at(String bucket, String key, int pos)
 			throws ThrudocException, InvalidBucketException, TException {
-		if(!isValidBucket(bucket))
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
+
 		return bucketMap.get(bucket).retrieve_at(key, pos);
 	}
 
-	public List<String> scan(String bucket, String seed, int count) throws InvalidBucketException, TException {
-		if(!isValidBucket(bucket))
+	public List<String> scan(String bucket, String seed, int count)
+			throws InvalidBucketException, TException {
+		if (!isValidBucket(bucket))
 			throw new InvalidBucketException();
-		
-		
-		return bucketMap.get(bucket).scan(seed,count);	
-	}
-	
 
-	public List<logEntry> getLogFrom(String lsn, int kbLimit) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return bucketMap.get(bucket).scan(seed, count);
 	}
+
+	
 
 	public Map<String, Long> getServiceStats() throws TException {
 		// TODO Auto-generated method stub
@@ -245,7 +269,18 @@ public class ThrudocHandler implements Iface {
 
 	public void ping() throws TException {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	public List<String> getAvailibleServers() throws TException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<LogEntry> getLogSince(String bucket, String lsn, int kbLimit)
+			throws TException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

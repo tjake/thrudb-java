@@ -3,8 +3,6 @@ package org.thrudb.thrudoc;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.thrift.TException;
@@ -17,7 +15,8 @@ import org.apache.thrift.server.THsHaServer.Options;
 import org.apache.thrift.transport.TNonblockingServerSocket;
 import org.apache.thrift.transport.TNonblockingServerTransport;
 import org.thrudb.thrift.TPeekingTransportFactory;
-import org.thrudb.thrift.ZooKeeperMonitor;
+import org.thrudb.thrudoc.zk.RetryBackend;
+import org.thrudb.thrudoc.zk.ZooKeeperBackend;
 
 public class ThrudocServer {
 
@@ -77,16 +76,20 @@ public class ThrudocServer {
 			TNonblockingServerTransport serverSocket = new TNonblockingServerSocket(
 					port);
 
+			ThrudocHandler   docHandler=  new ThrudocHandler(docRoot);
+			ZooKeeperBackend zkHandler =  new ZooKeeperBackend("127.0.0.1:2182", port, docHandler);
+			RetryBackend     rHandler  =  new RetryBackend(1,zkHandler);
+			
 			// Processor
-			TProcessor processor = new ThrudocLoggingProcessor(
-					new ThrudocHandler(docRoot));
+			TProcessor processor = new ThrudocLoggingProcessor(rHandler);
 
 			Options opt = new Options();
 			opt.maxWorkerThreads = threadCount;
 
 			TPeekingTransportFactory peekFactory = new TPeekingTransportFactory(
 					propertyName, "thrudoc_log");
-
+			
+			
 			// Server
 			// TServer server = new THsHaServer(processor,serverSocket);
 			server = new THsHaServer(new TProcessorFactory(processor),
@@ -137,9 +140,7 @@ public class ThrudocServer {
 		return property;
 	}
 	
-	public void initMonitors(){
-		ExecutorService serviceThread = Executors.newSingleThreadExecutor();
-	}
+
 	
 
 	/**
@@ -208,9 +209,6 @@ public class ThrudocServer {
 			System.out.println("thread count: " + threadCount);
 			thrudocServer.setThreadCount(threadCount);
 
-			ExecutorService thread = Executors.newSingleThreadExecutor();
-			thread.submit(new ZooKeeperMonitor("127.0.0.1:2182", thrudocServer.getThrudocHandler()));
-			
 			
 			
 		
