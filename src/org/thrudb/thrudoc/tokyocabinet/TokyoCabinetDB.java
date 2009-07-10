@@ -24,6 +24,7 @@ public class TokyoCabinetDB implements ThrudocBackend {
 	private Logger logger = Logger.getLogger(getClass());
 	private String docRoot;
 	private String bucketName;
+	private File   dbFile;
 	private BDB    bdb;
 	
 	/**
@@ -44,8 +45,8 @@ public class TokyoCabinetDB implements ThrudocBackend {
 		int bdbFlags = BDB.OWRITER;
 	
 		//verify db file
-		String dbFileName = docRoot+File.separatorChar+bucketName+".tcb";
-		File   dbFile     = new File(dbFileName);
+	    String dbFileName = docRoot+File.separatorChar+bucketName+".tcb";
+		dbFile     = new File(dbFileName);
 		
 		if(dbFile.isFile() && !dbFile.canWrite())
 			throw new TException(dbFileName+" is not writable");
@@ -424,7 +425,12 @@ public class TokyoCabinetDB implements ThrudocBackend {
 	}
 	
 	public boolean erase(){
-		return bdb.vanish();
+		boolean ok = bdb.vanish();		
+		if(ok){
+		    dbFile.delete();
+		}
+		
+		return ok;
 	}
 	
 	public void shutdown(){

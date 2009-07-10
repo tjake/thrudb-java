@@ -2,7 +2,6 @@ package org.thrudb.thrudoc;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,83 +11,78 @@ import org.apache.log4j.Logger;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TTransportException;
 import org.apache.zookeeper.server.NIOServerCnxn;
 import org.apache.zookeeper.server.ZooKeeperServer;
-import org.apache.zookeeper.server.ZooKeeperServerMXBean;
 import org.apache.zookeeper.server.NIOServerCnxn.Factory;
 
 public class ThrudocTests extends TestCase {
-
-	private ExecutorService zkServiceThread = Executors
-			.newSingleThreadExecutor();
-	private ExecutorService serviceThread = Executors.newSingleThreadExecutor();
-	private Thrudoc.Client client;
-	private TFramedTransport transport;
+	private final static String bucket = "test_bucket";
 	private static Logger logger = Logger.getLogger(ThrudocTests.class);
 
-	public void setUp() {
-		try {
-			zkServiceThread.submit(new ZkThread());
-			Thread.sleep(1000);
-			
-			serviceThread.submit(new ThrudocTestService());
-			Thread.sleep(1000);
+	private Thrudoc.Client getClient(int port) throws TTransportException {
+		
+		TSocket         socket    = new TSocket("localhost", 11291);
+		TTransport      transport = new TFramedTransport(socket);
+		TBinaryProtocol protocol  = new TBinaryProtocol(transport);
 
-			//client
-			TSocket socket = new TSocket("localhost", 11291);
-			transport = new TFramedTransport(socket);
-			TBinaryProtocol protocol = new TBinaryProtocol(transport);
+		Thrudoc.Client client = new Thrudoc.Client(protocol);
 
-			client = new Thrudoc.Client(protocol);
-
-			transport.open();
-
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
+		transport.open();
+		
+		return client;
 	}
-
-	public void tearDown() {
-		transport.close();
-		serviceThread.shutdownNow();
-		zkServiceThread.shutdownNow();
-
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			fail(e.getMessage());
+	
+	
+	
+	public ExecutorService startService(Thread svc) {
+		ExecutorService thread = Executors.newSingleThreadExecutor();
+	
+		thread.submit(svc);
+	
+		try{
+			Thread.sleep(5000);
+		}catch(InterruptedException e){
+			//whatever
 		}
-
+		
+		return thread;
 	}
-
-	public class ZkThread extends Thread {
+	
+	public class ZkService extends Thread {
 
 		int port;
 		ZooKeeperServer server;
-		File dataDir = new File(".", "zkdata");
-		File logDir  = new File(".", "zklogs");
-		
+		String prefix;
+		File dataDir;
+		File logDir;
+
 		Factory nioFactory;
 
-		public ZkThread() throws IOException {
-			port = 2182;
-	
-			if (!dataDir.exists() && !dataDir.mkdir()) 
+		public ZkService(String prefix, int port) throws IOException {
+			this.port = port;
+			this.prefix = prefix;
+
+			dataDir = new File(".", "zkdata_" + prefix);
+			logDir = new File(".", "zklogs_" + prefix);
+
+			if (!dataDir.exists() && !dataDir.mkdir())
 				throw new IOException("unable to mkdir " + dataDir);
-			
-			if (!logDir.exists() && !logDir.mkdir()) 
-				throw new IOException("unable to mkdir " + logDir);			
+
+			if (!logDir.exists() && !logDir.mkdir())
+				throw new IOException("unable to mkdir " + logDir);
 		}
 
 		public void run() {
 
 			try {
-				
+
 				server = new ZooKeeperServer(dataDir, logDir, 2000);
-				
+
 				nioFactory = new NIOServerCnxn.Factory(port);
 				nioFactory.startup(server);
-				
+
 			} catch (final IOException e) {
 				throw new RuntimeException(
 						"Unable to start single ZooKeeper server.", e);
@@ -104,16 +98,41 @@ public class ThrudocTests extends TestCase {
 		}
 	}
 
-	class ThrudocTestService implements Runnable {
-		private ThrudocServer thrudocServer = new ThrudocServer();
+	class ThrudocTestService extends Thread {
+		ThrudocServer thrudocServer;
+		int port;
+		String prefix;
+		File dataDir;
+		File logDir;
+
+		public ThrudocTestService(String prefix, int port) throws IOException {
+			this.prefix = prefix;
+			this.port = port;
+
+			dataDir = new File(".", "doc_" + prefix);
+			logDir = new File(".", "log_" + prefix);
+			
+
+			if (!dataDir.exists() && !dataDir.mkdir())
+				throw new IOException("unable to mkdir " + dataDir);
+
+			if (!logDir.exists() && !logDir.mkdir())
+				throw new IOException("unable to mkdir " + logDir);
+		
+			
+			try {
+				thrudocServer = new ThrudocServer();
+				thrudocServer.setDocRoot(dataDir.getAbsolutePath());
+				thrudocServer.setLogRoot(logDir.getAbsolutePath());
+				thrudocServer.setPort(port);
+				thrudocServer.setThreadCount(5);
+			} catch (Throwable t) {
+				fail(t.toString());
+			}
+		}
 
 		public void run() {
 			try {
-
-				thrudocServer.setDocRoot(".");
-				thrudocServer.setLogRoot(".");
-				thrudocServer.setPort(11291);
-				thrudocServer.setThreadCount(5);
 
 				thrudocServer.start();
 				logger.info("thrudoc started");
@@ -123,33 +142,39 @@ public class ThrudocTests extends TestCase {
 				fail(t.toString());
 			}
 		}
+		
+		public void shutdown() {
+			thrudocServer.stop();
+		}
 	}
 
-	public void testUUID() {
-		byte[] uuid = UUID.randomUUID().toString().getBytes();
-		String bucket = "thrudb";
-
-		try {
-			// List<String> keys = client.scan(bucket, "", 10);
-
-			client.create_bucket(bucket);
-			client.put(bucket, ThrudocBackend.SPECIAL_KEY, uuid);
-
-			byte[] t = client.get(bucket, ThrudocBackend.SPECIAL_KEY);
-
-			assertTrue(uuid.length == t.length);
-
-		} catch (Exception e) {
+	public void testSingleServer() {
+		
+		try{
+			ExecutorService zkThread = startService(new ZkService("zk",2182));
+			ExecutorService tdThread = startService(new ThrudocTestService("td",11291));
+			
+			Thrudoc.Client client = getClient(11291);
+			
+			this.checkMap(client);
+			//this.doReads(client);
+			
+			client.delete_bucket(bucket);
+			tdThread.shutdown();
+			zkThread.shutdown();
+			
+		}catch(Exception e){
+			e.printStackTrace();
 			fail(e.getLocalizedMessage());
 		}
-
+		
 	}
 
-	public void testMapOperations() {
-		String bucket = "test_bucket";
+	private void checkMap(Thrudoc.Client client) {
+		
 
-		try {
-			client.delete_bucket(bucket);
+		try {		
+		    client.delete_bucket(bucket);
 			client.create_bucket(bucket);
 
 			byte[] value = client.get(bucket, "key");

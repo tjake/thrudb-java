@@ -132,8 +132,12 @@ public class ThrudocHandler implements Iface {
 		if (db == null)
 			return; // this can't happen
 
-		db.erase();
+		
+		if(!db.erase())
+		    throw new ThrudocException();
 
+		db.shutdown();
+		
 		bucketMap.remove(bucket);
 	}
 
