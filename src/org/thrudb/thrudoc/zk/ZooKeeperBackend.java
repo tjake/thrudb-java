@@ -33,6 +33,8 @@ import org.thrudb.thrudoc.ThrudocException;
 import org.thrudb.thrudoc.Thrudoc.Iface;
 import org.thrudb.util.StaticHelpers;
 
+import com.sun.jdi.InvalidStackFrameException;
+
 /**
  * Zookeeper maintains the state of what instances are connected and what
  * resources they own. We are intentionally not going to shove a ton on
@@ -204,6 +206,7 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
                     byte[] obj = zkServer.getData(bucketListNode + "/" + bucket + "/" + instance, false, null);
 
                     BucketInstance info = (BucketInstance) StaticHelpers.fromBytes(obj);
+                    info.ephemeralId = instance;
                     instanceList.add(info);
 
                 } catch (KeeperException e) {
@@ -420,12 +423,15 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
 
         try {
             if (instance.instanceId.equals(instanceId)) {
+                // publish myself to other instances
+                logger.warn(instanceId + ":" + bucket);
+
                 putBucketInZoo(bucket);
-                bucketList.add(bucket);
+                bucketList = zkServer.getChildren(bucketListNode, true);
                 updateBucketList();
             }
         } catch (Exception e) {
-            throw new IllegalStateException("Problem updating bucketList",e);
+            throw new IllegalStateException("Problem updating bucketList", e);
         }
 
     }
@@ -442,13 +448,30 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
 
         try {
             ServerInstance instance = this.getInstanceForBucket(bucket, "", true);
-            
-            if(instance == null && state == ZooState.CONNECTED)
+
+            if (instance == null && state == ZooState.CONNECTED)
                 return;
-            
+
             getClient(instance).delete_bucket(bucket);
 
             // FIXME: this should update zk bucketList
+            BucketInstance bucketInstance = null;
+            for (BucketInstance tmpBucket : bucketInfo.get(bucket)) {
+                if (tmpBucket.instanceId.equals(instanceId)) {
+                    bucketInstance = tmpBucket;
+                    break;
+                }
+            }
+
+            try {
+                if (bucketInstance != null) {
+                    zkServer.delete(bucketListNode + "/" + bucket + "/" + bucketInstance.ephemeralId, -1);
+                    bucketList = zkServer.getChildren(bucketListNode, true);
+                    updateBucketList();
+                }
+            } catch (Exception e) {
+                throw new IllegalStateException("Problem deleting ephemeral node", e);
+            }
 
         } catch (InvalidBucketException e) {
             // this is fine
