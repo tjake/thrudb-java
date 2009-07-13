@@ -287,4 +287,14 @@ public class ThrudocHandler implements Iface {
 		return null;
 	}
 
+    public void setPartitionFactor(String bucket, int factor) throws TException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void setReplicationFactor(String bucket, int factor) throws TException {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

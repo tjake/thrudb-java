@@ -1,6 +1,5 @@
 package org.thrudb.thrudoc;
 
-import java.io.FilenameFilter;
 import java.util.List;
 
 import org.apache.thrift.TException;
@@ -9,6 +8,7 @@ public interface ThrudocBackend {
 
 	static final String SPECIAL_KEY = "__DBID__";
 	static final String SHARD_KEY   = "__SHARD__";
+	
 	
 	byte[] get(String key);
 	

@@ -30,13 +30,14 @@ public class TPeekingTransport extends TFramedTransport {
 	private boolean recording  = false;
 	
 	private boolean logging    = false;
-	private HDB     log;
-	private String  nextLogId  = "-1";
+	private LogManager  logManager;
+
+    private String  nextLogId  = "-1";
 	
 
-	public TPeekingTransport(TTransport baseTransport, HDB log) {
+	public TPeekingTransport(TTransport baseTransport, LogManager logManager) {
 		super(baseTransport);
-		this.log = log;
+		this.logManager = logManager;
 	}
 
 	@Override
@@ -91,9 +92,7 @@ public class TPeekingTransport extends TFramedTransport {
 		}
 		
 		if(logging){
-			if(!log.putcat(nextLogId.getBytes(), buf)){
-				throw new TTransportException("Log message"+nextLogId+" is corrupt");
-			}
+			logManager.log(nextLogId, buf);
 		}
 		
 		return sz;
@@ -163,14 +162,7 @@ public class TPeekingTransport extends TFramedTransport {
 		
 		//get new log in sequence
 		if(logging){
-			int lsn = log.addint("LSN_"+bucket, 1);
-			if(lsn == Integer.MIN_VALUE){
-				throw new TTransportException("Logging error:"+log.errmsg());
-			}else{
-				logger.info("LSN is now "+lsn+" for "+bucket);
-			}
-			
-			nextLogId = bucket+"_"+String.valueOf(lsn)+"_";
+			nextLogId = logManager.getNextLSN(bucket);
 		}
 	
 	}
@@ -180,11 +172,7 @@ public class TPeekingTransport extends TFramedTransport {
 	 */
 	public void rollback() throws TTransportException{
 		if(logging){
-			//log.out(String.valueOf(nextLogId));
-			if(!log.put(nextLogId+"r", "e")){
-				throw new TTransportException("Logging rollback err:"+log.errmsg());
-			}
-			log.sync();
+			logManager.rollback(nextLogId);
 		}
 	}
 	
@@ -194,10 +182,7 @@ public class TPeekingTransport extends TFramedTransport {
 	 */
 	public void commit() throws TTransportException{
 		if(logging){
-			if(!log.put(nextLogId+"r", "c")){
-				throw new TTransportException("Logging commit err:"+log.errmsg());
-			}
-			log.sync();
+			logManager.commit(nextLogId);
 		}	
 	}
 }

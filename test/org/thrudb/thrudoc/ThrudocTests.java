@@ -2,6 +2,7 @@ package org.thrudb.thrudoc;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,6 +20,7 @@ import org.apache.zookeeper.server.NIOServerCnxn.Factory;
 
 public class ThrudocTests extends TestCase {
     private final static String bucket = "test_bucket";
+    private final static String key    = UUID.randomUUID().toString();
     private static Logger logger = Logger.getLogger(ThrudocTests.class);
 
     private Thrudoc.Client getClient(int port) throws TTransportException {
@@ -164,6 +166,38 @@ public class ThrudocTests extends TestCase {
         }
 
     }
+    
+    
+    public void testTwoServers() {
+
+        try {
+            ExecutorService zkThread = startService(new ZkService("zk", 2182));
+            ExecutorService td1Thread = startService(new ThrudocTestService("td", 11291));
+            ExecutorService td2Thread = startService(new ThrudocTestService("td2", 11292));
+
+            Thrudoc.Client client1 = getClient(11291);
+            Thrudoc.Client client2 = getClient(11292);
+            
+            client1.create_bucket(bucket);
+            client1.setReplicationFactor(bucket,2); 
+            
+            this.doWrites(client1);
+
+            this.doReads(client1);
+
+            this.doReads(client2);
+          
+            
+            client1.delete_bucket(bucket);
+            td1Thread.shutdown();
+            td2Thread.shutdown();
+            zkThread.shutdown();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail(e.getLocalizedMessage());
+        }
+    }
 
     private void checkCreateBucket(Thrudoc.Client client) {
         try {
@@ -198,4 +232,26 @@ public class ThrudocTests extends TestCase {
         }
     }
 
+    private void doWrites(Thrudoc.Client client){
+       try{
+           for (int i = 0; i < 1000; i++) {
+               client.put(bucket, key+i, "value".getBytes());
+           }
+       }catch(Throwable t){
+           t.printStackTrace();
+           fail(t.getMessage());
+       }
+    }
+    
+    private void doReads(Thrudoc.Client client){
+        try{   
+            for (int i = 0; i < 1000; i++) {
+                assertTrue("value".equals(new String(client.get(bucket, key+i))));
+            }
+        }catch(Throwable t){
+            t.printStackTrace();
+            fail(t.getMessage());
+        }
+    }
+    
 }

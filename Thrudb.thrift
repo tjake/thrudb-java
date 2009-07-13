@@ -40,7 +40,7 @@ service Thrudb {
 		 *Changes the replication factor for a given bucket
 		 *
 		 */
-		 boolean   setReplicationFactor(1:String bucket, 2:i32 factor);
+		 void   setReplicationFactor(1:string bucket, 2:i32 factor);
 		 
 		 
 		 /**
@@ -48,7 +48,7 @@ service Thrudb {
 		  *Changes the partition factor for a given bucket
 		  *
 		  */
-		 boolean   setPartitionFactor(1:String bucket, 2:i32 factor);       
+		 void   setPartitionFactor(1:string bucket, 2:i32 factor);       
 
         /**
          * <pre>

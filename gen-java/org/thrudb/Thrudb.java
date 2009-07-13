@@ -34,6 +34,26 @@ public class Thrudb {
     public List<String> getAvailibleServers() throws TException;
 
     /**
+     * 
+     * Changes the replication factor for a given bucket
+     * 
+     * 
+     * @param bucket
+     * @param factor
+     */
+    public void setReplicationFactor(String bucket, int factor) throws TException;
+
+    /**
+     * 
+     * Changes the partition factor for a given bucket
+     * 
+     * 
+     * @param bucket
+     * @param factor
+     */
+    public void setPartitionFactor(String bucket, int factor) throws TException;
+
+    /**
      * <pre>
      * Retrieves a map of data about this service.
      * 
@@ -138,6 +158,68 @@ public class Thrudb {
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "getAvailibleServers failed: unknown result");
     }
 
+    public void setReplicationFactor(String bucket, int factor) throws TException
+    {
+      send_setReplicationFactor(bucket, factor);
+      recv_setReplicationFactor();
+    }
+
+    public void send_setReplicationFactor(String bucket, int factor) throws TException
+    {
+      oprot_.writeMessageBegin(new TMessage("setReplicationFactor", TMessageType.CALL, seqid_));
+      setReplicationFactor_args args = new setReplicationFactor_args();
+      args.bucket = bucket;
+      args.factor = factor;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+    }
+
+    public void recv_setReplicationFactor() throws TException
+    {
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      setReplicationFactor_result result = new setReplicationFactor_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      return;
+    }
+
+    public void setPartitionFactor(String bucket, int factor) throws TException
+    {
+      send_setPartitionFactor(bucket, factor);
+      recv_setPartitionFactor();
+    }
+
+    public void send_setPartitionFactor(String bucket, int factor) throws TException
+    {
+      oprot_.writeMessageBegin(new TMessage("setPartitionFactor", TMessageType.CALL, seqid_));
+      setPartitionFactor_args args = new setPartitionFactor_args();
+      args.bucket = bucket;
+      args.factor = factor;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+    }
+
+    public void recv_setPartitionFactor() throws TException
+    {
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      setPartitionFactor_result result = new setPartitionFactor_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      return;
+    }
+
     public Map<String,Long> getServiceStats() throws TException
     {
       send_getServiceStats();
@@ -240,6 +322,8 @@ public class Thrudb {
     {
       iface_ = iface;
       processMap_.put("getAvailibleServers", new getAvailibleServers());
+      processMap_.put("setReplicationFactor", new setReplicationFactor());
+      processMap_.put("setPartitionFactor", new setPartitionFactor());
       processMap_.put("getServiceStats", new getServiceStats());
       processMap_.put("ping", new ping());
       processMap_.put("getLogSince", new getLogSince());
@@ -279,6 +363,38 @@ public class Thrudb {
         getAvailibleServers_result result = new getAvailibleServers_result();
         result.success = iface_.getAvailibleServers();
         oprot.writeMessageBegin(new TMessage("getAvailibleServers", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+      }
+
+    }
+
+    private class setReplicationFactor implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
+      {
+        setReplicationFactor_args args = new setReplicationFactor_args();
+        args.read(iprot);
+        iprot.readMessageEnd();
+        setReplicationFactor_result result = new setReplicationFactor_result();
+        iface_.setReplicationFactor(args.bucket, args.factor);
+        oprot.writeMessageBegin(new TMessage("setReplicationFactor", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+      }
+
+    }
+
+    private class setPartitionFactor implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
+      {
+        setPartitionFactor_args args = new setPartitionFactor_args();
+        args.read(iprot);
+        iprot.readMessageEnd();
+        setPartitionFactor_result result = new setPartitionFactor_result();
+        iface_.setPartitionFactor(args.bucket, args.factor);
+        oprot.writeMessageBegin(new TMessage("setPartitionFactor", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
@@ -674,6 +790,772 @@ public class Thrudb {
         sb.append(this.success);
       }
       first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class setReplicationFactor_args implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("setReplicationFactor_args");
+    private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
+    private static final TField FACTOR_FIELD_DESC = new TField("factor", TType.I32, (short)2);
+
+    public String bucket;
+    public static final int BUCKET = 1;
+    public int factor;
+    public static final int FACTOR = 2;
+
+    private final Isset __isset = new Isset();
+    private static final class Isset implements java.io.Serializable {
+      public boolean factor = false;
+    }
+
+    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
+      put(FACTOR, new FieldMetaData("factor", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.I32)));
+    }});
+
+    static {
+      FieldMetaData.addStructMetaDataMap(setReplicationFactor_args.class, metaDataMap);
+    }
+
+    public setReplicationFactor_args() {
+    }
+
+    public setReplicationFactor_args(
+      String bucket,
+      int factor)
+    {
+      this();
+      this.bucket = bucket;
+      this.factor = factor;
+      this.__isset.factor = true;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public setReplicationFactor_args(setReplicationFactor_args other) {
+      if (other.isSetBucket()) {
+        this.bucket = other.bucket;
+      }
+      __isset.factor = other.__isset.factor;
+      this.factor = other.factor;
+    }
+
+    @Override
+    public setReplicationFactor_args clone() {
+      return new setReplicationFactor_args(this);
+    }
+
+    public String getBucket() {
+      return this.bucket;
+    }
+
+    public void setBucket(String bucket) {
+      this.bucket = bucket;
+    }
+
+    public void unsetBucket() {
+      this.bucket = null;
+    }
+
+    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    public boolean isSetBucket() {
+      return this.bucket != null;
+    }
+
+    public void setBucketIsSet(boolean value) {
+      if (!value) {
+        this.bucket = null;
+      }
+    }
+
+    public int getFactor() {
+      return this.factor;
+    }
+
+    public void setFactor(int factor) {
+      this.factor = factor;
+      this.__isset.factor = true;
+    }
+
+    public void unsetFactor() {
+      this.__isset.factor = false;
+    }
+
+    // Returns true if field factor is set (has been asigned a value) and false otherwise
+    public boolean isSetFactor() {
+      return this.__isset.factor;
+    }
+
+    public void setFactorIsSet(boolean value) {
+      this.__isset.factor = value;
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case BUCKET:
+        if (value == null) {
+          unsetBucket();
+        } else {
+          setBucket((String)value);
+        }
+        break;
+
+      case FACTOR:
+        if (value == null) {
+          unsetFactor();
+        } else {
+          setFactor((Integer)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case BUCKET:
+        return getBucket();
+
+      case FACTOR:
+        return new Integer(getFactor());
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case BUCKET:
+        return isSetBucket();
+      case FACTOR:
+        return isSetFactor();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof setReplicationFactor_args)
+        return this.equals((setReplicationFactor_args)that);
+      return false;
+    }
+
+    public boolean equals(setReplicationFactor_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_bucket = true && this.isSetBucket();
+      boolean that_present_bucket = true && that.isSetBucket();
+      if (this_present_bucket || that_present_bucket) {
+        if (!(this_present_bucket && that_present_bucket))
+          return false;
+        if (!this.bucket.equals(that.bucket))
+          return false;
+      }
+
+      boolean this_present_factor = true;
+      boolean that_present_factor = true;
+      if (this_present_factor || that_present_factor) {
+        if (!(this_present_factor && that_present_factor))
+          return false;
+        if (this.factor != that.factor)
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin();
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case BUCKET:
+            if (field.type == TType.STRING) {
+              this.bucket = iprot.readString();
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          case FACTOR:
+            if (field.type == TType.I32) {
+              this.factor = iprot.readI32();
+              this.__isset.factor = true;
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.bucket != null) {
+        oprot.writeFieldBegin(BUCKET_FIELD_DESC);
+        oprot.writeString(this.bucket);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldBegin(FACTOR_FIELD_DESC);
+      oprot.writeI32(this.factor);
+      oprot.writeFieldEnd();
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("setReplicationFactor_args(");
+      boolean first = true;
+
+      sb.append("bucket:");
+      if (this.bucket == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.bucket);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("factor:");
+      sb.append(this.factor);
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class setReplicationFactor_result implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("setReplicationFactor_result");
+
+    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+    }});
+
+    static {
+      FieldMetaData.addStructMetaDataMap(setReplicationFactor_result.class, metaDataMap);
+    }
+
+    public setReplicationFactor_result() {
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public setReplicationFactor_result(setReplicationFactor_result other) {
+    }
+
+    @Override
+    public setReplicationFactor_result clone() {
+      return new setReplicationFactor_result(this);
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof setReplicationFactor_result)
+        return this.equals((setReplicationFactor_result)that);
+      return false;
+    }
+
+    public boolean equals(setReplicationFactor_result that) {
+      if (that == null)
+        return false;
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin();
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("setReplicationFactor_result(");
+      boolean first = true;
+
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class setPartitionFactor_args implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("setPartitionFactor_args");
+    private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
+    private static final TField FACTOR_FIELD_DESC = new TField("factor", TType.I32, (short)2);
+
+    public String bucket;
+    public static final int BUCKET = 1;
+    public int factor;
+    public static final int FACTOR = 2;
+
+    private final Isset __isset = new Isset();
+    private static final class Isset implements java.io.Serializable {
+      public boolean factor = false;
+    }
+
+    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
+      put(FACTOR, new FieldMetaData("factor", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.I32)));
+    }});
+
+    static {
+      FieldMetaData.addStructMetaDataMap(setPartitionFactor_args.class, metaDataMap);
+    }
+
+    public setPartitionFactor_args() {
+    }
+
+    public setPartitionFactor_args(
+      String bucket,
+      int factor)
+    {
+      this();
+      this.bucket = bucket;
+      this.factor = factor;
+      this.__isset.factor = true;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public setPartitionFactor_args(setPartitionFactor_args other) {
+      if (other.isSetBucket()) {
+        this.bucket = other.bucket;
+      }
+      __isset.factor = other.__isset.factor;
+      this.factor = other.factor;
+    }
+
+    @Override
+    public setPartitionFactor_args clone() {
+      return new setPartitionFactor_args(this);
+    }
+
+    public String getBucket() {
+      return this.bucket;
+    }
+
+    public void setBucket(String bucket) {
+      this.bucket = bucket;
+    }
+
+    public void unsetBucket() {
+      this.bucket = null;
+    }
+
+    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    public boolean isSetBucket() {
+      return this.bucket != null;
+    }
+
+    public void setBucketIsSet(boolean value) {
+      if (!value) {
+        this.bucket = null;
+      }
+    }
+
+    public int getFactor() {
+      return this.factor;
+    }
+
+    public void setFactor(int factor) {
+      this.factor = factor;
+      this.__isset.factor = true;
+    }
+
+    public void unsetFactor() {
+      this.__isset.factor = false;
+    }
+
+    // Returns true if field factor is set (has been asigned a value) and false otherwise
+    public boolean isSetFactor() {
+      return this.__isset.factor;
+    }
+
+    public void setFactorIsSet(boolean value) {
+      this.__isset.factor = value;
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      case BUCKET:
+        if (value == null) {
+          unsetBucket();
+        } else {
+          setBucket((String)value);
+        }
+        break;
+
+      case FACTOR:
+        if (value == null) {
+          unsetFactor();
+        } else {
+          setFactor((Integer)value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case BUCKET:
+        return getBucket();
+
+      case FACTOR:
+        return new Integer(getFactor());
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      case BUCKET:
+        return isSetBucket();
+      case FACTOR:
+        return isSetFactor();
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof setPartitionFactor_args)
+        return this.equals((setPartitionFactor_args)that);
+      return false;
+    }
+
+    public boolean equals(setPartitionFactor_args that) {
+      if (that == null)
+        return false;
+
+      boolean this_present_bucket = true && this.isSetBucket();
+      boolean that_present_bucket = true && that.isSetBucket();
+      if (this_present_bucket || that_present_bucket) {
+        if (!(this_present_bucket && that_present_bucket))
+          return false;
+        if (!this.bucket.equals(that.bucket))
+          return false;
+      }
+
+      boolean this_present_factor = true;
+      boolean that_present_factor = true;
+      if (this_present_factor || that_present_factor) {
+        if (!(this_present_factor && that_present_factor))
+          return false;
+        if (this.factor != that.factor)
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin();
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          case BUCKET:
+            if (field.type == TType.STRING) {
+              this.bucket = iprot.readString();
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          case FACTOR:
+            if (field.type == TType.I32) {
+              this.factor = iprot.readI32();
+              this.__isset.factor = true;
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      if (this.bucket != null) {
+        oprot.writeFieldBegin(BUCKET_FIELD_DESC);
+        oprot.writeString(this.bucket);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldBegin(FACTOR_FIELD_DESC);
+      oprot.writeI32(this.factor);
+      oprot.writeFieldEnd();
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("setPartitionFactor_args(");
+      boolean first = true;
+
+      sb.append("bucket:");
+      if (this.bucket == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.bucket);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("factor:");
+      sb.append(this.factor);
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+      // check that fields of type enum have valid values
+    }
+
+  }
+
+  public static class setPartitionFactor_result implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("setPartitionFactor_result");
+
+    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+    }});
+
+    static {
+      FieldMetaData.addStructMetaDataMap(setPartitionFactor_result.class, metaDataMap);
+    }
+
+    public setPartitionFactor_result() {
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public setPartitionFactor_result(setPartitionFactor_result other) {
+    }
+
+    @Override
+    public setPartitionFactor_result clone() {
+      return new setPartitionFactor_result(this);
+    }
+
+    public void setFieldValue(int fieldID, Object value) {
+      switch (fieldID) {
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
+    public boolean isSet(int fieldID) {
+      switch (fieldID) {
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof setPartitionFactor_result)
+        return this.equals((setPartitionFactor_result)that);
+      return false;
+    }
+
+    public boolean equals(setPartitionFactor_result that) {
+      if (that == null)
+        return false;
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return 0;
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField field;
+      iprot.readStructBegin();
+      while (true)
+      {
+        field = iprot.readFieldBegin();
+        if (field.type == TType.STOP) { 
+          break;
+        }
+        switch (field.id)
+        {
+          default:
+            TProtocolUtil.skip(iprot, field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder sb = new StringBuilder("setPartitionFactor_result(");
+      boolean first = true;
+
       sb.append(")");
       return sb.toString();
     }

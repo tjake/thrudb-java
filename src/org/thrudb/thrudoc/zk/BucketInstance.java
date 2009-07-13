@@ -3,8 +3,10 @@ package org.thrudb.thrudoc.zk;
 import java.io.Serializable;
 
 public class BucketInstance implements Serializable{
-	public String  ephemeralId;
+    private static final long serialVersionUID = 1L;
+    public String  ephemeralId;
     public String  instanceId;
 	public String  shard;
-	public Boolean master = false;
+	public String  lsn;
+	public Boolean master = false;  
 }

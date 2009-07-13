@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,15 +24,15 @@ import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.ZooDefs.Ids;
+import org.apache.zookeeper.data.Stat;
 import org.thrudb.LogEntry;
+import org.thrudb.thrift.LogManager;
 import org.thrudb.thrudoc.InvalidBucketException;
 import org.thrudb.thrudoc.Thrudoc;
 import org.thrudb.thrudoc.ThrudocBackend;
 import org.thrudb.thrudoc.ThrudocException;
 import org.thrudb.thrudoc.Thrudoc.Iface;
 import org.thrudb.util.StaticHelpers;
-
-import com.sun.jdi.InvalidStackFrameException;
 
 /**
  * Zookeeper maintains the state of what instances are connected and what
@@ -81,15 +80,21 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
 
     /** node name for space list */
     private final String bucketListNode = "/bucketList";
-
+    private final String bucketMetaDataNode = "/bucketMetaDataNode";
+    
     /** Keeps track of the spaces available on each instance */
     private List<String> bucketList;
     private Map<String, List<BucketInstance>> bucketInfo;
+    
+    
+    /** Redo log **/
+    LogManager logManager;
 
-    public ZooKeeperBackend(String zkAddress, int port, Thrudoc.Iface delegateHandler) {
+    public ZooKeeperBackend(String zkAddress, int port, Thrudoc.Iface delegateHandler, LogManager logManager) {
         this.zkAddress = zkAddress;
         this.delegateHandler = delegateHandler;
         this.thrudocPort = port;
+        this.logManager = logManager;
 
         try {
             instanceId = new String(delegateHandler.get("thrudb", ThrudocBackend.SPECIAL_KEY));
@@ -111,7 +116,7 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
         ExecutorService thread = Executors.newSingleThreadExecutor();
         thread.submit(this);
     }
-
+    
     private void createServerList() throws KeeperException, InterruptedException {
 
         // create serverlistNode
@@ -151,7 +156,8 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
                 byte[] obj = zkServer.getData(serverListNode + "/" + server, false, null);
 
                 ServerInstance info = (ServerInstance) StaticHelpers.fromBytes(obj);
-
+                info.ephemeralId = server;
+                
                 serverInfo.put(info.instanceId, info);
 
             } catch (KeeperException e) {
@@ -182,7 +188,14 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
 
         BucketInstance myBucket = new BucketInstance();
         myBucket.instanceId = instanceId;
-        myBucket.master = false;
+        if(logManager != null){
+            try{
+                myBucket.lsn    = logManager.getCurrentLSN(bucket);
+                logger.debug("Bucket LSN: "+myBucket.lsn);
+            }catch(Exception e){
+                throw new RuntimeException("Error reading log",e);
+            }
+        }
 
         try {
             byte[] obj = StaticHelpers.toBytes(myBucket);
@@ -264,7 +277,6 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
                     // setup monitors
                     this.createServerList();
                     this.createBucketList();
-
                 }
 
                 Thread.sleep(200);
@@ -561,6 +573,40 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
     // FIXME: this should scan all shards
     public List<String> scan(String bucket, String seed, int limit) throws ThrudocException, InvalidBucketException, TException {
         return getClient(getInstanceForBucket(bucket, seed, false)).scan(bucket, seed, limit);
+    }
+
+    public void setPartitionFactor(String bucket, int factor) throws TException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void setReplicationFactor(String bucket, int factor) throws TException {
+        try {
+            String node = bucketMetaDataNode+"/"+bucket;
+            Stat exists = zkServer.exists(node, false);
+            
+            BucketMetaData bucketMetaData = null;
+            
+            if(exists != null){
+                byte[] obj = zkServer.getData(node, false, null);
+                bucketMetaData = (BucketMetaData) StaticHelpers.fromBytes(obj);
+            }
+            
+            if(bucketMetaData == null){
+                bucketMetaData = new BucketMetaData();
+            }
+            
+            bucketMetaData.replicas = factor;
+            
+            if(exists == null){
+                zkServer.create(node, StaticHelpers.toBytes(bucketMetaData), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            }else{
+                zkServer.setData(node, StaticHelpers.toBytes(bucketMetaData), -1);
+            }
+            
+        } catch (Exception e){
+            throw new TException(e);
+        }   
     }
 
 }

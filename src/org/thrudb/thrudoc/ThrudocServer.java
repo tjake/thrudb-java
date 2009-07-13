@@ -72,26 +72,25 @@ public class ThrudocServer {
 	public void start() {
 		// Start the server
 		try {
+		    
+		    Options opt = new Options();
+            opt.maxWorkerThreads = threadCount;
+
+            TPeekingTransportFactory peekFactory = new TPeekingTransportFactory(
+                    propertyName, "thrudoc_log");
+		    
 			// Transport
 			TNonblockingServerTransport serverSocket = new TNonblockingServerSocket(
 					port);
 
 			ThrudocHandler   docHandler=  new ThrudocHandler(docRoot);
-			ZooKeeperBackend zkHandler =  new ZooKeeperBackend("127.0.0.1:2182", port, docHandler);
+			ZooKeeperBackend zkHandler =  new ZooKeeperBackend("127.0.0.1:2182", port, docHandler,peekFactory);
 			RetryBackend     rHandler  =  new RetryBackend(1,zkHandler);
 			
 			// Processor
 			TProcessor processor = new ThrudocLoggingProcessor(rHandler);
 
-			Options opt = new Options();
-			opt.maxWorkerThreads = threadCount;
-
-			TPeekingTransportFactory peekFactory = new TPeekingTransportFactory(
-					propertyName, "thrudoc_log");
-			
-			
 			// Server
-			// TServer server = new THsHaServer(processor,serverSocket);
 			server = new THsHaServer(new TProcessorFactory(processor),
 					serverSocket, peekFactory, peekFactory,
 					new TBinaryProtocol.Factory(),

@@ -402,4 +402,31 @@ public class RetryBackend implements Iface {
 	
 	}
 
+    public void setPartitionFactor(String bucket, int factor) throws TException {
+        int tries = 0;
+
+        while (++tries <= maxRetries) {
+            try {
+                delegateBackend.setPartitionFactor(bucket, factor);
+                return;
+            } catch (TException e) {
+                handleException(e, tries);
+            }
+        } 
+    }
+
+    public void setReplicationFactor(String bucket, int factor) throws TException {
+        int tries = 0;
+
+        while (++tries <= maxRetries) {
+            try {
+                delegateBackend.setReplicationFactor(bucket, factor);
+                return;
+            } catch (TException e) {
+                handleException(e, tries);
+            }
+        } 
+        
+    }
+
 }
