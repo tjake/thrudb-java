@@ -7,7 +7,6 @@ namespace ruby Thrudoc
 include "Thrudb.thrift"
 
 exception ThrudocException{}
-exception InvalidBucketException{}
 exception InvalidKeyException{}
 exception InvalidParametersException{}
 

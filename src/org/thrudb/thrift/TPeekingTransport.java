@@ -32,6 +32,7 @@ public class TPeekingTransport extends TFramedTransport {
 	private boolean logging    = false;
 	private LogManager  logManager;
 
+	private String  bucket     = "";
     private String  nextLogId  = "-1";
 	
 
@@ -92,7 +93,7 @@ public class TPeekingTransport extends TFramedTransport {
 		}
 		
 		if(logging){
-			logManager.log(nextLogId, buf);
+			logManager.log(bucket,nextLogId, buf);
 		}
 		
 		return sz;
@@ -162,7 +163,8 @@ public class TPeekingTransport extends TFramedTransport {
 		
 		//get new log in sequence
 		if(logging){
-			nextLogId = logManager.getNextLSN(bucket);
+		    this.bucket = bucket; 
+			nextLogId   = logManager.getNextLSN(bucket);
 		}
 	
 	}
@@ -172,7 +174,7 @@ public class TPeekingTransport extends TFramedTransport {
 	 */
 	public void rollback() throws TTransportException{
 		if(logging){
-			logManager.rollback(nextLogId);
+			logManager.rollback(bucket,nextLogId);
 		}
 	}
 	
@@ -182,7 +184,7 @@ public class TPeekingTransport extends TFramedTransport {
 	 */
 	public void commit() throws TTransportException{
 		if(logging){
-			logManager.commit(nextLogId);
+			logManager.commit(bucket,nextLogId);
 		}	
 	}
 }

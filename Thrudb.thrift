@@ -5,6 +5,8 @@ namespace java org.thrudb
 namespace ruby Thrudb
 
 
+exception InvalidBucketException{}
+
 /**
  * <pre>Represents a single log entry.
  *
@@ -40,7 +42,7 @@ service Thrudb {
 		 *Changes the replication factor for a given bucket
 		 *
 		 */
-		 void   setReplicationFactor(1:string bucket, 2:i32 factor);
+		 void   setReplicationFactor(1:string bucket, 2:i32 factor) throws(1: InvalidBucketException);
 		 
 		 
 		 /**
@@ -48,7 +50,7 @@ service Thrudb {
 		  *Changes the partition factor for a given bucket
 		  *
 		  */
-		 void   setPartitionFactor(1:string bucket, 2:i32 factor);       
+		 void   setPartitionFactor(1:string bucket, 2:i32 factor) throws(1: InvalidBucketException);       
 
         /**
          * <pre>
@@ -88,5 +90,5 @@ service Thrudb {
          * @param kbLimit
          *                        The max response size of the messages (not strict)</pre>
          */
-        list<LogEntry>    getLogSince(1:string bucket, 2:string lsn, 3:i32 kbLimit);
+        list<LogEntry>    getLogSince(1:string bucket, 2:string lsn, 3:i32 kbLimit) throws(1: InvalidBucketException);
 }

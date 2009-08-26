@@ -52,7 +52,7 @@ import org.thrudb.util.StaticHelpers;
  */
 public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
 
-    private Logger logger = Logger.getLogger(getClass());
+    private static Logger logger = Logger.getLogger(ZooKeeperBackend.class);
     private ZooKeeper zkServer;
     private String zkAddress;
     private int thrudocPort;
@@ -81,15 +81,19 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
     /** node name for space list */
     private final String bucketListNode = "/bucketList";
     private final String bucketMetaDataNode = "/bucketMetaDataNode";
-    
+
     /** Keeps track of the spaces available on each instance */
     private List<String> bucketList;
     private Map<String, List<BucketInstance>> bucketInfo;
-    
-    
-    /** Redo log **/
-    LogManager logManager;
 
+    /** Keeps meta info on the buckets **/
+    private Map<String, BucketMetaData> bucketMetaData;
+
+    /** Redo log **/
+    LogManager         logManager;
+    ReplicationManager replicationManager;
+    
+    
     public ZooKeeperBackend(String zkAddress, int port, Thrudoc.Iface delegateHandler, LogManager logManager) {
         this.zkAddress = zkAddress;
         this.delegateHandler = delegateHandler;
@@ -107,16 +111,23 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
             throw new RuntimeException("Problem identifying this thrudb instance on zookeeper... bailing");
         }
 
-        this.serverList = new ArrayList<String>();
-        this.serverInfo = new HashMap<String, ServerInstance>();
-        this.bucketList = new ArrayList<String>();
-        this.bucketInfo = new HashMap<String, List<BucketInstance>>();
+        serverList = new ArrayList<String>();
+        serverInfo = new HashMap<String, ServerInstance>();
+        bucketList = new ArrayList<String>();
+        bucketInfo = new HashMap<String, List<BucketInstance>>();
+        bucketMetaData = new HashMap<String, BucketMetaData>();
 
         // start connector thread
         ExecutorService thread = Executors.newSingleThreadExecutor();
         thread.submit(this);
-    }
     
+        //start replication thread  
+        replicationManager = new ReplicationManager(this);
+        ExecutorService replThread = Executors.newSingleThreadExecutor();
+        replThread.submit(replicationManager);
+        
+    }
+
     private void createServerList() throws KeeperException, InterruptedException {
 
         // create serverlistNode
@@ -149,7 +160,7 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
         updateServerInfo();
     }
 
-    public void updateServerInfo() {
+    private void updateServerInfo() {
 
         for (String server : serverList) {
             try {
@@ -157,7 +168,7 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
 
                 ServerInstance info = (ServerInstance) StaticHelpers.fromBytes(obj);
                 info.ephemeralId = server;
-                
+
                 serverInfo.put(info.instanceId, info);
 
             } catch (KeeperException e) {
@@ -187,13 +198,14 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
         }
 
         BucketInstance myBucket = new BucketInstance();
+        myBucket.bucket     = bucket;
         myBucket.instanceId = instanceId;
-        if(logManager != null){
-            try{
-                myBucket.lsn    = logManager.getCurrentLSN(bucket);
-                logger.debug("Bucket LSN: "+myBucket.lsn);
-            }catch(Exception e){
-                throw new RuntimeException("Error reading log",e);
+        if (logManager != null) {
+            try {
+                myBucket.lsn = logManager.getCurrentLSN(bucket);
+                logger.debug("Bucket LSN: " + myBucket.lsn);
+            } catch (Exception e) {
+                throw new RuntimeException("Error reading log", e);
             }
         }
 
@@ -210,37 +222,88 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
 
     private void updateBucketList() throws InterruptedException, KeeperException {
 
-        for (String bucket : bucketList) {
-            List<String> bucketInstances = zkServer.getChildren(bucketListNode + "/" + bucket, true);
+        try {
+            for (String bucket : bucketList) {
+                List<String> bucketInstances = zkServer.getChildren(bucketListNode + "/" + bucket, true);
 
-            List<BucketInstance> instanceList = new ArrayList<BucketInstance>();
-            for (String instance : bucketInstances) {
-                try {
+                List<BucketInstance> instanceList = new ArrayList<BucketInstance>();
+                for (String instance : bucketInstances) {
+
                     byte[] obj = zkServer.getData(bucketListNode + "/" + bucket + "/" + instance, false, null);
 
                     BucketInstance info = (BucketInstance) StaticHelpers.fromBytes(obj);
                     info.ephemeralId = instance;
+                    info.bucket      = bucket;
                     instanceList.add(info);
-
-                } catch (KeeperException e) {
-                    logger.error(e);
-                    throw new IllegalStateException(e);
-                } catch (InterruptedException e) {
-                    logger.error(e);
-                    throw new IllegalStateException(e);
-                } catch (ClassNotFoundException e) {
-                    logger.error(e);
-                    throw new IllegalStateException(e);
-                } catch (IOException e) {
-                    logger.error(e);
-                    throw new IllegalStateException(e);
                 }
-            }
 
-            bucketInfo.put(bucket, instanceList);
+                // also update meta info
+                updateBucketMetaData(bucketMetaDataNode + "/" + bucket);
+
+                bucketInfo.put(bucket, instanceList);
+            }
+        } catch (KeeperException e) {
+            logger.error(e);
+            throw new IllegalStateException(e);
+        } catch (InterruptedException e) {
+            logger.error(e);
+            throw new IllegalStateException(e);
+        } catch (ClassNotFoundException e) {
+            logger.error(e);
+            throw new IllegalStateException(e);
+        } catch (IOException e) {
+            logger.error(e);
+            throw new IllegalStateException(e);
         }
 
         state = ZooState.CONNECTED;
+    }
+
+    private void updateBucketMetaData(String path) throws InterruptedException, KeeperException {
+
+        // A bucket has been added or removed
+        if (path.equals(bucketMetaDataNode)) {
+            this.updateBucketList();
+            return;
+        }
+
+        try {
+            // also update meta info
+            BucketMetaData meta;
+            try {
+                byte[] obj = zkServer.getData(path, true, null);
+                meta = (BucketMetaData) StaticHelpers.fromBytes(obj);
+            } catch (KeeperException.NoNodeException e) {
+                // default for no node
+                meta = new BucketMetaData();
+            }
+
+            String[] pathArray = path.split("/");
+
+            if (pathArray.length != 3) {
+                throw new IllegalStateException("unable to parse bucket name from: " + path);
+            }
+
+            meta.bucket = pathArray[2];
+
+            configureBucket(meta);
+
+            bucketMetaData.put(meta.bucket, meta);
+
+        } catch (KeeperException e) {
+            logger.error(e);
+            throw new IllegalStateException(e);
+        } catch (InterruptedException e) {
+            logger.error(e);
+            throw new IllegalStateException(e);
+        } catch (ClassNotFoundException e) {
+            logger.error(e);
+            throw new IllegalStateException(e);
+        } catch (IOException e) {
+            logger.error(e);
+            throw new IllegalStateException(e);
+        }
+
     }
 
     private void createBucketList() throws KeeperException, InterruptedException, TException, ThrudocException {
@@ -261,6 +324,7 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
         // fetch the current list and start a monitor
         bucketList = zkServer.getChildren(bucketListNode, true);
         updateBucketList();
+
     }
 
     public void run() {
@@ -297,6 +361,9 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
         }
     }
 
+    /**
+     * This is called by zk whenever a node changes state that we're watching
+     */
     public void process(WatchedEvent event) {
 
         String path = event.getPath();
@@ -325,12 +392,16 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
                     state = ZooState.SERVER_TRANSITION;
                     serverList = zkServer.getChildren(serverListNode, true);
                     this.updateServerInfo();
-                }
 
-                if (path != null && path.equals(bucketList)) {
+                } else if (path != null && path.equals(bucketList)) {
                     state = ZooState.BUCKET_TRANSITION;
                     bucketList = zkServer.getChildren(bucketListNode, true);
                     updateBucketList();
+
+                } else if (path != null && path.startsWith(bucketMetaDataNode)) {
+                    updateBucketMetaData(path);
+                } else {
+                    logger.warn("Unhandled update to: " + path);
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage());
@@ -345,7 +416,7 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
      * @param bucket
      * @return
      */
-    public ServerInstance getInstanceForBucket(String bucket, String key, boolean write) throws InvalidBucketException {
+    private ServerInstance getInstanceForBucket(String bucket, String key, boolean write) throws InvalidBucketException {
 
         if (state != ZooState.CONNECTED) {
             throw new IllegalStateException("ZooKeeper not ready");
@@ -362,7 +433,17 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
         return instance;
     }
 
-    private Thrudoc.Iface getClient(ServerInstance instance) {
+    public ServerInstance getServerForBucketInstance(BucketInstance bucketInstance){
+        ServerInstance serverInstance = serverInfo.get(bucketInstance.instanceId);
+    
+        if(serverInstance == null){
+            throw new IllegalStateException("no server info for instanceId:"+bucketInstance.instanceId);
+        }
+        
+        return serverInstance;
+    }
+    
+    public Thrudoc.Iface getClient(ServerInstance instance) {
 
         Map<ServerInstance, Thrudoc.Iface> clientList = clientConnections.get();
 
@@ -466,7 +547,7 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
 
             getClient(instance).delete_bucket(bucket);
 
-            // FIXME: this should update zk bucketList
+            // also remove from zk bucketList
             BucketInstance bucketInstance = null;
             for (BucketInstance tmpBucket : bucketInfo.get(bucket)) {
                 if (tmpBucket.instanceId.equals(instanceId)) {
@@ -577,36 +658,124 @@ public final class ZooKeeperBackend implements Iface, Runnable, Watcher {
 
     public void setPartitionFactor(String bucket, int factor) throws TException {
         // TODO Auto-generated method stub
-        
+
     }
 
+    /**
+     * 
+     */
     public void setReplicationFactor(String bucket, int factor) throws TException {
+
+        if (!bucketInfo.containsKey(bucket)) {
+            // throw new InvalidBucketException();
+            throw new TException("Invalid Bucket");
+        }
+
         try {
-            String node = bucketMetaDataNode+"/"+bucket;
+
+            // create serverlistNode
+            try {
+                zkServer.create(bucketMetaDataNode, null, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            } catch (KeeperException.NodeExistsException e) {
+                // this is fine.
+            }
+
+            String node = bucketMetaDataNode + "/" + bucket;
             Stat exists = zkServer.exists(node, false);
-            
+
             BucketMetaData bucketMetaData = null;
-            
-            if(exists != null){
+
+            if (exists != null) {
                 byte[] obj = zkServer.getData(node, false, null);
                 bucketMetaData = (BucketMetaData) StaticHelpers.fromBytes(obj);
             }
-            
-            if(bucketMetaData == null){
+
+            if (bucketMetaData == null) {
                 bucketMetaData = new BucketMetaData();
             }
-            
+
+            bucketMetaData.bucket = bucket;
             bucketMetaData.replicas = factor;
-            
-            if(exists == null){
+
+            if (exists == null) {
                 zkServer.create(node, StaticHelpers.toBytes(bucketMetaData), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-            }else{
+            } else {
                 zkServer.setData(node, StaticHelpers.toBytes(bucketMetaData), -1);
             }
-            
-        } catch (Exception e){
+
+        } catch (Exception e) {
             throw new TException(e);
-        }   
+        }
     }
 
+    void configureBucket(BucketMetaData meta) {
+
+        List<BucketInstance> instances = bucketInfo.get(meta.bucket);
+
+        if (instances == null || instances.isEmpty()) {
+            throw new IllegalStateException("No active instances for :" + meta.bucket);
+        }
+
+        // start by choosing a master
+        BucketInstance masterInstance = instances.get(0);
+        masterInstance.master = true;
+
+        // remove any extra replicas
+        for (int i = (meta.replicas + 1); i < instances.size(); i++) {
+            if (instances.get(i).instanceId.equals(instanceId)) {
+                try {
+                    replicationManager.stopReplication(instances.get(i));
+                    delegateHandler.delete_bucket(meta.bucket);
+                } catch (Exception e) {
+                    throw new IllegalStateException("Error deleting replica", e);
+                }
+            }
+        }
+
+        Set<String> serversUsed = new HashSet<String>();
+        for (BucketInstance instance : instances) {
+            serversUsed.add(instance.ephemeralId);
+
+            if (!instance.master && instance.instanceId.equals(instanceId)) {
+                replicationManager.startReplication(masterInstance,instance);
+            }
+        }
+
+        // create start new replicas
+        for (int i = 0; i < (meta.replicas - instances.size() + 1); i++) {
+
+            // choose a server not yet used as a replica
+            for (String server : serverList) {
+                if (!serversUsed.contains(server)) {
+                    try {
+                        getClient(serverInfo.get(server)).create_bucket(meta.bucket);
+                        serversUsed.add(server);
+                    } catch (Exception e) {
+                        logger.error("Can't add bucket to client server", e);
+                    }
+                }
+            }
+        }
+
+    }
+
+    public String getInstanceId() {
+        return instanceId;
+    }
+
+    public LogManager getLogManager() {
+        return logManager;
+    }
+
+    public ReplicationManager getReplicationManager() {
+        return replicationManager;
+    }
+
+    public Thrudoc.Iface getDelegateHandler() {
+        return delegateHandler;
+    }
+
+    
+   
+    
 }
