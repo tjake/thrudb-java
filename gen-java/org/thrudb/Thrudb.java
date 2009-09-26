@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import java.util.BitSet;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
@@ -28,28 +32,37 @@ public class Thrudb {
   public interface Iface {
 
     /**
-     * Reteieves a map of data about this service.
+     *  * <pre>
+     *  * Lists the names of the servers currently running
+     *  * </pre>
+     * list<string>      getAvailibleServers();
      * 
-     * There are many kinds of data:
+     * /**
+     *  * <pre>
+     *  * Retrieves a map of data about this service.
+     *  *
+     *  * There are many kinds of data:
+     *  *
+     *  * Service call counts -
+     *  *                      All keys will start with "mc_", example: "mc_get"
+     *  *                      All values will represent number of times invoked
+     *  *
+     *  * Service call message sizes -
+     *  *                      All keys will start with "ms_"
+     *  *                      All values will represent total bytes received
+     *  *
+     *  * Service memory/cpu usage, uptime and health -
+     *  *                      key:"heap",  value:heapsize in kb
+     *  *                      key:"cpu",   value:0-100 representing %cpu
+     *  *                      key:"uptime",value:seconds since start
+     *  *
+     *  *
+     *  * Note, this data is ephemeral so if the service is restarted the previous
+     *  * stats are lost.</pre>
      * 
-     * Service call counts -
-     * 		All keys will start with "mc_", example: "mc_get"
-     * 		All values will represent number of times invoked
-     * 					  
-     * Service call message sizes -
-     * 		All keys will start with "ms_"
-     * 		All values will represent total bytes recieved
-     *  
-     * Service memory/cpu usage, uptime and health -
-     * 			key:"heap",  value:heapsize in kb
-     * 		key:"cpu",   value:0-100 representing %cpu
-     * 		key:"uptime",value:seconds since start
-     * 
-     * 
-     * Note, this data is ephemeral so if the service is restarted the previous
-     * stats are lost.
+     * @param server
      */
-    public Map<String,Long> getServiceStats() throws TException;
+    public Map<String,Long> getServiceStats(String server) throws TException;
 
     /**
      * Acts as a noop, for debug and monitoring purposes.
@@ -57,17 +70,19 @@ public class Thrudb {
     public void ping() throws TException;
 
     /**
-     * Will return a number of binary requests from the redo logs.
+     * <pre>Will return a number of binary requests from the redo logs.
      * 
      * @param lsn
      *            The log sequence number to start from (inclusive)
      * @param kbLimit
-     * 		  The max response size of the messages (not strict)
+     *                        The max response size of the messages (not strict)</pre>
      * 
+     * @param server
+     * @param bucket
      * @param lsn
      * @param kbLimit
      */
-    public List<logEntry> getLogFrom(String lsn, int kbLimit) throws TException;
+    public List<logEntry> getLogSince(String server, String bucket, String lsn, int kbLimit) throws TException;
 
   }
 
@@ -98,16 +113,17 @@ public class Thrudb {
       return this.oprot_;
     }
 
-    public Map<String,Long> getServiceStats() throws TException
+    public Map<String,Long> getServiceStats(String server) throws TException
     {
-      send_getServiceStats();
+      send_getServiceStats(server);
       return recv_getServiceStats();
     }
 
-    public void send_getServiceStats() throws TException
+    public void send_getServiceStats(String server) throws TException
     {
       oprot_.writeMessageBegin(new TMessage("getServiceStats", TMessageType.CALL, seqid_));
       getServiceStats_args args = new getServiceStats_args();
+      args.server = server;
       args.write(oprot_);
       oprot_.writeMessageEnd();
       oprot_.getTransport().flush();
@@ -159,16 +175,18 @@ public class Thrudb {
       return;
     }
 
-    public List<logEntry> getLogFrom(String lsn, int kbLimit) throws TException
+    public List<logEntry> getLogSince(String server, String bucket, String lsn, int kbLimit) throws TException
     {
-      send_getLogFrom(lsn, kbLimit);
-      return recv_getLogFrom();
+      send_getLogSince(server, bucket, lsn, kbLimit);
+      return recv_getLogSince();
     }
 
-    public void send_getLogFrom(String lsn, int kbLimit) throws TException
+    public void send_getLogSince(String server, String bucket, String lsn, int kbLimit) throws TException
     {
-      oprot_.writeMessageBegin(new TMessage("getLogFrom", TMessageType.CALL, seqid_));
-      getLogFrom_args args = new getLogFrom_args();
+      oprot_.writeMessageBegin(new TMessage("getLogSince", TMessageType.CALL, seqid_));
+      getLogSince_args args = new getLogSince_args();
+      args.server = server;
+      args.bucket = bucket;
       args.lsn = lsn;
       args.kbLimit = kbLimit;
       args.write(oprot_);
@@ -176,7 +194,7 @@ public class Thrudb {
       oprot_.getTransport().flush();
     }
 
-    public List<logEntry> recv_getLogFrom() throws TException
+    public List<logEntry> recv_getLogSince() throws TException
     {
       TMessage msg = iprot_.readMessageBegin();
       if (msg.type == TMessageType.EXCEPTION) {
@@ -184,23 +202,24 @@ public class Thrudb {
         iprot_.readMessageEnd();
         throw x;
       }
-      getLogFrom_result result = new getLogFrom_result();
+      getLogSince_result result = new getLogSince_result();
       result.read(iprot_);
       iprot_.readMessageEnd();
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new TApplicationException(TApplicationException.MISSING_RESULT, "getLogFrom failed: unknown result");
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "getLogSince failed: unknown result");
     }
 
   }
   public static class Processor implements TProcessor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Processor.class.getName());
     public Processor(Iface iface)
     {
       iface_ = iface;
       processMap_.put("getServiceStats", new getServiceStats());
       processMap_.put("ping", new ping());
-      processMap_.put("getLogFrom", new getLogFrom());
+      processMap_.put("getLogSince", new getLogSince());
     }
 
     protected static interface ProcessFunction {
@@ -235,7 +254,7 @@ public class Thrudb {
         args.read(iprot);
         iprot.readMessageEnd();
         getServiceStats_result result = new getServiceStats_result();
-        result.success = iface_.getServiceStats();
+        result.success = iface_.getServiceStats(args.server);
         oprot.writeMessageBegin(new TMessage("getServiceStats", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
@@ -260,15 +279,15 @@ public class Thrudb {
 
     }
 
-    private class getLogFrom implements ProcessFunction {
+    private class getLogSince implements ProcessFunction {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
-        getLogFrom_args args = new getLogFrom_args();
+        getLogSince_args args = new getLogSince_args();
         args.read(iprot);
         iprot.readMessageEnd();
-        getLogFrom_result result = new getLogFrom_result();
-        result.success = iface_.getLogFrom(args.lsn, args.kbLimit);
-        oprot.writeMessageBegin(new TMessage("getLogFrom", TMessageType.REPLY, seqid));
+        getLogSince_result result = new getLogSince_result();
+        result.success = iface_.getLogSince(args.server, args.bucket, args.lsn, args.kbLimit);
+        oprot.writeMessageBegin(new TMessage("getLogSince", TMessageType.REPLY, seqid));
         result.write(oprot);
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
@@ -278,10 +297,18 @@ public class Thrudb {
 
   }
 
-  public static class getServiceStats_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class getServiceStats_args implements TBase, java.io.Serializable, Cloneable, Comparable<getServiceStats_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("getServiceStats_args");
+    private static final TField SERVER_FIELD_DESC = new TField("server", TType.STRING, (short)1);
+
+    public String server;
+    public static final int SERVER = 1;
+
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+      put(SERVER, new FieldMetaData("server", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
@@ -291,19 +318,65 @@ public class Thrudb {
     public getServiceStats_args() {
     }
 
+    public getServiceStats_args(
+      String server)
+    {
+      this();
+      this.server = server;
+    }
+
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public getServiceStats_args(getServiceStats_args other) {
+      if (other.isSetServer()) {
+        this.server = other.server;
+      }
     }
 
-    @Override
+    public getServiceStats_args deepCopy() {
+      return new getServiceStats_args(this);
+    }
+
+    @Deprecated
     public getServiceStats_args clone() {
       return new getServiceStats_args(this);
     }
 
+    public String getServer() {
+      return this.server;
+    }
+
+    public getServiceStats_args setServer(String server) {
+      this.server = server;
+      return this;
+    }
+
+    public void unsetServer() {
+      this.server = null;
+    }
+
+    // Returns true if field server is set (has been asigned a value) and false otherwise
+    public boolean isSetServer() {
+      return this.server != null;
+    }
+
+    public void setServerIsSet(boolean value) {
+      if (!value) {
+        this.server = null;
+      }
+    }
+
     public void setFieldValue(int fieldID, Object value) {
       switch (fieldID) {
+      case SERVER:
+        if (value == null) {
+          unsetServer();
+        } else {
+          setServer((String)value);
+        }
+        break;
+
       default:
         throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
@@ -311,6 +384,9 @@ public class Thrudb {
 
     public Object getFieldValue(int fieldID) {
       switch (fieldID) {
+      case SERVER:
+        return getServer();
+
       default:
         throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
@@ -319,6 +395,8 @@ public class Thrudb {
     // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
     public boolean isSet(int fieldID) {
       switch (fieldID) {
+      case SERVER:
+        return isSetServer();
       default:
         throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
@@ -337,11 +415,39 @@ public class Thrudb {
       if (that == null)
         return false;
 
+      boolean this_present_server = true && this.isSetServer();
+      boolean that_present_server = true && that.isSetServer();
+      if (this_present_server || that_present_server) {
+        if (!(this_present_server && that_present_server))
+          return false;
+        if (!this.server.equals(that.server))
+          return false;
+      }
+
       return true;
     }
 
     @Override
     public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(getServiceStats_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      getServiceStats_args typedOther = (getServiceStats_args)other;
+
+      lastComparison = Boolean.valueOf(isSetServer()).compareTo(isSetServer());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(server, typedOther.server);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
       return 0;
     }
 
@@ -356,6 +462,13 @@ public class Thrudb {
         }
         switch (field.id)
         {
+          case SERVER:
+            if (field.type == TType.STRING) {
+              this.server = iprot.readString();
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
           default:
             TProtocolUtil.skip(iprot, field.type);
             break;
@@ -373,6 +486,11 @@ public class Thrudb {
       validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
+      if (this.server != null) {
+        oprot.writeFieldBegin(SERVER_FIELD_DESC);
+        oprot.writeString(this.server);
+        oprot.writeFieldEnd();
+      }
       oprot.writeFieldStop();
       oprot.writeStructEnd();
     }
@@ -382,6 +500,13 @@ public class Thrudb {
       StringBuilder sb = new StringBuilder("getServiceStats_args(");
       boolean first = true;
 
+      sb.append("server:");
+      if (this.server == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.server);
+      }
+      first = false;
       sb.append(")");
       return sb.toString();
     }
@@ -400,9 +525,7 @@ public class Thrudb {
     public Map<String,Long> success;
     public static final int SUCCESS = 0;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -446,28 +569,22 @@ public class Thrudb {
       }
     }
 
-    @Override
-    public getServiceStats_result clone() {
+    public getServiceStats_result deepCopy() {
       return new getServiceStats_result(this);
     }
 
-    public int getSuccessSize() {
-      return (this.success == null) ? 0 : this.success.size();
-    }
-
-    public void putToSuccess(String key, long val) {
-      if (this.success == null) {
-        this.success = new HashMap<String,Long>();
-      }
-      this.success.put(key, val);
+    @Deprecated
+    public getServiceStats_result clone() {
+      return new getServiceStats_result(this);
     }
 
     public Map<String,Long> getSuccess() {
       return this.success;
     }
 
-    public void setSuccess(Map<String,Long> success) {
+    public getServiceStats_result setSuccess(Map<String,Long> success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -600,7 +717,8 @@ public class Thrudb {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.STRING, TType.I64, this.success.size()));
-          for (Map.Entry<String, Long> _iter4 : this.success.entrySet())          {
+          for (Map.Entry<String, Long> _iter4 : this.success.entrySet())
+          {
             oprot.writeString(_iter4.getKey());
             oprot.writeI64(_iter4.getValue());
           }
@@ -635,7 +753,7 @@ public class Thrudb {
 
   }
 
-  public static class ping_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class ping_args implements TBase, java.io.Serializable, Cloneable, Comparable<ping_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("ping_args");
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
@@ -654,7 +772,11 @@ public class Thrudb {
     public ping_args(ping_args other) {
     }
 
-    @Override
+    public ping_args deepCopy() {
+      return new ping_args(this);
+    }
+
+    @Deprecated
     public ping_args clone() {
       return new ping_args(this);
     }
@@ -699,6 +821,17 @@ public class Thrudb {
 
     @Override
     public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(ping_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      ping_args typedOther = (ping_args)other;
+
       return 0;
     }
 
@@ -750,7 +883,7 @@ public class Thrudb {
 
   }
 
-  public static class ping_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class ping_result implements TBase, java.io.Serializable, Cloneable, Comparable<ping_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("ping_result");
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
@@ -769,7 +902,11 @@ public class Thrudb {
     public ping_result(ping_result other) {
     }
 
-    @Override
+    public ping_result deepCopy() {
+      return new ping_result(this);
+    }
+
+    @Deprecated
     public ping_result clone() {
       return new ping_result(this);
     }
@@ -814,6 +951,17 @@ public class Thrudb {
 
     @Override
     public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(ping_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      ping_result typedOther = (ping_result)other;
+
       return 0;
     }
 
@@ -864,22 +1012,31 @@ public class Thrudb {
 
   }
 
-  public static class getLogFrom_args implements TBase, java.io.Serializable, Cloneable   {
-    private static final TStruct STRUCT_DESC = new TStruct("getLogFrom_args");
-    private static final TField LSN_FIELD_DESC = new TField("lsn", TType.STRING, (short)1);
-    private static final TField KB_LIMIT_FIELD_DESC = new TField("kbLimit", TType.I32, (short)2);
+  public static class getLogSince_args implements TBase, java.io.Serializable, Cloneable, Comparable<getLogSince_args>   {
+    private static final TStruct STRUCT_DESC = new TStruct("getLogSince_args");
+    private static final TField SERVER_FIELD_DESC = new TField("server", TType.STRING, (short)1);
+    private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)2);
+    private static final TField LSN_FIELD_DESC = new TField("lsn", TType.STRING, (short)3);
+    private static final TField KB_LIMIT_FIELD_DESC = new TField("kbLimit", TType.I32, (short)4);
 
+    public String server;
+    public String bucket;
     public String lsn;
-    public static final int LSN = 1;
     public int kbLimit;
-    public static final int KBLIMIT = 2;
+    public static final int SERVER = 1;
+    public static final int BUCKET = 2;
+    public static final int LSN = 3;
+    public static final int KBLIMIT = 4;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-      public boolean kbLimit = false;
-    }
+    // isset id assignments
+    private static final int __KBLIMIT_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+      put(SERVER, new FieldMetaData("server", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
+      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
       put(LSN, new FieldMetaData("lsn", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
       put(KBLIMIT, new FieldMetaData("kbLimit", TFieldRequirementType.DEFAULT, 
@@ -887,44 +1044,108 @@ public class Thrudb {
     }});
 
     static {
-      FieldMetaData.addStructMetaDataMap(getLogFrom_args.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(getLogSince_args.class, metaDataMap);
     }
 
-    public getLogFrom_args() {
+    public getLogSince_args() {
     }
 
-    public getLogFrom_args(
+    public getLogSince_args(
+      String server,
+      String bucket,
       String lsn,
       int kbLimit)
     {
       this();
+      this.server = server;
+      this.bucket = bucket;
       this.lsn = lsn;
       this.kbLimit = kbLimit;
-      this.__isset.kbLimit = true;
+      setKbLimitIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public getLogFrom_args(getLogFrom_args other) {
+    public getLogSince_args(getLogSince_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
+      if (other.isSetServer()) {
+        this.server = other.server;
+      }
+      if (other.isSetBucket()) {
+        this.bucket = other.bucket;
+      }
       if (other.isSetLsn()) {
         this.lsn = other.lsn;
       }
-      __isset.kbLimit = other.__isset.kbLimit;
       this.kbLimit = other.kbLimit;
     }
 
-    @Override
-    public getLogFrom_args clone() {
-      return new getLogFrom_args(this);
+    public getLogSince_args deepCopy() {
+      return new getLogSince_args(this);
+    }
+
+    @Deprecated
+    public getLogSince_args clone() {
+      return new getLogSince_args(this);
+    }
+
+    public String getServer() {
+      return this.server;
+    }
+
+    public getLogSince_args setServer(String server) {
+      this.server = server;
+      return this;
+    }
+
+    public void unsetServer() {
+      this.server = null;
+    }
+
+    // Returns true if field server is set (has been asigned a value) and false otherwise
+    public boolean isSetServer() {
+      return this.server != null;
+    }
+
+    public void setServerIsSet(boolean value) {
+      if (!value) {
+        this.server = null;
+      }
+    }
+
+    public String getBucket() {
+      return this.bucket;
+    }
+
+    public getLogSince_args setBucket(String bucket) {
+      this.bucket = bucket;
+      return this;
+    }
+
+    public void unsetBucket() {
+      this.bucket = null;
+    }
+
+    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    public boolean isSetBucket() {
+      return this.bucket != null;
+    }
+
+    public void setBucketIsSet(boolean value) {
+      if (!value) {
+        this.bucket = null;
+      }
     }
 
     public String getLsn() {
       return this.lsn;
     }
 
-    public void setLsn(String lsn) {
+    public getLogSince_args setLsn(String lsn) {
       this.lsn = lsn;
+      return this;
     }
 
     public void unsetLsn() {
@@ -946,26 +1167,43 @@ public class Thrudb {
       return this.kbLimit;
     }
 
-    public void setKbLimit(int kbLimit) {
+    public getLogSince_args setKbLimit(int kbLimit) {
       this.kbLimit = kbLimit;
-      this.__isset.kbLimit = true;
+      setKbLimitIsSet(true);
+      return this;
     }
 
     public void unsetKbLimit() {
-      this.__isset.kbLimit = false;
+      __isset_bit_vector.clear(__KBLIMIT_ISSET_ID);
     }
 
     // Returns true if field kbLimit is set (has been asigned a value) and false otherwise
     public boolean isSetKbLimit() {
-      return this.__isset.kbLimit;
+      return __isset_bit_vector.get(__KBLIMIT_ISSET_ID);
     }
 
     public void setKbLimitIsSet(boolean value) {
-      this.__isset.kbLimit = value;
+      __isset_bit_vector.set(__KBLIMIT_ISSET_ID, value);
     }
 
     public void setFieldValue(int fieldID, Object value) {
       switch (fieldID) {
+      case SERVER:
+        if (value == null) {
+          unsetServer();
+        } else {
+          setServer((String)value);
+        }
+        break;
+
+      case BUCKET:
+        if (value == null) {
+          unsetBucket();
+        } else {
+          setBucket((String)value);
+        }
+        break;
+
       case LSN:
         if (value == null) {
           unsetLsn();
@@ -989,6 +1227,12 @@ public class Thrudb {
 
     public Object getFieldValue(int fieldID) {
       switch (fieldID) {
+      case SERVER:
+        return getServer();
+
+      case BUCKET:
+        return getBucket();
+
       case LSN:
         return getLsn();
 
@@ -1003,6 +1247,10 @@ public class Thrudb {
     // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
     public boolean isSet(int fieldID) {
       switch (fieldID) {
+      case SERVER:
+        return isSetServer();
+      case BUCKET:
+        return isSetBucket();
       case LSN:
         return isSetLsn();
       case KBLIMIT:
@@ -1016,14 +1264,32 @@ public class Thrudb {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof getLogFrom_args)
-        return this.equals((getLogFrom_args)that);
+      if (that instanceof getLogSince_args)
+        return this.equals((getLogSince_args)that);
       return false;
     }
 
-    public boolean equals(getLogFrom_args that) {
+    public boolean equals(getLogSince_args that) {
       if (that == null)
         return false;
+
+      boolean this_present_server = true && this.isSetServer();
+      boolean that_present_server = true && that.isSetServer();
+      if (this_present_server || that_present_server) {
+        if (!(this_present_server && that_present_server))
+          return false;
+        if (!this.server.equals(that.server))
+          return false;
+      }
+
+      boolean this_present_bucket = true && this.isSetBucket();
+      boolean that_present_bucket = true && that.isSetBucket();
+      if (this_present_bucket || that_present_bucket) {
+        if (!(this_present_bucket && that_present_bucket))
+          return false;
+        if (!this.bucket.equals(that.bucket))
+          return false;
+      }
 
       boolean this_present_lsn = true && this.isSetLsn();
       boolean that_present_lsn = true && that.isSetLsn();
@@ -1051,6 +1317,49 @@ public class Thrudb {
       return 0;
     }
 
+    public int compareTo(getLogSince_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      getLogSince_args typedOther = (getLogSince_args)other;
+
+      lastComparison = Boolean.valueOf(isSetServer()).compareTo(isSetServer());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(server, typedOther.server);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetLsn()).compareTo(isSetLsn());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(lsn, typedOther.lsn);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKbLimit()).compareTo(isSetKbLimit());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(kbLimit, typedOther.kbLimit);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -1062,6 +1371,20 @@ public class Thrudb {
         }
         switch (field.id)
         {
+          case SERVER:
+            if (field.type == TType.STRING) {
+              this.server = iprot.readString();
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
+          case BUCKET:
+            if (field.type == TType.STRING) {
+              this.bucket = iprot.readString();
+            } else { 
+              TProtocolUtil.skip(iprot, field.type);
+            }
+            break;
           case LSN:
             if (field.type == TType.STRING) {
               this.lsn = iprot.readString();
@@ -1072,7 +1395,7 @@ public class Thrudb {
           case KBLIMIT:
             if (field.type == TType.I32) {
               this.kbLimit = iprot.readI32();
-              this.__isset.kbLimit = true;
+              setKbLimitIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -1094,6 +1417,16 @@ public class Thrudb {
       validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
+      if (this.server != null) {
+        oprot.writeFieldBegin(SERVER_FIELD_DESC);
+        oprot.writeString(this.server);
+        oprot.writeFieldEnd();
+      }
+      if (this.bucket != null) {
+        oprot.writeFieldBegin(BUCKET_FIELD_DESC);
+        oprot.writeString(this.bucket);
+        oprot.writeFieldEnd();
+      }
       if (this.lsn != null) {
         oprot.writeFieldBegin(LSN_FIELD_DESC);
         oprot.writeString(this.lsn);
@@ -1108,9 +1441,25 @@ public class Thrudb {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("getLogFrom_args(");
+      StringBuilder sb = new StringBuilder("getLogSince_args(");
       boolean first = true;
 
+      sb.append("server:");
+      if (this.server == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.server);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("bucket:");
+      if (this.bucket == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.bucket);
+      }
+      first = false;
+      if (!first) sb.append(", ");
       sb.append("lsn:");
       if (this.lsn == null) {
         sb.append("null");
@@ -1133,16 +1482,14 @@ public class Thrudb {
 
   }
 
-  public static class getLogFrom_result implements TBase, java.io.Serializable, Cloneable   {
-    private static final TStruct STRUCT_DESC = new TStruct("getLogFrom_result");
+  public static class getLogSince_result implements TBase, java.io.Serializable, Cloneable, Comparable<getLogSince_result>   {
+    private static final TStruct STRUCT_DESC = new TStruct("getLogSince_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.LIST, (short)0);
 
     public List<logEntry> success;
     public static final int SUCCESS = 0;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -1151,13 +1498,13 @@ public class Thrudb {
     }});
 
     static {
-      FieldMetaData.addStructMetaDataMap(getLogFrom_result.class, metaDataMap);
+      FieldMetaData.addStructMetaDataMap(getLogSince_result.class, metaDataMap);
     }
 
-    public getLogFrom_result() {
+    public getLogSince_result() {
     }
 
-    public getLogFrom_result(
+    public getLogSince_result(
       List<logEntry> success)
     {
       this();
@@ -1167,7 +1514,7 @@ public class Thrudb {
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public getLogFrom_result(getLogFrom_result other) {
+    public getLogSince_result(getLogSince_result other) {
       if (other.isSetSuccess()) {
         List<logEntry> __this__success = new ArrayList<logEntry>();
         for (logEntry other_element : other.success) {
@@ -1177,32 +1524,22 @@ public class Thrudb {
       }
     }
 
-    @Override
-    public getLogFrom_result clone() {
-      return new getLogFrom_result(this);
+    public getLogSince_result deepCopy() {
+      return new getLogSince_result(this);
     }
 
-    public int getSuccessSize() {
-      return (this.success == null) ? 0 : this.success.size();
-    }
-
-    public java.util.Iterator<logEntry> getSuccessIterator() {
-      return (this.success == null) ? null : this.success.iterator();
-    }
-
-    public void addToSuccess(logEntry elem) {
-      if (this.success == null) {
-        this.success = new ArrayList<logEntry>();
-      }
-      this.success.add(elem);
+    @Deprecated
+    public getLogSince_result clone() {
+      return new getLogSince_result(this);
     }
 
     public List<logEntry> getSuccess() {
       return this.success;
     }
 
-    public void setSuccess(List<logEntry> success) {
+    public getLogSince_result setSuccess(List<logEntry> success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -1259,12 +1596,12 @@ public class Thrudb {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof getLogFrom_result)
-        return this.equals((getLogFrom_result)that);
+      if (that instanceof getLogSince_result)
+        return this.equals((getLogSince_result)that);
       return false;
     }
 
-    public boolean equals(getLogFrom_result that) {
+    public boolean equals(getLogSince_result that) {
       if (that == null)
         return false;
 
@@ -1282,6 +1619,25 @@ public class Thrudb {
 
     @Override
     public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(getLogSince_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      getLogSince_result typedOther = (getLogSince_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
       return 0;
     }
 
@@ -1334,7 +1690,8 @@ public class Thrudb {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.success.size()));
-          for (logEntry _iter8 : this.success)          {
+          for (logEntry _iter8 : this.success)
+          {
             _iter8.write(oprot);
           }
           oprot.writeListEnd();
@@ -1347,7 +1704,7 @@ public class Thrudb {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("getLogFrom_result(");
+      StringBuilder sb = new StringBuilder("getLogSince_result(");
       boolean first = true;
 
       sb.append("success:");

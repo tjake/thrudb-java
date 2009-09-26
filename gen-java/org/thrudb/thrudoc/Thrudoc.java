@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import java.util.BitSet;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
@@ -19,7 +23,7 @@ import org.apache.thrift.protocol.*;
 
 public class Thrudoc {
 
-  public interface Iface extends org.thrudb.Thrudb.Iface {
+  public interface Iface {
 
     public void create_bucket(String bucket) throws ThrudocException, TException;
 
@@ -63,7 +67,7 @@ public class Thrudoc {
 
   }
 
-  public static class Client extends org.thrudb.Thrudb.Client implements Iface {
+  public static class Client implements Iface {
     public Client(TProtocol prot)
     {
       this(prot, prot);
@@ -71,7 +75,23 @@ public class Thrudoc {
 
     public Client(TProtocol iprot, TProtocol oprot)
     {
-      super(iprot, oprot);
+      iprot_ = iprot;
+      oprot_ = oprot;
+    }
+
+    protected TProtocol iprot_;
+    protected TProtocol oprot_;
+
+    protected int seqid_;
+
+    public TProtocol getInputProtocol()
+    {
+      return this.iprot_;
+    }
+
+    public TProtocol getOutputProtocol()
+    {
+      return this.oprot_;
     }
 
     public void create_bucket(String bucket) throws ThrudocException, TException
@@ -849,10 +869,10 @@ public class Thrudoc {
     }
 
   }
-  public static class Processor extends org.thrudb.Thrudb.Processor implements TProcessor {
+  public static class Processor implements TProcessor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Processor.class.getName());
     public Processor(Iface iface)
     {
-      super(iface);
       iface_ = iface;
       processMap_.put("create_bucket", new create_bucket());
       processMap_.put("delete_bucket", new delete_bucket());
@@ -876,7 +896,12 @@ public class Thrudoc {
       processMap_.put("admin", new admin());
     }
 
+    protected static interface ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException;
+    }
+
     private Iface iface_;
+    protected final HashMap<String,ProcessFunction> processMap_ = new HashMap<String,ProcessFunction>();
 
     public boolean process(TProtocol iprot, TProtocol oprot) throws TException
     {
@@ -907,6 +932,14 @@ public class Thrudoc {
           iface_.create_bucket(args.bucket);
         } catch (ThrudocException ex1) {
           result.ex1 = ex1;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing create_bucket", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing create_bucket");
+          oprot.writeMessageBegin(new TMessage("create_bucket", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("create_bucket", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -927,6 +960,14 @@ public class Thrudoc {
           iface_.delete_bucket(args.bucket);
         } catch (ThrudocException ex1) {
           result.ex1 = ex1;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing delete_bucket", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing delete_bucket");
+          oprot.writeMessageBegin(new TMessage("delete_bucket", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("delete_bucket", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -947,6 +988,14 @@ public class Thrudoc {
           result.success = iface_.get_bucket_list();
         } catch (ThrudocException ex1) {
           result.ex1 = ex1;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing get_bucket_list", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing get_bucket_list");
+          oprot.writeMessageBegin(new TMessage("get_bucket_list", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("get_bucket_list", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -965,11 +1014,19 @@ public class Thrudoc {
         incr_result result = new incr_result();
         try {
           result.success = iface_.incr(args.bucket, args.key, args.amount);
-          result.__isset.success = true;
+          result.setSuccessIsSet(true);
         } catch (ThrudocException ex1) {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing incr", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing incr");
+          oprot.writeMessageBegin(new TMessage("incr", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("incr", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -988,11 +1045,19 @@ public class Thrudoc {
         decr_result result = new decr_result();
         try {
           result.success = iface_.decr(args.bucket, args.key, args.amount);
-          result.__isset.success = true;
+          result.setSuccessIsSet(true);
         } catch (ThrudocException ex1) {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing decr", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing decr");
+          oprot.writeMessageBegin(new TMessage("decr", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("decr", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1015,6 +1080,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing put", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing put");
+          oprot.writeMessageBegin(new TMessage("put", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("put", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1037,6 +1110,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing get", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing get");
+          oprot.writeMessageBegin(new TMessage("get", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("get", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1059,6 +1140,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing remove", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing remove");
+          oprot.writeMessageBegin(new TMessage("remove", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("remove", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1081,6 +1170,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing push_front", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing push_front");
+          oprot.writeMessageBegin(new TMessage("push_front", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("push_front", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1103,6 +1200,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing push_back", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing push_back");
+          oprot.writeMessageBegin(new TMessage("push_back", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("push_back", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1125,6 +1230,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing pop_front", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing pop_front");
+          oprot.writeMessageBegin(new TMessage("pop_front", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("pop_front", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1147,6 +1260,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing pop_back", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing pop_back");
+          oprot.writeMessageBegin(new TMessage("pop_back", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("pop_back", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1169,6 +1290,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing remove_at", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing remove_at");
+          oprot.writeMessageBegin(new TMessage("remove_at", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("remove_at", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1191,6 +1320,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing insert_at", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing insert_at");
+          oprot.writeMessageBegin(new TMessage("insert_at", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("insert_at", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1213,6 +1350,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing replace_at", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing replace_at");
+          oprot.writeMessageBegin(new TMessage("replace_at", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("replace_at", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1235,6 +1380,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing retrieve_at", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing retrieve_at");
+          oprot.writeMessageBegin(new TMessage("retrieve_at", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("retrieve_at", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1257,6 +1410,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing range", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing range");
+          oprot.writeMessageBegin(new TMessage("range", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("range", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1275,11 +1436,19 @@ public class Thrudoc {
         length_result result = new length_result();
         try {
           result.success = iface_.length(args.bucket, args.key);
-          result.__isset.success = true;
+          result.setSuccessIsSet(true);
         } catch (ThrudocException ex1) {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing length", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing length");
+          oprot.writeMessageBegin(new TMessage("length", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("length", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1302,6 +1471,14 @@ public class Thrudoc {
           result.ex1 = ex1;
         } catch (InvalidBucketException ex2) {
           result.ex2 = ex2;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing scan", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing scan");
+          oprot.writeMessageBegin(new TMessage("scan", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("scan", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1322,6 +1499,14 @@ public class Thrudoc {
           result.success = iface_.admin(args.op, args.data);
         } catch (ThrudocException e) {
           result.e = e;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing admin", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing admin");
+          oprot.writeMessageBegin(new TMessage("admin", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("admin", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -1333,16 +1518,14 @@ public class Thrudoc {
 
   }
 
-  public static class create_bucket_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class create_bucket_args implements TBase, java.io.Serializable, Cloneable, Comparable<create_bucket_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("create_bucket_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
 
     public String bucket;
     public static final int BUCKET = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -1372,7 +1555,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public create_bucket_args deepCopy() {
+      return new create_bucket_args(this);
+    }
+
+    @Deprecated
     public create_bucket_args clone() {
       return new create_bucket_args(this);
     }
@@ -1381,8 +1568,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public create_bucket_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -1465,6 +1653,25 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(create_bucket_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      create_bucket_args typedOther = (create_bucket_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -1532,16 +1739,14 @@ public class Thrudoc {
 
   }
 
-  public static class create_bucket_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class create_bucket_result implements TBase, java.io.Serializable, Cloneable, Comparable<create_bucket_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("create_bucket_result");
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
 
     public ThrudocException ex1;
     public static final int EX1 = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
@@ -1571,7 +1776,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public create_bucket_result deepCopy() {
+      return new create_bucket_result(this);
+    }
+
+    @Deprecated
     public create_bucket_result clone() {
       return new create_bucket_result(this);
     }
@@ -1580,8 +1789,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public create_bucket_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -1664,6 +1874,25 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(create_bucket_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      create_bucket_result typedOther = (create_bucket_result)other;
+
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -1731,16 +1960,14 @@ public class Thrudoc {
 
   }
 
-  public static class delete_bucket_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class delete_bucket_args implements TBase, java.io.Serializable, Cloneable, Comparable<delete_bucket_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("delete_bucket_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
 
     public String bucket;
     public static final int BUCKET = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -1770,7 +1997,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public delete_bucket_args deepCopy() {
+      return new delete_bucket_args(this);
+    }
+
+    @Deprecated
     public delete_bucket_args clone() {
       return new delete_bucket_args(this);
     }
@@ -1779,8 +2010,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public delete_bucket_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -1863,6 +2095,25 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(delete_bucket_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      delete_bucket_args typedOther = (delete_bucket_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -1930,16 +2181,14 @@ public class Thrudoc {
 
   }
 
-  public static class delete_bucket_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class delete_bucket_result implements TBase, java.io.Serializable, Cloneable, Comparable<delete_bucket_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("delete_bucket_result");
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
 
     public ThrudocException ex1;
     public static final int EX1 = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
@@ -1969,7 +2218,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public delete_bucket_result deepCopy() {
+      return new delete_bucket_result(this);
+    }
+
+    @Deprecated
     public delete_bucket_result clone() {
       return new delete_bucket_result(this);
     }
@@ -1978,8 +2231,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public delete_bucket_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -2062,6 +2316,25 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(delete_bucket_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      delete_bucket_result typedOther = (delete_bucket_result)other;
+
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -2129,7 +2402,7 @@ public class Thrudoc {
 
   }
 
-  public static class get_bucket_list_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class get_bucket_list_args implements TBase, java.io.Serializable, Cloneable, Comparable<get_bucket_list_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("get_bucket_list_args");
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
@@ -2148,7 +2421,11 @@ public class Thrudoc {
     public get_bucket_list_args(get_bucket_list_args other) {
     }
 
-    @Override
+    public get_bucket_list_args deepCopy() {
+      return new get_bucket_list_args(this);
+    }
+
+    @Deprecated
     public get_bucket_list_args clone() {
       return new get_bucket_list_args(this);
     }
@@ -2193,6 +2470,17 @@ public class Thrudoc {
 
     @Override
     public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(get_bucket_list_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      get_bucket_list_args typedOther = (get_bucket_list_args)other;
+
       return 0;
     }
 
@@ -2250,13 +2538,11 @@ public class Thrudoc {
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
 
     public Set<String> success;
-    public static final int SUCCESS = 0;
     public ThrudocException ex1;
+    public static final int SUCCESS = 0;
     public static final int EX1 = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -2298,32 +2584,22 @@ public class Thrudoc {
       }
     }
 
-    @Override
-    public get_bucket_list_result clone() {
+    public get_bucket_list_result deepCopy() {
       return new get_bucket_list_result(this);
     }
 
-    public int getSuccessSize() {
-      return (this.success == null) ? 0 : this.success.size();
-    }
-
-    public java.util.Iterator<String> getSuccessIterator() {
-      return (this.success == null) ? null : this.success.iterator();
-    }
-
-    public void addToSuccess(String elem) {
-      if (this.success == null) {
-        this.success = new HashSet<String>();
-      }
-      this.success.add(elem);
+    @Deprecated
+    public get_bucket_list_result clone() {
+      return new get_bucket_list_result(this);
     }
 
     public Set<String> getSuccess() {
       return this.success;
     }
 
-    public void setSuccess(Set<String> success) {
+    public get_bucket_list_result setSuccess(Set<String> success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -2345,8 +2621,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public get_bucket_list_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -2507,7 +2784,8 @@ public class Thrudoc {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeSetBegin(new TSet(TType.STRING, this.success.size()));
-          for (String _iter3 : this.success)          {
+          for (String _iter3 : this.success)
+          {
             oprot.writeString(_iter3);
           }
           oprot.writeSetEnd();
@@ -2553,23 +2831,22 @@ public class Thrudoc {
 
   }
 
-  public static class incr_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class incr_args implements TBase, java.io.Serializable, Cloneable, Comparable<incr_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("incr_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField AMOUNT_FIELD_DESC = new TField("amount", TType.I32, (short)3);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
-    public static final int KEY = 2;
     public int amount;
+    public static final int BUCKET = 1;
+    public static final int KEY = 2;
     public static final int AMOUNT = 3;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-      public boolean amount = false;
-    }
+    // isset id assignments
+    private static final int __AMOUNT_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -2598,24 +2875,29 @@ public class Thrudoc {
       this.bucket = bucket;
       this.key = key;
       this.amount = amount;
-      this.__isset.amount = true;
+      setAmountIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public incr_args(incr_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
       if (other.isSetBucket()) {
         this.bucket = other.bucket;
       }
       if (other.isSetKey()) {
         this.key = other.key;
       }
-      __isset.amount = other.__isset.amount;
       this.amount = other.amount;
     }
 
-    @Override
+    public incr_args deepCopy() {
+      return new incr_args(this);
+    }
+
+    @Deprecated
     public incr_args clone() {
       return new incr_args(this);
     }
@@ -2624,8 +2906,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public incr_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -2647,8 +2930,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public incr_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -2670,22 +2954,23 @@ public class Thrudoc {
       return this.amount;
     }
 
-    public void setAmount(int amount) {
+    public incr_args setAmount(int amount) {
       this.amount = amount;
-      this.__isset.amount = true;
+      setAmountIsSet(true);
+      return this;
     }
 
     public void unsetAmount() {
-      this.__isset.amount = false;
+      __isset_bit_vector.clear(__AMOUNT_ISSET_ID);
     }
 
     // Returns true if field amount is set (has been asigned a value) and false otherwise
     public boolean isSetAmount() {
-      return this.__isset.amount;
+      return __isset_bit_vector.get(__AMOUNT_ISSET_ID);
     }
 
     public void setAmountIsSet(boolean value) {
-      this.__isset.amount = value;
+      __isset_bit_vector.set(__AMOUNT_ISSET_ID, value);
     }
 
     public void setFieldValue(int fieldID, Object value) {
@@ -2797,6 +3082,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(incr_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      incr_args typedOther = (incr_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetAmount()).compareTo(isSetAmount());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(amount, typedOther.amount);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -2825,7 +3145,7 @@ public class Thrudoc {
           case AMOUNT:
             if (field.type == TType.I32) {
               this.amount = iprot.readI32();
-              this.__isset.amount = true;
+              setAmountIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -2899,23 +3219,22 @@ public class Thrudoc {
 
   }
 
-  public static class incr_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class incr_result implements TBase, java.io.Serializable, Cloneable, Comparable<incr_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("incr_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.I32, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public int success;
-    public static final int SUCCESS = 0;
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int SUCCESS = 0;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-      public boolean success = false;
-    }
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -2940,7 +3259,7 @@ public class Thrudoc {
     {
       this();
       this.success = success;
-      this.__isset.success = true;
+      setSuccessIsSet(true);
       this.ex1 = ex1;
       this.ex2 = ex2;
     }
@@ -2949,7 +3268,8 @@ public class Thrudoc {
      * Performs a deep copy on <i>other</i>.
      */
     public incr_result(incr_result other) {
-      __isset.success = other.__isset.success;
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
       this.success = other.success;
       if (other.isSetEx1()) {
         this.ex1 = new ThrudocException(other.ex1);
@@ -2959,7 +3279,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public incr_result deepCopy() {
+      return new incr_result(this);
+    }
+
+    @Deprecated
     public incr_result clone() {
       return new incr_result(this);
     }
@@ -2968,30 +3292,32 @@ public class Thrudoc {
       return this.success;
     }
 
-    public void setSuccess(int success) {
+    public incr_result setSuccess(int success) {
       this.success = success;
-      this.__isset.success = true;
+      setSuccessIsSet(true);
+      return this;
     }
 
     public void unsetSuccess() {
-      this.__isset.success = false;
+      __isset_bit_vector.clear(__SUCCESS_ISSET_ID);
     }
 
     // Returns true if field success is set (has been asigned a value) and false otherwise
     public boolean isSetSuccess() {
-      return this.__isset.success;
+      return __isset_bit_vector.get(__SUCCESS_ISSET_ID);
     }
 
     public void setSuccessIsSet(boolean value) {
-      this.__isset.success = value;
+      __isset_bit_vector.set(__SUCCESS_ISSET_ID, value);
     }
 
     public ThrudocException getEx1() {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public incr_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -3013,8 +3339,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public incr_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -3141,6 +3468,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(incr_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      incr_result typedOther = (incr_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -3155,7 +3517,7 @@ public class Thrudoc {
           case SUCCESS:
             if (field.type == TType.I32) {
               this.success = iprot.readI32();
-              this.__isset.success = true;
+              setSuccessIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -3244,23 +3606,22 @@ public class Thrudoc {
 
   }
 
-  public static class decr_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class decr_args implements TBase, java.io.Serializable, Cloneable, Comparable<decr_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("decr_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField AMOUNT_FIELD_DESC = new TField("amount", TType.I32, (short)3);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
-    public static final int KEY = 2;
     public int amount;
+    public static final int BUCKET = 1;
+    public static final int KEY = 2;
     public static final int AMOUNT = 3;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-      public boolean amount = false;
-    }
+    // isset id assignments
+    private static final int __AMOUNT_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -3289,24 +3650,29 @@ public class Thrudoc {
       this.bucket = bucket;
       this.key = key;
       this.amount = amount;
-      this.__isset.amount = true;
+      setAmountIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public decr_args(decr_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
       if (other.isSetBucket()) {
         this.bucket = other.bucket;
       }
       if (other.isSetKey()) {
         this.key = other.key;
       }
-      __isset.amount = other.__isset.amount;
       this.amount = other.amount;
     }
 
-    @Override
+    public decr_args deepCopy() {
+      return new decr_args(this);
+    }
+
+    @Deprecated
     public decr_args clone() {
       return new decr_args(this);
     }
@@ -3315,8 +3681,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public decr_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -3338,8 +3705,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public decr_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -3361,22 +3729,23 @@ public class Thrudoc {
       return this.amount;
     }
 
-    public void setAmount(int amount) {
+    public decr_args setAmount(int amount) {
       this.amount = amount;
-      this.__isset.amount = true;
+      setAmountIsSet(true);
+      return this;
     }
 
     public void unsetAmount() {
-      this.__isset.amount = false;
+      __isset_bit_vector.clear(__AMOUNT_ISSET_ID);
     }
 
     // Returns true if field amount is set (has been asigned a value) and false otherwise
     public boolean isSetAmount() {
-      return this.__isset.amount;
+      return __isset_bit_vector.get(__AMOUNT_ISSET_ID);
     }
 
     public void setAmountIsSet(boolean value) {
-      this.__isset.amount = value;
+      __isset_bit_vector.set(__AMOUNT_ISSET_ID, value);
     }
 
     public void setFieldValue(int fieldID, Object value) {
@@ -3488,6 +3857,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(decr_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      decr_args typedOther = (decr_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetAmount()).compareTo(isSetAmount());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(amount, typedOther.amount);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -3516,7 +3920,7 @@ public class Thrudoc {
           case AMOUNT:
             if (field.type == TType.I32) {
               this.amount = iprot.readI32();
-              this.__isset.amount = true;
+              setAmountIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -3590,23 +3994,22 @@ public class Thrudoc {
 
   }
 
-  public static class decr_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class decr_result implements TBase, java.io.Serializable, Cloneable, Comparable<decr_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("decr_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.I32, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public int success;
-    public static final int SUCCESS = 0;
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int SUCCESS = 0;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-      public boolean success = false;
-    }
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -3631,7 +4034,7 @@ public class Thrudoc {
     {
       this();
       this.success = success;
-      this.__isset.success = true;
+      setSuccessIsSet(true);
       this.ex1 = ex1;
       this.ex2 = ex2;
     }
@@ -3640,7 +4043,8 @@ public class Thrudoc {
      * Performs a deep copy on <i>other</i>.
      */
     public decr_result(decr_result other) {
-      __isset.success = other.__isset.success;
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
       this.success = other.success;
       if (other.isSetEx1()) {
         this.ex1 = new ThrudocException(other.ex1);
@@ -3650,7 +4054,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public decr_result deepCopy() {
+      return new decr_result(this);
+    }
+
+    @Deprecated
     public decr_result clone() {
       return new decr_result(this);
     }
@@ -3659,30 +4067,32 @@ public class Thrudoc {
       return this.success;
     }
 
-    public void setSuccess(int success) {
+    public decr_result setSuccess(int success) {
       this.success = success;
-      this.__isset.success = true;
+      setSuccessIsSet(true);
+      return this;
     }
 
     public void unsetSuccess() {
-      this.__isset.success = false;
+      __isset_bit_vector.clear(__SUCCESS_ISSET_ID);
     }
 
     // Returns true if field success is set (has been asigned a value) and false otherwise
     public boolean isSetSuccess() {
-      return this.__isset.success;
+      return __isset_bit_vector.get(__SUCCESS_ISSET_ID);
     }
 
     public void setSuccessIsSet(boolean value) {
-      this.__isset.success = value;
+      __isset_bit_vector.set(__SUCCESS_ISSET_ID, value);
     }
 
     public ThrudocException getEx1() {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public decr_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -3704,8 +4114,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public decr_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -3832,6 +4243,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(decr_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      decr_result typedOther = (decr_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -3846,7 +4292,7 @@ public class Thrudoc {
           case SUCCESS:
             if (field.type == TType.I32) {
               this.success = iprot.readI32();
-              this.__isset.success = true;
+              setSuccessIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -3935,22 +4381,20 @@ public class Thrudoc {
 
   }
 
-  public static class put_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class put_args implements TBase, java.io.Serializable, Cloneable, Comparable<put_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("put_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)3);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
-    public static final int KEY = 2;
     public byte[] value;
+    public static final int BUCKET = 1;
+    public static final int KEY = 2;
     public static final int VALUE = 3;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -3995,7 +4439,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public put_args deepCopy() {
+      return new put_args(this);
+    }
+
+    @Deprecated
     public put_args clone() {
       return new put_args(this);
     }
@@ -4004,8 +4452,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public put_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -4027,8 +4476,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public put_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -4050,8 +4500,9 @@ public class Thrudoc {
       return this.value;
     }
 
-    public void setValue(byte[] value) {
+    public put_args setValue(byte[] value) {
       this.value = value;
+      return this;
     }
 
     public void unsetValue() {
@@ -4178,6 +4629,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(put_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      put_args typedOther = (put_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetValue()).compareTo(isSetValue());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(value, typedOther.value);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -4290,19 +4776,17 @@ public class Thrudoc {
 
   }
 
-  public static class put_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class put_result implements TBase, java.io.Serializable, Cloneable, Comparable<put_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("put_result");
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
@@ -4339,7 +4823,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public put_result deepCopy() {
+      return new put_result(this);
+    }
+
+    @Deprecated
     public put_result clone() {
       return new put_result(this);
     }
@@ -4348,8 +4836,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public put_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -4371,8 +4860,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public put_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -4477,6 +4967,33 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(put_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      put_result typedOther = (put_result)other;
+
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -4564,19 +5081,17 @@ public class Thrudoc {
 
   }
 
-  public static class get_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class get_args implements TBase, java.io.Serializable, Cloneable, Comparable<get_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("get_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
+    public static final int BUCKET = 1;
     public static final int KEY = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -4613,7 +5128,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public get_args deepCopy() {
+      return new get_args(this);
+    }
+
+    @Deprecated
     public get_args clone() {
       return new get_args(this);
     }
@@ -4622,8 +5141,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public get_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -4645,8 +5165,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public get_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -4751,6 +5272,33 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(get_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      get_args typedOther = (get_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -4838,22 +5386,20 @@ public class Thrudoc {
 
   }
 
-  public static class get_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class get_result implements TBase, java.io.Serializable, Cloneable, Comparable<get_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("get_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public byte[] success;
-    public static final int SUCCESS = 0;
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int SUCCESS = 0;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -4898,7 +5444,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public get_result deepCopy() {
+      return new get_result(this);
+    }
+
+    @Deprecated
     public get_result clone() {
       return new get_result(this);
     }
@@ -4907,8 +5457,9 @@ public class Thrudoc {
       return this.success;
     }
 
-    public void setSuccess(byte[] success) {
+    public get_result setSuccess(byte[] success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -4930,8 +5481,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public get_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -4953,8 +5505,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public get_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -5081,6 +5634,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(get_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      get_result typedOther = (get_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -5192,19 +5780,17 @@ public class Thrudoc {
 
   }
 
-  public static class remove_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class remove_args implements TBase, java.io.Serializable, Cloneable, Comparable<remove_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("remove_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
+    public static final int BUCKET = 1;
     public static final int KEY = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -5241,7 +5827,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public remove_args deepCopy() {
+      return new remove_args(this);
+    }
+
+    @Deprecated
     public remove_args clone() {
       return new remove_args(this);
     }
@@ -5250,8 +5840,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public remove_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -5273,8 +5864,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public remove_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -5379,6 +5971,33 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(remove_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      remove_args typedOther = (remove_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -5466,19 +6085,17 @@ public class Thrudoc {
 
   }
 
-  public static class remove_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class remove_result implements TBase, java.io.Serializable, Cloneable, Comparable<remove_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("remove_result");
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
@@ -5515,7 +6132,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public remove_result deepCopy() {
+      return new remove_result(this);
+    }
+
+    @Deprecated
     public remove_result clone() {
       return new remove_result(this);
     }
@@ -5524,8 +6145,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public remove_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -5547,8 +6169,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public remove_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -5653,6 +6276,33 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(remove_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      remove_result typedOther = (remove_result)other;
+
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -5740,22 +6390,20 @@ public class Thrudoc {
 
   }
 
-  public static class push_front_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class push_front_args implements TBase, java.io.Serializable, Cloneable, Comparable<push_front_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("push_front_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)3);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
-    public static final int KEY = 2;
     public byte[] value;
+    public static final int BUCKET = 1;
+    public static final int KEY = 2;
     public static final int VALUE = 3;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -5800,7 +6448,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public push_front_args deepCopy() {
+      return new push_front_args(this);
+    }
+
+    @Deprecated
     public push_front_args clone() {
       return new push_front_args(this);
     }
@@ -5809,8 +6461,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public push_front_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -5832,8 +6485,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public push_front_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -5855,8 +6509,9 @@ public class Thrudoc {
       return this.value;
     }
 
-    public void setValue(byte[] value) {
+    public push_front_args setValue(byte[] value) {
       this.value = value;
+      return this;
     }
 
     public void unsetValue() {
@@ -5983,6 +6638,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(push_front_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      push_front_args typedOther = (push_front_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetValue()).compareTo(isSetValue());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(value, typedOther.value);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -6095,19 +6785,17 @@ public class Thrudoc {
 
   }
 
-  public static class push_front_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class push_front_result implements TBase, java.io.Serializable, Cloneable, Comparable<push_front_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("push_front_result");
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
@@ -6144,7 +6832,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public push_front_result deepCopy() {
+      return new push_front_result(this);
+    }
+
+    @Deprecated
     public push_front_result clone() {
       return new push_front_result(this);
     }
@@ -6153,8 +6845,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public push_front_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -6176,8 +6869,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public push_front_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -6282,6 +6976,33 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(push_front_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      push_front_result typedOther = (push_front_result)other;
+
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -6369,22 +7090,20 @@ public class Thrudoc {
 
   }
 
-  public static class push_back_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class push_back_args implements TBase, java.io.Serializable, Cloneable, Comparable<push_back_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("push_back_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)3);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
-    public static final int KEY = 2;
     public byte[] value;
+    public static final int BUCKET = 1;
+    public static final int KEY = 2;
     public static final int VALUE = 3;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -6429,7 +7148,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public push_back_args deepCopy() {
+      return new push_back_args(this);
+    }
+
+    @Deprecated
     public push_back_args clone() {
       return new push_back_args(this);
     }
@@ -6438,8 +7161,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public push_back_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -6461,8 +7185,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public push_back_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -6484,8 +7209,9 @@ public class Thrudoc {
       return this.value;
     }
 
-    public void setValue(byte[] value) {
+    public push_back_args setValue(byte[] value) {
       this.value = value;
+      return this;
     }
 
     public void unsetValue() {
@@ -6612,6 +7338,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(push_back_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      push_back_args typedOther = (push_back_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetValue()).compareTo(isSetValue());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(value, typedOther.value);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -6724,19 +7485,17 @@ public class Thrudoc {
 
   }
 
-  public static class push_back_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class push_back_result implements TBase, java.io.Serializable, Cloneable, Comparable<push_back_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("push_back_result");
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
@@ -6773,7 +7532,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public push_back_result deepCopy() {
+      return new push_back_result(this);
+    }
+
+    @Deprecated
     public push_back_result clone() {
       return new push_back_result(this);
     }
@@ -6782,8 +7545,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public push_back_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -6805,8 +7569,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public push_back_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -6911,6 +7676,33 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(push_back_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      push_back_result typedOther = (push_back_result)other;
+
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -6998,19 +7790,17 @@ public class Thrudoc {
 
   }
 
-  public static class pop_front_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class pop_front_args implements TBase, java.io.Serializable, Cloneable, Comparable<pop_front_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("pop_front_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
+    public static final int BUCKET = 1;
     public static final int KEY = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -7047,7 +7837,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public pop_front_args deepCopy() {
+      return new pop_front_args(this);
+    }
+
+    @Deprecated
     public pop_front_args clone() {
       return new pop_front_args(this);
     }
@@ -7056,8 +7850,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public pop_front_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -7079,8 +7874,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public pop_front_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -7185,6 +7981,33 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(pop_front_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      pop_front_args typedOther = (pop_front_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -7272,22 +8095,20 @@ public class Thrudoc {
 
   }
 
-  public static class pop_front_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class pop_front_result implements TBase, java.io.Serializable, Cloneable, Comparable<pop_front_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("pop_front_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public byte[] success;
-    public static final int SUCCESS = 0;
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int SUCCESS = 0;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -7332,7 +8153,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public pop_front_result deepCopy() {
+      return new pop_front_result(this);
+    }
+
+    @Deprecated
     public pop_front_result clone() {
       return new pop_front_result(this);
     }
@@ -7341,8 +8166,9 @@ public class Thrudoc {
       return this.success;
     }
 
-    public void setSuccess(byte[] success) {
+    public pop_front_result setSuccess(byte[] success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -7364,8 +8190,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public pop_front_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -7387,8 +8214,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public pop_front_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -7515,6 +8343,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(pop_front_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      pop_front_result typedOther = (pop_front_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -7626,19 +8489,17 @@ public class Thrudoc {
 
   }
 
-  public static class pop_back_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class pop_back_args implements TBase, java.io.Serializable, Cloneable, Comparable<pop_back_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("pop_back_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
+    public static final int BUCKET = 1;
     public static final int KEY = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -7675,7 +8536,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public pop_back_args deepCopy() {
+      return new pop_back_args(this);
+    }
+
+    @Deprecated
     public pop_back_args clone() {
       return new pop_back_args(this);
     }
@@ -7684,8 +8549,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public pop_back_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -7707,8 +8573,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public pop_back_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -7813,6 +8680,33 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(pop_back_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      pop_back_args typedOther = (pop_back_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -7900,22 +8794,20 @@ public class Thrudoc {
 
   }
 
-  public static class pop_back_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class pop_back_result implements TBase, java.io.Serializable, Cloneable, Comparable<pop_back_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("pop_back_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public byte[] success;
-    public static final int SUCCESS = 0;
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int SUCCESS = 0;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -7960,7 +8852,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public pop_back_result deepCopy() {
+      return new pop_back_result(this);
+    }
+
+    @Deprecated
     public pop_back_result clone() {
       return new pop_back_result(this);
     }
@@ -7969,8 +8865,9 @@ public class Thrudoc {
       return this.success;
     }
 
-    public void setSuccess(byte[] success) {
+    public pop_back_result setSuccess(byte[] success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -7992,8 +8889,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public pop_back_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -8015,8 +8913,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public pop_back_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -8143,6 +9042,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(pop_back_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      pop_back_result typedOther = (pop_back_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -8254,23 +9188,22 @@ public class Thrudoc {
 
   }
 
-  public static class remove_at_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class remove_at_args implements TBase, java.io.Serializable, Cloneable, Comparable<remove_at_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("remove_at_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField POS_FIELD_DESC = new TField("pos", TType.I32, (short)3);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
-    public static final int KEY = 2;
     public int pos;
+    public static final int BUCKET = 1;
+    public static final int KEY = 2;
     public static final int POS = 3;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-      public boolean pos = false;
-    }
+    // isset id assignments
+    private static final int __POS_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -8297,24 +9230,29 @@ public class Thrudoc {
       this.bucket = bucket;
       this.key = key;
       this.pos = pos;
-      this.__isset.pos = true;
+      setPosIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public remove_at_args(remove_at_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
       if (other.isSetBucket()) {
         this.bucket = other.bucket;
       }
       if (other.isSetKey()) {
         this.key = other.key;
       }
-      __isset.pos = other.__isset.pos;
       this.pos = other.pos;
     }
 
-    @Override
+    public remove_at_args deepCopy() {
+      return new remove_at_args(this);
+    }
+
+    @Deprecated
     public remove_at_args clone() {
       return new remove_at_args(this);
     }
@@ -8323,8 +9261,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public remove_at_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -8346,8 +9285,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public remove_at_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -8369,22 +9309,23 @@ public class Thrudoc {
       return this.pos;
     }
 
-    public void setPos(int pos) {
+    public remove_at_args setPos(int pos) {
       this.pos = pos;
-      this.__isset.pos = true;
+      setPosIsSet(true);
+      return this;
     }
 
     public void unsetPos() {
-      this.__isset.pos = false;
+      __isset_bit_vector.clear(__POS_ISSET_ID);
     }
 
     // Returns true if field pos is set (has been asigned a value) and false otherwise
     public boolean isSetPos() {
-      return this.__isset.pos;
+      return __isset_bit_vector.get(__POS_ISSET_ID);
     }
 
     public void setPosIsSet(boolean value) {
-      this.__isset.pos = value;
+      __isset_bit_vector.set(__POS_ISSET_ID, value);
     }
 
     public void setFieldValue(int fieldID, Object value) {
@@ -8496,6 +9437,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(remove_at_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      remove_at_args typedOther = (remove_at_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetPos()).compareTo(isSetPos());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(pos, typedOther.pos);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -8524,7 +9500,7 @@ public class Thrudoc {
           case POS:
             if (field.type == TType.I32) {
               this.pos = iprot.readI32();
-              this.__isset.pos = true;
+              setPosIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -8598,22 +9574,20 @@ public class Thrudoc {
 
   }
 
-  public static class remove_at_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class remove_at_result implements TBase, java.io.Serializable, Cloneable, Comparable<remove_at_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("remove_at_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public byte[] success;
-    public static final int SUCCESS = 0;
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int SUCCESS = 0;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -8658,7 +9632,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public remove_at_result deepCopy() {
+      return new remove_at_result(this);
+    }
+
+    @Deprecated
     public remove_at_result clone() {
       return new remove_at_result(this);
     }
@@ -8667,8 +9645,9 @@ public class Thrudoc {
       return this.success;
     }
 
-    public void setSuccess(byte[] success) {
+    public remove_at_result setSuccess(byte[] success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -8690,8 +9669,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public remove_at_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -8713,8 +9693,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public remove_at_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -8841,6 +9822,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(remove_at_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      remove_at_result typedOther = (remove_at_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -8952,7 +9968,7 @@ public class Thrudoc {
 
   }
 
-  public static class insert_at_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class insert_at_args implements TBase, java.io.Serializable, Cloneable, Comparable<insert_at_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("insert_at_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
@@ -8960,18 +9976,17 @@ public class Thrudoc {
     private static final TField POS_FIELD_DESC = new TField("pos", TType.I32, (short)4);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
-    public static final int KEY = 2;
     public byte[] value;
-    public static final int VALUE = 3;
     public int pos;
+    public static final int BUCKET = 1;
+    public static final int KEY = 2;
+    public static final int VALUE = 3;
     public static final int POS = 4;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-      public boolean pos = false;
-    }
+    // isset id assignments
+    private static final int __POS_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -9002,13 +10017,15 @@ public class Thrudoc {
       this.key = key;
       this.value = value;
       this.pos = pos;
-      this.__isset.pos = true;
+      setPosIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public insert_at_args(insert_at_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
       if (other.isSetBucket()) {
         this.bucket = other.bucket;
       }
@@ -9019,11 +10036,14 @@ public class Thrudoc {
         this.value = new byte[other.value.length];
         System.arraycopy(other.value, 0, value, 0, other.value.length);
       }
-      __isset.pos = other.__isset.pos;
       this.pos = other.pos;
     }
 
-    @Override
+    public insert_at_args deepCopy() {
+      return new insert_at_args(this);
+    }
+
+    @Deprecated
     public insert_at_args clone() {
       return new insert_at_args(this);
     }
@@ -9032,8 +10052,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public insert_at_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -9055,8 +10076,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public insert_at_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -9078,8 +10100,9 @@ public class Thrudoc {
       return this.value;
     }
 
-    public void setValue(byte[] value) {
+    public insert_at_args setValue(byte[] value) {
       this.value = value;
+      return this;
     }
 
     public void unsetValue() {
@@ -9101,22 +10124,23 @@ public class Thrudoc {
       return this.pos;
     }
 
-    public void setPos(int pos) {
+    public insert_at_args setPos(int pos) {
       this.pos = pos;
-      this.__isset.pos = true;
+      setPosIsSet(true);
+      return this;
     }
 
     public void unsetPos() {
-      this.__isset.pos = false;
+      __isset_bit_vector.clear(__POS_ISSET_ID);
     }
 
     // Returns true if field pos is set (has been asigned a value) and false otherwise
     public boolean isSetPos() {
-      return this.__isset.pos;
+      return __isset_bit_vector.get(__POS_ISSET_ID);
     }
 
     public void setPosIsSet(boolean value) {
-      this.__isset.pos = value;
+      __isset_bit_vector.set(__POS_ISSET_ID, value);
     }
 
     public void setFieldValue(int fieldID, Object value) {
@@ -9250,6 +10274,49 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(insert_at_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      insert_at_args typedOther = (insert_at_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetValue()).compareTo(isSetValue());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(value, typedOther.value);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetPos()).compareTo(isSetPos());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(pos, typedOther.pos);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -9285,7 +10352,7 @@ public class Thrudoc {
           case POS:
             if (field.type == TType.I32) {
               this.pos = iprot.readI32();
-              this.__isset.pos = true;
+              setPosIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -9377,19 +10444,17 @@ public class Thrudoc {
 
   }
 
-  public static class insert_at_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class insert_at_result implements TBase, java.io.Serializable, Cloneable, Comparable<insert_at_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("insert_at_result");
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
@@ -9426,7 +10491,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public insert_at_result deepCopy() {
+      return new insert_at_result(this);
+    }
+
+    @Deprecated
     public insert_at_result clone() {
       return new insert_at_result(this);
     }
@@ -9435,8 +10504,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public insert_at_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -9458,8 +10528,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public insert_at_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -9564,6 +10635,33 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(insert_at_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      insert_at_result typedOther = (insert_at_result)other;
+
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -9651,7 +10749,7 @@ public class Thrudoc {
 
   }
 
-  public static class replace_at_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class replace_at_args implements TBase, java.io.Serializable, Cloneable, Comparable<replace_at_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("replace_at_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
@@ -9659,18 +10757,17 @@ public class Thrudoc {
     private static final TField POS_FIELD_DESC = new TField("pos", TType.I32, (short)4);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
-    public static final int KEY = 2;
     public byte[] value;
-    public static final int VALUE = 3;
     public int pos;
+    public static final int BUCKET = 1;
+    public static final int KEY = 2;
+    public static final int VALUE = 3;
     public static final int POS = 4;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-      public boolean pos = false;
-    }
+    // isset id assignments
+    private static final int __POS_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -9701,13 +10798,15 @@ public class Thrudoc {
       this.key = key;
       this.value = value;
       this.pos = pos;
-      this.__isset.pos = true;
+      setPosIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public replace_at_args(replace_at_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
       if (other.isSetBucket()) {
         this.bucket = other.bucket;
       }
@@ -9718,11 +10817,14 @@ public class Thrudoc {
         this.value = new byte[other.value.length];
         System.arraycopy(other.value, 0, value, 0, other.value.length);
       }
-      __isset.pos = other.__isset.pos;
       this.pos = other.pos;
     }
 
-    @Override
+    public replace_at_args deepCopy() {
+      return new replace_at_args(this);
+    }
+
+    @Deprecated
     public replace_at_args clone() {
       return new replace_at_args(this);
     }
@@ -9731,8 +10833,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public replace_at_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -9754,8 +10857,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public replace_at_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -9777,8 +10881,9 @@ public class Thrudoc {
       return this.value;
     }
 
-    public void setValue(byte[] value) {
+    public replace_at_args setValue(byte[] value) {
       this.value = value;
+      return this;
     }
 
     public void unsetValue() {
@@ -9800,22 +10905,23 @@ public class Thrudoc {
       return this.pos;
     }
 
-    public void setPos(int pos) {
+    public replace_at_args setPos(int pos) {
       this.pos = pos;
-      this.__isset.pos = true;
+      setPosIsSet(true);
+      return this;
     }
 
     public void unsetPos() {
-      this.__isset.pos = false;
+      __isset_bit_vector.clear(__POS_ISSET_ID);
     }
 
     // Returns true if field pos is set (has been asigned a value) and false otherwise
     public boolean isSetPos() {
-      return this.__isset.pos;
+      return __isset_bit_vector.get(__POS_ISSET_ID);
     }
 
     public void setPosIsSet(boolean value) {
-      this.__isset.pos = value;
+      __isset_bit_vector.set(__POS_ISSET_ID, value);
     }
 
     public void setFieldValue(int fieldID, Object value) {
@@ -9949,6 +11055,49 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(replace_at_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      replace_at_args typedOther = (replace_at_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetValue()).compareTo(isSetValue());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(value, typedOther.value);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetPos()).compareTo(isSetPos());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(pos, typedOther.pos);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -9984,7 +11133,7 @@ public class Thrudoc {
           case POS:
             if (field.type == TType.I32) {
               this.pos = iprot.readI32();
-              this.__isset.pos = true;
+              setPosIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -10076,19 +11225,17 @@ public class Thrudoc {
 
   }
 
-  public static class replace_at_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class replace_at_result implements TBase, java.io.Serializable, Cloneable, Comparable<replace_at_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("replace_at_result");
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
@@ -10125,7 +11272,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public replace_at_result deepCopy() {
+      return new replace_at_result(this);
+    }
+
+    @Deprecated
     public replace_at_result clone() {
       return new replace_at_result(this);
     }
@@ -10134,8 +11285,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public replace_at_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -10157,8 +11309,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public replace_at_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -10263,6 +11416,33 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(replace_at_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      replace_at_result typedOther = (replace_at_result)other;
+
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -10350,23 +11530,22 @@ public class Thrudoc {
 
   }
 
-  public static class retrieve_at_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class retrieve_at_args implements TBase, java.io.Serializable, Cloneable, Comparable<retrieve_at_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("retrieve_at_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField POS_FIELD_DESC = new TField("pos", TType.I32, (short)4);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
-    public static final int KEY = 2;
     public int pos;
+    public static final int BUCKET = 1;
+    public static final int KEY = 2;
     public static final int POS = 4;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-      public boolean pos = false;
-    }
+    // isset id assignments
+    private static final int __POS_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -10393,24 +11572,29 @@ public class Thrudoc {
       this.bucket = bucket;
       this.key = key;
       this.pos = pos;
-      this.__isset.pos = true;
+      setPosIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public retrieve_at_args(retrieve_at_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
       if (other.isSetBucket()) {
         this.bucket = other.bucket;
       }
       if (other.isSetKey()) {
         this.key = other.key;
       }
-      __isset.pos = other.__isset.pos;
       this.pos = other.pos;
     }
 
-    @Override
+    public retrieve_at_args deepCopy() {
+      return new retrieve_at_args(this);
+    }
+
+    @Deprecated
     public retrieve_at_args clone() {
       return new retrieve_at_args(this);
     }
@@ -10419,8 +11603,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public retrieve_at_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -10442,8 +11627,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public retrieve_at_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -10465,22 +11651,23 @@ public class Thrudoc {
       return this.pos;
     }
 
-    public void setPos(int pos) {
+    public retrieve_at_args setPos(int pos) {
       this.pos = pos;
-      this.__isset.pos = true;
+      setPosIsSet(true);
+      return this;
     }
 
     public void unsetPos() {
-      this.__isset.pos = false;
+      __isset_bit_vector.clear(__POS_ISSET_ID);
     }
 
     // Returns true if field pos is set (has been asigned a value) and false otherwise
     public boolean isSetPos() {
-      return this.__isset.pos;
+      return __isset_bit_vector.get(__POS_ISSET_ID);
     }
 
     public void setPosIsSet(boolean value) {
-      this.__isset.pos = value;
+      __isset_bit_vector.set(__POS_ISSET_ID, value);
     }
 
     public void setFieldValue(int fieldID, Object value) {
@@ -10592,6 +11779,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(retrieve_at_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      retrieve_at_args typedOther = (retrieve_at_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetPos()).compareTo(isSetPos());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(pos, typedOther.pos);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -10620,7 +11842,7 @@ public class Thrudoc {
           case POS:
             if (field.type == TType.I32) {
               this.pos = iprot.readI32();
-              this.__isset.pos = true;
+              setPosIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -10694,22 +11916,20 @@ public class Thrudoc {
 
   }
 
-  public static class retrieve_at_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class retrieve_at_result implements TBase, java.io.Serializable, Cloneable, Comparable<retrieve_at_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("retrieve_at_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public byte[] success;
-    public static final int SUCCESS = 0;
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int SUCCESS = 0;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -10754,7 +11974,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public retrieve_at_result deepCopy() {
+      return new retrieve_at_result(this);
+    }
+
+    @Deprecated
     public retrieve_at_result clone() {
       return new retrieve_at_result(this);
     }
@@ -10763,8 +11987,9 @@ public class Thrudoc {
       return this.success;
     }
 
-    public void setSuccess(byte[] success) {
+    public retrieve_at_result setSuccess(byte[] success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -10786,8 +12011,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public retrieve_at_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -10809,8 +12035,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public retrieve_at_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -10937,6 +12164,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(retrieve_at_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      retrieve_at_result typedOther = (retrieve_at_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -11048,7 +12310,7 @@ public class Thrudoc {
 
   }
 
-  public static class range_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class range_args implements TBase, java.io.Serializable, Cloneable, Comparable<range_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("range_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
@@ -11056,19 +12318,18 @@ public class Thrudoc {
     private static final TField END_FIELD_DESC = new TField("end", TType.I32, (short)4);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
-    public static final int KEY = 2;
     public int start;
-    public static final int START = 3;
     public int end;
+    public static final int BUCKET = 1;
+    public static final int KEY = 2;
+    public static final int START = 3;
     public static final int END = 4;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-      public boolean start = false;
-      public boolean end = false;
-    }
+    // isset id assignments
+    private static final int __START_ISSET_ID = 0;
+    private static final int __END_ISSET_ID = 1;
+    private BitSet __isset_bit_vector = new BitSet(2);
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -11098,28 +12359,32 @@ public class Thrudoc {
       this.bucket = bucket;
       this.key = key;
       this.start = start;
-      this.__isset.start = true;
+      setStartIsSet(true);
       this.end = end;
-      this.__isset.end = true;
+      setEndIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public range_args(range_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
       if (other.isSetBucket()) {
         this.bucket = other.bucket;
       }
       if (other.isSetKey()) {
         this.key = other.key;
       }
-      __isset.start = other.__isset.start;
       this.start = other.start;
-      __isset.end = other.__isset.end;
       this.end = other.end;
     }
 
-    @Override
+    public range_args deepCopy() {
+      return new range_args(this);
+    }
+
+    @Deprecated
     public range_args clone() {
       return new range_args(this);
     }
@@ -11128,8 +12393,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public range_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -11151,8 +12417,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public range_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -11174,44 +12441,46 @@ public class Thrudoc {
       return this.start;
     }
 
-    public void setStart(int start) {
+    public range_args setStart(int start) {
       this.start = start;
-      this.__isset.start = true;
+      setStartIsSet(true);
+      return this;
     }
 
     public void unsetStart() {
-      this.__isset.start = false;
+      __isset_bit_vector.clear(__START_ISSET_ID);
     }
 
     // Returns true if field start is set (has been asigned a value) and false otherwise
     public boolean isSetStart() {
-      return this.__isset.start;
+      return __isset_bit_vector.get(__START_ISSET_ID);
     }
 
     public void setStartIsSet(boolean value) {
-      this.__isset.start = value;
+      __isset_bit_vector.set(__START_ISSET_ID, value);
     }
 
     public int getEnd() {
       return this.end;
     }
 
-    public void setEnd(int end) {
+    public range_args setEnd(int end) {
       this.end = end;
-      this.__isset.end = true;
+      setEndIsSet(true);
+      return this;
     }
 
     public void unsetEnd() {
-      this.__isset.end = false;
+      __isset_bit_vector.clear(__END_ISSET_ID);
     }
 
     // Returns true if field end is set (has been asigned a value) and false otherwise
     public boolean isSetEnd() {
-      return this.__isset.end;
+      return __isset_bit_vector.get(__END_ISSET_ID);
     }
 
     public void setEndIsSet(boolean value) {
-      this.__isset.end = value;
+      __isset_bit_vector.set(__END_ISSET_ID, value);
     }
 
     public void setFieldValue(int fieldID, Object value) {
@@ -11345,6 +12614,49 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(range_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      range_args typedOther = (range_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetStart()).compareTo(isSetStart());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(start, typedOther.start);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEnd()).compareTo(isSetEnd());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(end, typedOther.end);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -11373,7 +12685,7 @@ public class Thrudoc {
           case START:
             if (field.type == TType.I32) {
               this.start = iprot.readI32();
-              this.__isset.start = true;
+              setStartIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -11381,7 +12693,7 @@ public class Thrudoc {
           case END:
             if (field.type == TType.I32) {
               this.end = iprot.readI32();
-              this.__isset.end = true;
+              setEndIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -11462,22 +12774,20 @@ public class Thrudoc {
 
   }
 
-  public static class range_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class range_result implements TBase, java.io.Serializable, Cloneable, Comparable<range_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("range_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.LIST, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public List<byte[]> success;
-    public static final int SUCCESS = 0;
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int SUCCESS = 0;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -11528,32 +12838,22 @@ public class Thrudoc {
       }
     }
 
-    @Override
-    public range_result clone() {
+    public range_result deepCopy() {
       return new range_result(this);
     }
 
-    public int getSuccessSize() {
-      return (this.success == null) ? 0 : this.success.size();
-    }
-
-    public java.util.Iterator<byte[]> getSuccessIterator() {
-      return (this.success == null) ? null : this.success.iterator();
-    }
-
-    public void addToSuccess(byte[] elem) {
-      if (this.success == null) {
-        this.success = new ArrayList<byte[]>();
-      }
-      this.success.add(elem);
+    @Deprecated
+    public range_result clone() {
+      return new range_result(this);
     }
 
     public List<byte[]> getSuccess() {
       return this.success;
     }
 
-    public void setSuccess(List<byte[]> success) {
+    public range_result setSuccess(List<byte[]> success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -11575,8 +12875,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public range_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -11598,8 +12899,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public range_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -11726,6 +13028,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(range_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      range_result typedOther = (range_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -11790,7 +13127,8 @@ public class Thrudoc {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.success.size()));
-          for (byte[] _iter7 : this.success)          {
+          for (byte[] _iter7 : this.success)
+          {
             oprot.writeBinary(_iter7);
           }
           oprot.writeListEnd();
@@ -11848,19 +13186,17 @@ public class Thrudoc {
 
   }
 
-  public static class length_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class length_args implements TBase, java.io.Serializable, Cloneable, Comparable<length_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("length_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String key;
+    public static final int BUCKET = 1;
     public static final int KEY = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -11897,7 +13233,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public length_args deepCopy() {
+      return new length_args(this);
+    }
+
+    @Deprecated
     public length_args clone() {
       return new length_args(this);
     }
@@ -11906,8 +13246,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public length_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -11929,8 +13270,9 @@ public class Thrudoc {
       return this.key;
     }
 
-    public void setKey(String key) {
+    public length_args setKey(String key) {
       this.key = key;
+      return this;
     }
 
     public void unsetKey() {
@@ -12035,6 +13377,33 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(length_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      length_args typedOther = (length_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -12122,23 +13491,22 @@ public class Thrudoc {
 
   }
 
-  public static class length_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class length_result implements TBase, java.io.Serializable, Cloneable, Comparable<length_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("length_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.I32, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public int success;
-    public static final int SUCCESS = 0;
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int SUCCESS = 0;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-      public boolean success = false;
-    }
+    // isset id assignments
+    private static final int __SUCCESS_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -12163,7 +13531,7 @@ public class Thrudoc {
     {
       this();
       this.success = success;
-      this.__isset.success = true;
+      setSuccessIsSet(true);
       this.ex1 = ex1;
       this.ex2 = ex2;
     }
@@ -12172,7 +13540,8 @@ public class Thrudoc {
      * Performs a deep copy on <i>other</i>.
      */
     public length_result(length_result other) {
-      __isset.success = other.__isset.success;
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
       this.success = other.success;
       if (other.isSetEx1()) {
         this.ex1 = new ThrudocException(other.ex1);
@@ -12182,7 +13551,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public length_result deepCopy() {
+      return new length_result(this);
+    }
+
+    @Deprecated
     public length_result clone() {
       return new length_result(this);
     }
@@ -12191,30 +13564,32 @@ public class Thrudoc {
       return this.success;
     }
 
-    public void setSuccess(int success) {
+    public length_result setSuccess(int success) {
       this.success = success;
-      this.__isset.success = true;
+      setSuccessIsSet(true);
+      return this;
     }
 
     public void unsetSuccess() {
-      this.__isset.success = false;
+      __isset_bit_vector.clear(__SUCCESS_ISSET_ID);
     }
 
     // Returns true if field success is set (has been asigned a value) and false otherwise
     public boolean isSetSuccess() {
-      return this.__isset.success;
+      return __isset_bit_vector.get(__SUCCESS_ISSET_ID);
     }
 
     public void setSuccessIsSet(boolean value) {
-      this.__isset.success = value;
+      __isset_bit_vector.set(__SUCCESS_ISSET_ID, value);
     }
 
     public ThrudocException getEx1() {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public length_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -12236,8 +13611,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public length_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -12364,6 +13740,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(length_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      length_result typedOther = (length_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -12378,7 +13789,7 @@ public class Thrudoc {
           case SUCCESS:
             if (field.type == TType.I32) {
               this.success = iprot.readI32();
-              this.__isset.success = true;
+              setSuccessIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -12467,23 +13878,22 @@ public class Thrudoc {
 
   }
 
-  public static class scan_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class scan_args implements TBase, java.io.Serializable, Cloneable, Comparable<scan_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("scan_args");
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField SEED_FIELD_DESC = new TField("seed", TType.STRING, (short)2);
     private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I32, (short)3);
 
     public String bucket;
-    public static final int BUCKET = 1;
     public String seed;
-    public static final int SEED = 2;
     public int limit;
+    public static final int BUCKET = 1;
+    public static final int SEED = 2;
     public static final int LIMIT = 3;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-      public boolean limit = false;
-    }
+    // isset id assignments
+    private static final int __LIMIT_ISSET_ID = 0;
+    private BitSet __isset_bit_vector = new BitSet(1);
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
@@ -12510,24 +13920,29 @@ public class Thrudoc {
       this.bucket = bucket;
       this.seed = seed;
       this.limit = limit;
-      this.__isset.limit = true;
+      setLimitIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public scan_args(scan_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
       if (other.isSetBucket()) {
         this.bucket = other.bucket;
       }
       if (other.isSetSeed()) {
         this.seed = other.seed;
       }
-      __isset.limit = other.__isset.limit;
       this.limit = other.limit;
     }
 
-    @Override
+    public scan_args deepCopy() {
+      return new scan_args(this);
+    }
+
+    @Deprecated
     public scan_args clone() {
       return new scan_args(this);
     }
@@ -12536,8 +13951,9 @@ public class Thrudoc {
       return this.bucket;
     }
 
-    public void setBucket(String bucket) {
+    public scan_args setBucket(String bucket) {
       this.bucket = bucket;
+      return this;
     }
 
     public void unsetBucket() {
@@ -12559,8 +13975,9 @@ public class Thrudoc {
       return this.seed;
     }
 
-    public void setSeed(String seed) {
+    public scan_args setSeed(String seed) {
       this.seed = seed;
+      return this;
     }
 
     public void unsetSeed() {
@@ -12582,22 +13999,23 @@ public class Thrudoc {
       return this.limit;
     }
 
-    public void setLimit(int limit) {
+    public scan_args setLimit(int limit) {
       this.limit = limit;
-      this.__isset.limit = true;
+      setLimitIsSet(true);
+      return this;
     }
 
     public void unsetLimit() {
-      this.__isset.limit = false;
+      __isset_bit_vector.clear(__LIMIT_ISSET_ID);
     }
 
     // Returns true if field limit is set (has been asigned a value) and false otherwise
     public boolean isSetLimit() {
-      return this.__isset.limit;
+      return __isset_bit_vector.get(__LIMIT_ISSET_ID);
     }
 
     public void setLimitIsSet(boolean value) {
-      this.__isset.limit = value;
+      __isset_bit_vector.set(__LIMIT_ISSET_ID, value);
     }
 
     public void setFieldValue(int fieldID, Object value) {
@@ -12709,6 +14127,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(scan_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      scan_args typedOther = (scan_args)other;
+
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetSeed()).compareTo(isSetSeed());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(seed, typedOther.seed);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetLimit()).compareTo(isSetLimit());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(limit, typedOther.limit);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -12737,7 +14190,7 @@ public class Thrudoc {
           case LIMIT:
             if (field.type == TType.I32) {
               this.limit = iprot.readI32();
-              this.__isset.limit = true;
+              setLimitIsSet(true);
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
@@ -12811,22 +14264,20 @@ public class Thrudoc {
 
   }
 
-  public static class scan_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class scan_result implements TBase, java.io.Serializable, Cloneable, Comparable<scan_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("scan_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.LIST, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public List<String> success;
-    public static final int SUCCESS = 0;
     public ThrudocException ex1;
-    public static final int EX1 = 1;
     public InvalidBucketException ex2;
+    public static final int SUCCESS = 0;
+    public static final int EX1 = 1;
     public static final int EX2 = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -12875,32 +14326,22 @@ public class Thrudoc {
       }
     }
 
-    @Override
-    public scan_result clone() {
+    public scan_result deepCopy() {
       return new scan_result(this);
     }
 
-    public int getSuccessSize() {
-      return (this.success == null) ? 0 : this.success.size();
-    }
-
-    public java.util.Iterator<String> getSuccessIterator() {
-      return (this.success == null) ? null : this.success.iterator();
-    }
-
-    public void addToSuccess(String elem) {
-      if (this.success == null) {
-        this.success = new ArrayList<String>();
-      }
-      this.success.add(elem);
+    @Deprecated
+    public scan_result clone() {
+      return new scan_result(this);
     }
 
     public List<String> getSuccess() {
       return this.success;
     }
 
-    public void setSuccess(List<String> success) {
+    public scan_result setSuccess(List<String> success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -12922,8 +14363,9 @@ public class Thrudoc {
       return this.ex1;
     }
 
-    public void setEx1(ThrudocException ex1) {
+    public scan_result setEx1(ThrudocException ex1) {
       this.ex1 = ex1;
+      return this;
     }
 
     public void unsetEx1() {
@@ -12945,8 +14387,9 @@ public class Thrudoc {
       return this.ex2;
     }
 
-    public void setEx2(InvalidBucketException ex2) {
+    public scan_result setEx2(InvalidBucketException ex2) {
       this.ex2 = ex2;
+      return this;
     }
 
     public void unsetEx2() {
@@ -13073,6 +14516,41 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(scan_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      scan_result typedOther = (scan_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -13137,7 +14615,8 @@ public class Thrudoc {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.success.size()));
-          for (String _iter11 : this.success)          {
+          for (String _iter11 : this.success)
+          {
             oprot.writeString(_iter11);
           }
           oprot.writeListEnd();
@@ -13195,19 +14674,17 @@ public class Thrudoc {
 
   }
 
-  public static class admin_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class admin_args implements TBase, java.io.Serializable, Cloneable, Comparable<admin_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("admin_args");
     private static final TField OP_FIELD_DESC = new TField("op", TType.STRING, (short)1);
     private static final TField DATA_FIELD_DESC = new TField("data", TType.STRING, (short)2);
 
     public String op;
-    public static final int OP = 1;
     public String data;
+    public static final int OP = 1;
     public static final int DATA = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(OP, new FieldMetaData("op", TFieldRequirementType.DEFAULT, 
@@ -13244,7 +14721,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public admin_args deepCopy() {
+      return new admin_args(this);
+    }
+
+    @Deprecated
     public admin_args clone() {
       return new admin_args(this);
     }
@@ -13253,8 +14734,9 @@ public class Thrudoc {
       return this.op;
     }
 
-    public void setOp(String op) {
+    public admin_args setOp(String op) {
       this.op = op;
+      return this;
     }
 
     public void unsetOp() {
@@ -13276,8 +14758,9 @@ public class Thrudoc {
       return this.data;
     }
 
-    public void setData(String data) {
+    public admin_args setData(String data) {
       this.data = data;
+      return this;
     }
 
     public void unsetData() {
@@ -13382,6 +14865,33 @@ public class Thrudoc {
       return 0;
     }
 
+    public int compareTo(admin_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      admin_args typedOther = (admin_args)other;
+
+      lastComparison = Boolean.valueOf(isSetOp()).compareTo(isSetOp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(op, typedOther.op);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetData()).compareTo(isSetData());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(data, typedOther.data);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -13469,19 +14979,17 @@ public class Thrudoc {
 
   }
 
-  public static class admin_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class admin_result implements TBase, java.io.Serializable, Cloneable, Comparable<admin_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("admin_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField E_FIELD_DESC = new TField("e", TType.STRUCT, (short)1);
 
     public String success;
-    public static final int SUCCESS = 0;
     public ThrudocException e;
+    public static final int SUCCESS = 0;
     public static final int E = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -13518,7 +15026,11 @@ public class Thrudoc {
       }
     }
 
-    @Override
+    public admin_result deepCopy() {
+      return new admin_result(this);
+    }
+
+    @Deprecated
     public admin_result clone() {
       return new admin_result(this);
     }
@@ -13527,8 +15039,9 @@ public class Thrudoc {
       return this.success;
     }
 
-    public void setSuccess(String success) {
+    public admin_result setSuccess(String success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -13550,8 +15063,9 @@ public class Thrudoc {
       return this.e;
     }
 
-    public void setE(ThrudocException e) {
+    public admin_result setE(ThrudocException e) {
       this.e = e;
+      return this;
     }
 
     public void unsetE() {
@@ -13653,6 +15167,33 @@ public class Thrudoc {
 
     @Override
     public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(admin_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      admin_result typedOther = (admin_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetE()).compareTo(isSetE());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(e, typedOther.e);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
       return 0;
     }
 

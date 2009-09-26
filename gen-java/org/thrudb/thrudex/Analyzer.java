@@ -20,7 +20,13 @@ public class Analyzer {
   public static final int STOP = 4;
   public static final int WHITESPACE = 5;
 
-  public static final IntRangeSet VALID_VALUES = new IntRangeSet(STANDARD, KEYWORD, SIMPLE, STOP, WHITESPACE);
+  public static final IntRangeSet VALID_VALUES = new IntRangeSet(
+    STANDARD, 
+    KEYWORD, 
+    SIMPLE, 
+    STOP, 
+    WHITESPACE );
+
   public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>() {{
     put(STANDARD, "STANDARD");
     put(KEYWORD, "KEYWORD");

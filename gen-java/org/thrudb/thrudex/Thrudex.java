@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import java.util.BitSet;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
@@ -378,6 +382,7 @@ public class Thrudex {
 
   }
   public static class Processor implements TProcessor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Processor.class.getName());
     public Processor(Iface iface)
     {
       iface_ = iface;
@@ -460,6 +465,14 @@ public class Thrudex {
           iface_.put(args.d);
         } catch (ThrudexException ex) {
           result.ex = ex;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing put", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing put");
+          oprot.writeMessageBegin(new TMessage("put", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("put", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -480,6 +493,14 @@ public class Thrudex {
           iface_.remove(args.e);
         } catch (ThrudexException ex) {
           result.ex = ex;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing remove", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing remove");
+          oprot.writeMessageBegin(new TMessage("remove", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("remove", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -500,6 +521,14 @@ public class Thrudex {
           result.success = iface_.search(args.s);
         } catch (ThrudexException ex) {
           result.ex = ex;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing search", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing search");
+          oprot.writeMessageBegin(new TMessage("search", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("search", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -520,6 +549,14 @@ public class Thrudex {
           result.success = iface_.putList(args.documents);
         } catch (ThrudexException ex) {
           result.ex = ex;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing putList", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing putList");
+          oprot.writeMessageBegin(new TMessage("putList", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("putList", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -540,6 +577,14 @@ public class Thrudex {
           result.success = iface_.removeList(args.elements);
         } catch (ThrudexException ex) {
           result.ex = ex;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing removeList", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing removeList");
+          oprot.writeMessageBegin(new TMessage("removeList", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("removeList", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -560,6 +605,14 @@ public class Thrudex {
           result.success = iface_.searchList(args.q);
         } catch (ThrudexException ex) {
           result.ex = ex;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing searchList", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing searchList");
+          oprot.writeMessageBegin(new TMessage("searchList", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("searchList", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -580,6 +633,14 @@ public class Thrudex {
           result.success = iface_.admin(args.op, args.data);
         } catch (ThrudexException ex) {
           result.ex = ex;
+        } catch (Throwable th) {
+          LOGGER.error("Internal error processing admin", th);
+          TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing admin");
+          oprot.writeMessageBegin(new TMessage("admin", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
         }
         oprot.writeMessageBegin(new TMessage("admin", TMessageType.REPLY, seqid));
         result.write(oprot);
@@ -591,7 +652,7 @@ public class Thrudex {
 
   }
 
-  public static class ping_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class ping_args implements TBase, java.io.Serializable, Cloneable, Comparable<ping_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("ping_args");
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
@@ -610,7 +671,11 @@ public class Thrudex {
     public ping_args(ping_args other) {
     }
 
-    @Override
+    public ping_args deepCopy() {
+      return new ping_args(this);
+    }
+
+    @Deprecated
     public ping_args clone() {
       return new ping_args(this);
     }
@@ -655,6 +720,17 @@ public class Thrudex {
 
     @Override
     public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(ping_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      ping_args typedOther = (ping_args)other;
+
       return 0;
     }
 
@@ -706,7 +782,7 @@ public class Thrudex {
 
   }
 
-  public static class ping_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class ping_result implements TBase, java.io.Serializable, Cloneable, Comparable<ping_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("ping_result");
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
@@ -725,7 +801,11 @@ public class Thrudex {
     public ping_result(ping_result other) {
     }
 
-    @Override
+    public ping_result deepCopy() {
+      return new ping_result(this);
+    }
+
+    @Deprecated
     public ping_result clone() {
       return new ping_result(this);
     }
@@ -770,6 +850,17 @@ public class Thrudex {
 
     @Override
     public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(ping_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      ping_result typedOther = (ping_result)other;
+
       return 0;
     }
 
@@ -820,7 +911,7 @@ public class Thrudex {
 
   }
 
-  public static class getIndices_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class getIndices_args implements TBase, java.io.Serializable, Cloneable, Comparable<getIndices_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("getIndices_args");
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
@@ -839,7 +930,11 @@ public class Thrudex {
     public getIndices_args(getIndices_args other) {
     }
 
-    @Override
+    public getIndices_args deepCopy() {
+      return new getIndices_args(this);
+    }
+
+    @Deprecated
     public getIndices_args clone() {
       return new getIndices_args(this);
     }
@@ -884,6 +979,17 @@ public class Thrudex {
 
     @Override
     public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(getIndices_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      getIndices_args typedOther = (getIndices_args)other;
+
       return 0;
     }
 
@@ -935,16 +1041,14 @@ public class Thrudex {
 
   }
 
-  public static class getIndices_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class getIndices_result implements TBase, java.io.Serializable, Cloneable, Comparable<getIndices_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("getIndices_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.LIST, (short)0);
 
     public List<String> success;
     public static final int SUCCESS = 0;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -979,32 +1083,22 @@ public class Thrudex {
       }
     }
 
-    @Override
-    public getIndices_result clone() {
+    public getIndices_result deepCopy() {
       return new getIndices_result(this);
     }
 
-    public int getSuccessSize() {
-      return (this.success == null) ? 0 : this.success.size();
-    }
-
-    public java.util.Iterator<String> getSuccessIterator() {
-      return (this.success == null) ? null : this.success.iterator();
-    }
-
-    public void addToSuccess(String elem) {
-      if (this.success == null) {
-        this.success = new ArrayList<String>();
-      }
-      this.success.add(elem);
+    @Deprecated
+    public getIndices_result clone() {
+      return new getIndices_result(this);
     }
 
     public List<String> getSuccess() {
       return this.success;
     }
 
-    public void setSuccess(List<String> success) {
+    public getIndices_result setSuccess(List<String> success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -1087,6 +1181,25 @@ public class Thrudex {
       return 0;
     }
 
+    public int compareTo(getIndices_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      getIndices_result typedOther = (getIndices_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -1135,7 +1248,8 @@ public class Thrudex {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRING, this.success.size()));
-          for (String _iter16 : this.success)          {
+          for (String _iter16 : this.success)
+          {
             oprot.writeString(_iter16);
           }
           oprot.writeListEnd();
@@ -1169,16 +1283,14 @@ public class Thrudex {
 
   }
 
-  public static class put_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class put_args implements TBase, java.io.Serializable, Cloneable, Comparable<put_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("put_args");
     private static final TField D_FIELD_DESC = new TField("d", TType.STRUCT, (short)1);
 
     public Document d;
     public static final int D = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(D, new FieldMetaData("d", TFieldRequirementType.DEFAULT, 
@@ -1208,7 +1320,11 @@ public class Thrudex {
       }
     }
 
-    @Override
+    public put_args deepCopy() {
+      return new put_args(this);
+    }
+
+    @Deprecated
     public put_args clone() {
       return new put_args(this);
     }
@@ -1217,8 +1333,9 @@ public class Thrudex {
       return this.d;
     }
 
-    public void setD(Document d) {
+    public put_args setD(Document d) {
       this.d = d;
+      return this;
     }
 
     public void unsetD() {
@@ -1301,6 +1418,25 @@ public class Thrudex {
       return 0;
     }
 
+    public int compareTo(put_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      put_args typedOther = (put_args)other;
+
+      lastComparison = Boolean.valueOf(isSetD()).compareTo(isSetD());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(d, typedOther.d);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -1369,16 +1505,14 @@ public class Thrudex {
 
   }
 
-  public static class put_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class put_result implements TBase, java.io.Serializable, Cloneable, Comparable<put_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("put_result");
     private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public ThrudexException ex;
     public static final int EX = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(EX, new FieldMetaData("ex", TFieldRequirementType.DEFAULT, 
@@ -1408,7 +1542,11 @@ public class Thrudex {
       }
     }
 
-    @Override
+    public put_result deepCopy() {
+      return new put_result(this);
+    }
+
+    @Deprecated
     public put_result clone() {
       return new put_result(this);
     }
@@ -1417,8 +1555,9 @@ public class Thrudex {
       return this.ex;
     }
 
-    public void setEx(ThrudexException ex) {
+    public put_result setEx(ThrudexException ex) {
       this.ex = ex;
+      return this;
     }
 
     public void unsetEx() {
@@ -1501,6 +1640,25 @@ public class Thrudex {
       return 0;
     }
 
+    public int compareTo(put_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      put_result typedOther = (put_result)other;
+
+      lastComparison = Boolean.valueOf(isSetEx()).compareTo(isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex, typedOther.ex);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -1568,16 +1726,14 @@ public class Thrudex {
 
   }
 
-  public static class remove_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class remove_args implements TBase, java.io.Serializable, Cloneable, Comparable<remove_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("remove_args");
     private static final TField E_FIELD_DESC = new TField("e", TType.STRUCT, (short)1);
 
     public Element e;
     public static final int E = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(E, new FieldMetaData("e", TFieldRequirementType.DEFAULT, 
@@ -1607,7 +1763,11 @@ public class Thrudex {
       }
     }
 
-    @Override
+    public remove_args deepCopy() {
+      return new remove_args(this);
+    }
+
+    @Deprecated
     public remove_args clone() {
       return new remove_args(this);
     }
@@ -1616,8 +1776,9 @@ public class Thrudex {
       return this.e;
     }
 
-    public void setE(Element e) {
+    public remove_args setE(Element e) {
       this.e = e;
+      return this;
     }
 
     public void unsetE() {
@@ -1700,6 +1861,25 @@ public class Thrudex {
       return 0;
     }
 
+    public int compareTo(remove_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      remove_args typedOther = (remove_args)other;
+
+      lastComparison = Boolean.valueOf(isSetE()).compareTo(isSetE());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(e, typedOther.e);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -1768,16 +1948,14 @@ public class Thrudex {
 
   }
 
-  public static class remove_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class remove_result implements TBase, java.io.Serializable, Cloneable, Comparable<remove_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("remove_result");
     private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public ThrudexException ex;
     public static final int EX = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(EX, new FieldMetaData("ex", TFieldRequirementType.DEFAULT, 
@@ -1807,7 +1985,11 @@ public class Thrudex {
       }
     }
 
-    @Override
+    public remove_result deepCopy() {
+      return new remove_result(this);
+    }
+
+    @Deprecated
     public remove_result clone() {
       return new remove_result(this);
     }
@@ -1816,8 +1998,9 @@ public class Thrudex {
       return this.ex;
     }
 
-    public void setEx(ThrudexException ex) {
+    public remove_result setEx(ThrudexException ex) {
       this.ex = ex;
+      return this;
     }
 
     public void unsetEx() {
@@ -1900,6 +2083,25 @@ public class Thrudex {
       return 0;
     }
 
+    public int compareTo(remove_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      remove_result typedOther = (remove_result)other;
+
+      lastComparison = Boolean.valueOf(isSetEx()).compareTo(isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex, typedOther.ex);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -1974,9 +2176,7 @@ public class Thrudex {
     public SearchQuery s;
     public static final int S = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(S, new FieldMetaData("s", TFieldRequirementType.DEFAULT, 
@@ -2006,7 +2206,11 @@ public class Thrudex {
       }
     }
 
-    @Override
+    public search_args deepCopy() {
+      return new search_args(this);
+    }
+
+    @Deprecated
     public search_args clone() {
       return new search_args(this);
     }
@@ -2015,8 +2219,9 @@ public class Thrudex {
       return this.s;
     }
 
-    public void setS(SearchQuery s) {
+    public search_args setS(SearchQuery s) {
       this.s = s;
+      return this;
     }
 
     public void unsetS() {
@@ -2167,19 +2372,17 @@ public class Thrudex {
 
   }
 
-  public static class search_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class search_result implements TBase, java.io.Serializable, Cloneable, Comparable<search_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("search_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
     private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public SearchResponse success;
-    public static final int SUCCESS = 0;
     public ThrudexException ex;
+    public static final int SUCCESS = 0;
     public static final int EX = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -2216,7 +2419,11 @@ public class Thrudex {
       }
     }
 
-    @Override
+    public search_result deepCopy() {
+      return new search_result(this);
+    }
+
+    @Deprecated
     public search_result clone() {
       return new search_result(this);
     }
@@ -2225,8 +2432,9 @@ public class Thrudex {
       return this.success;
     }
 
-    public void setSuccess(SearchResponse success) {
+    public search_result setSuccess(SearchResponse success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -2248,8 +2456,9 @@ public class Thrudex {
       return this.ex;
     }
 
-    public void setEx(ThrudexException ex) {
+    public search_result setEx(ThrudexException ex) {
       this.ex = ex;
+      return this;
     }
 
     public void unsetEx() {
@@ -2354,6 +2563,33 @@ public class Thrudex {
       return 0;
     }
 
+    public int compareTo(search_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      search_result typedOther = (search_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx()).compareTo(isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex, typedOther.ex);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -2441,16 +2677,14 @@ public class Thrudex {
 
   }
 
-  public static class putList_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class putList_args implements TBase, java.io.Serializable, Cloneable, Comparable<putList_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("putList_args");
     private static final TField DOCUMENTS_FIELD_DESC = new TField("documents", TType.LIST, (short)1);
 
     public List<Document> documents;
     public static final int DOCUMENTS = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(DOCUMENTS, new FieldMetaData("documents", TFieldRequirementType.DEFAULT, 
@@ -2485,32 +2719,22 @@ public class Thrudex {
       }
     }
 
-    @Override
-    public putList_args clone() {
+    public putList_args deepCopy() {
       return new putList_args(this);
     }
 
-    public int getDocumentsSize() {
-      return (this.documents == null) ? 0 : this.documents.size();
-    }
-
-    public java.util.Iterator<Document> getDocumentsIterator() {
-      return (this.documents == null) ? null : this.documents.iterator();
-    }
-
-    public void addToDocuments(Document elem) {
-      if (this.documents == null) {
-        this.documents = new ArrayList<Document>();
-      }
-      this.documents.add(elem);
+    @Deprecated
+    public putList_args clone() {
+      return new putList_args(this);
     }
 
     public List<Document> getDocuments() {
       return this.documents;
     }
 
-    public void setDocuments(List<Document> documents) {
+    public putList_args setDocuments(List<Document> documents) {
       this.documents = documents;
+      return this;
     }
 
     public void unsetDocuments() {
@@ -2593,6 +2817,25 @@ public class Thrudex {
       return 0;
     }
 
+    public int compareTo(putList_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      putList_args typedOther = (putList_args)other;
+
+      lastComparison = Boolean.valueOf(isSetDocuments()).compareTo(isSetDocuments());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(documents, typedOther.documents);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -2643,7 +2886,8 @@ public class Thrudex {
         oprot.writeFieldBegin(DOCUMENTS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.documents.size()));
-          for (Document _iter20 : this.documents)          {
+          for (Document _iter20 : this.documents)
+          {
             _iter20.write(oprot);
           }
           oprot.writeListEnd();
@@ -2677,19 +2921,17 @@ public class Thrudex {
 
   }
 
-  public static class putList_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class putList_result implements TBase, java.io.Serializable, Cloneable, Comparable<putList_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("putList_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.LIST, (short)0);
     private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public List<ThrudexException> success;
-    public static final int SUCCESS = 0;
     public ThrudexException ex;
+    public static final int SUCCESS = 0;
     public static final int EX = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -2731,32 +2973,22 @@ public class Thrudex {
       }
     }
 
-    @Override
-    public putList_result clone() {
+    public putList_result deepCopy() {
       return new putList_result(this);
     }
 
-    public int getSuccessSize() {
-      return (this.success == null) ? 0 : this.success.size();
-    }
-
-    public java.util.Iterator<ThrudexException> getSuccessIterator() {
-      return (this.success == null) ? null : this.success.iterator();
-    }
-
-    public void addToSuccess(ThrudexException elem) {
-      if (this.success == null) {
-        this.success = new ArrayList<ThrudexException>();
-      }
-      this.success.add(elem);
+    @Deprecated
+    public putList_result clone() {
+      return new putList_result(this);
     }
 
     public List<ThrudexException> getSuccess() {
       return this.success;
     }
 
-    public void setSuccess(List<ThrudexException> success) {
+    public putList_result setSuccess(List<ThrudexException> success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -2778,8 +3010,9 @@ public class Thrudex {
       return this.ex;
     }
 
-    public void setEx(ThrudexException ex) {
+    public putList_result setEx(ThrudexException ex) {
       this.ex = ex;
+      return this;
     }
 
     public void unsetEx() {
@@ -2884,6 +3117,33 @@ public class Thrudex {
       return 0;
     }
 
+    public int compareTo(putList_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      putList_result typedOther = (putList_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx()).compareTo(isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex, typedOther.ex);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -2941,7 +3201,8 @@ public class Thrudex {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.success.size()));
-          for (ThrudexException _iter24 : this.success)          {
+          for (ThrudexException _iter24 : this.success)
+          {
             _iter24.write(oprot);
           }
           oprot.writeListEnd();
@@ -2987,16 +3248,14 @@ public class Thrudex {
 
   }
 
-  public static class removeList_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class removeList_args implements TBase, java.io.Serializable, Cloneable, Comparable<removeList_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("removeList_args");
     private static final TField ELEMENTS_FIELD_DESC = new TField("elements", TType.LIST, (short)1);
 
     public List<Element> elements;
     public static final int ELEMENTS = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(ELEMENTS, new FieldMetaData("elements", TFieldRequirementType.DEFAULT, 
@@ -3031,32 +3290,22 @@ public class Thrudex {
       }
     }
 
-    @Override
-    public removeList_args clone() {
+    public removeList_args deepCopy() {
       return new removeList_args(this);
     }
 
-    public int getElementsSize() {
-      return (this.elements == null) ? 0 : this.elements.size();
-    }
-
-    public java.util.Iterator<Element> getElementsIterator() {
-      return (this.elements == null) ? null : this.elements.iterator();
-    }
-
-    public void addToElements(Element elem) {
-      if (this.elements == null) {
-        this.elements = new ArrayList<Element>();
-      }
-      this.elements.add(elem);
+    @Deprecated
+    public removeList_args clone() {
+      return new removeList_args(this);
     }
 
     public List<Element> getElements() {
       return this.elements;
     }
 
-    public void setElements(List<Element> elements) {
+    public removeList_args setElements(List<Element> elements) {
       this.elements = elements;
+      return this;
     }
 
     public void unsetElements() {
@@ -3139,6 +3388,25 @@ public class Thrudex {
       return 0;
     }
 
+    public int compareTo(removeList_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      removeList_args typedOther = (removeList_args)other;
+
+      lastComparison = Boolean.valueOf(isSetElements()).compareTo(isSetElements());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(elements, typedOther.elements);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -3189,7 +3457,8 @@ public class Thrudex {
         oprot.writeFieldBegin(ELEMENTS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.elements.size()));
-          for (Element _iter28 : this.elements)          {
+          for (Element _iter28 : this.elements)
+          {
             _iter28.write(oprot);
           }
           oprot.writeListEnd();
@@ -3223,19 +3492,17 @@ public class Thrudex {
 
   }
 
-  public static class removeList_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class removeList_result implements TBase, java.io.Serializable, Cloneable, Comparable<removeList_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("removeList_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.LIST, (short)0);
     private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public List<ThrudexException> success;
-    public static final int SUCCESS = 0;
     public ThrudexException ex;
+    public static final int SUCCESS = 0;
     public static final int EX = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -3277,32 +3544,22 @@ public class Thrudex {
       }
     }
 
-    @Override
-    public removeList_result clone() {
+    public removeList_result deepCopy() {
       return new removeList_result(this);
     }
 
-    public int getSuccessSize() {
-      return (this.success == null) ? 0 : this.success.size();
-    }
-
-    public java.util.Iterator<ThrudexException> getSuccessIterator() {
-      return (this.success == null) ? null : this.success.iterator();
-    }
-
-    public void addToSuccess(ThrudexException elem) {
-      if (this.success == null) {
-        this.success = new ArrayList<ThrudexException>();
-      }
-      this.success.add(elem);
+    @Deprecated
+    public removeList_result clone() {
+      return new removeList_result(this);
     }
 
     public List<ThrudexException> getSuccess() {
       return this.success;
     }
 
-    public void setSuccess(List<ThrudexException> success) {
+    public removeList_result setSuccess(List<ThrudexException> success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -3324,8 +3581,9 @@ public class Thrudex {
       return this.ex;
     }
 
-    public void setEx(ThrudexException ex) {
+    public removeList_result setEx(ThrudexException ex) {
       this.ex = ex;
+      return this;
     }
 
     public void unsetEx() {
@@ -3430,6 +3688,33 @@ public class Thrudex {
       return 0;
     }
 
+    public int compareTo(removeList_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      removeList_result typedOther = (removeList_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx()).compareTo(isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex, typedOther.ex);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -3487,7 +3772,8 @@ public class Thrudex {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.success.size()));
-          for (ThrudexException _iter32 : this.success)          {
+          for (ThrudexException _iter32 : this.success)
+          {
             _iter32.write(oprot);
           }
           oprot.writeListEnd();
@@ -3540,9 +3826,7 @@ public class Thrudex {
     public List<SearchQuery> q;
     public static final int Q = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(Q, new FieldMetaData("q", TFieldRequirementType.DEFAULT, 
@@ -3577,32 +3861,22 @@ public class Thrudex {
       }
     }
 
-    @Override
-    public searchList_args clone() {
+    public searchList_args deepCopy() {
       return new searchList_args(this);
     }
 
-    public int getQSize() {
-      return (this.q == null) ? 0 : this.q.size();
-    }
-
-    public java.util.Iterator<SearchQuery> getQIterator() {
-      return (this.q == null) ? null : this.q.iterator();
-    }
-
-    public void addToQ(SearchQuery elem) {
-      if (this.q == null) {
-        this.q = new ArrayList<SearchQuery>();
-      }
-      this.q.add(elem);
+    @Deprecated
+    public searchList_args clone() {
+      return new searchList_args(this);
     }
 
     public List<SearchQuery> getQ() {
       return this.q;
     }
 
-    public void setQ(List<SearchQuery> q) {
+    public searchList_args setQ(List<SearchQuery> q) {
       this.q = q;
+      return this;
     }
 
     public void unsetQ() {
@@ -3735,7 +4009,8 @@ public class Thrudex {
         oprot.writeFieldBegin(Q_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.q.size()));
-          for (SearchQuery _iter36 : this.q)          {
+          for (SearchQuery _iter36 : this.q)
+          {
             _iter36.write(oprot);
           }
           oprot.writeListEnd();
@@ -3769,19 +4044,17 @@ public class Thrudex {
 
   }
 
-  public static class searchList_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class searchList_result implements TBase, java.io.Serializable, Cloneable, Comparable<searchList_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("searchList_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.LIST, (short)0);
     private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public List<SearchResponse> success;
-    public static final int SUCCESS = 0;
     public ThrudexException ex;
+    public static final int SUCCESS = 0;
     public static final int EX = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -3823,32 +4096,22 @@ public class Thrudex {
       }
     }
 
-    @Override
-    public searchList_result clone() {
+    public searchList_result deepCopy() {
       return new searchList_result(this);
     }
 
-    public int getSuccessSize() {
-      return (this.success == null) ? 0 : this.success.size();
-    }
-
-    public java.util.Iterator<SearchResponse> getSuccessIterator() {
-      return (this.success == null) ? null : this.success.iterator();
-    }
-
-    public void addToSuccess(SearchResponse elem) {
-      if (this.success == null) {
-        this.success = new ArrayList<SearchResponse>();
-      }
-      this.success.add(elem);
+    @Deprecated
+    public searchList_result clone() {
+      return new searchList_result(this);
     }
 
     public List<SearchResponse> getSuccess() {
       return this.success;
     }
 
-    public void setSuccess(List<SearchResponse> success) {
+    public searchList_result setSuccess(List<SearchResponse> success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -3870,8 +4133,9 @@ public class Thrudex {
       return this.ex;
     }
 
-    public void setEx(ThrudexException ex) {
+    public searchList_result setEx(ThrudexException ex) {
       this.ex = ex;
+      return this;
     }
 
     public void unsetEx() {
@@ -3976,6 +4240,33 @@ public class Thrudex {
       return 0;
     }
 
+    public int compareTo(searchList_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      searchList_result typedOther = (searchList_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx()).compareTo(isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex, typedOther.ex);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -4033,7 +4324,8 @@ public class Thrudex {
         oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
         {
           oprot.writeListBegin(new TList(TType.STRUCT, this.success.size()));
-          for (SearchResponse _iter40 : this.success)          {
+          for (SearchResponse _iter40 : this.success)
+          {
             _iter40.write(oprot);
           }
           oprot.writeListEnd();
@@ -4079,19 +4371,17 @@ public class Thrudex {
 
   }
 
-  public static class admin_args implements TBase, java.io.Serializable, Cloneable   {
+  public static class admin_args implements TBase, java.io.Serializable, Cloneable, Comparable<admin_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("admin_args");
     private static final TField OP_FIELD_DESC = new TField("op", TType.STRING, (short)1);
     private static final TField DATA_FIELD_DESC = new TField("data", TType.STRING, (short)2);
 
     public String op;
-    public static final int OP = 1;
     public String data;
+    public static final int OP = 1;
     public static final int DATA = 2;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(OP, new FieldMetaData("op", TFieldRequirementType.DEFAULT, 
@@ -4128,7 +4418,11 @@ public class Thrudex {
       }
     }
 
-    @Override
+    public admin_args deepCopy() {
+      return new admin_args(this);
+    }
+
+    @Deprecated
     public admin_args clone() {
       return new admin_args(this);
     }
@@ -4137,8 +4431,9 @@ public class Thrudex {
       return this.op;
     }
 
-    public void setOp(String op) {
+    public admin_args setOp(String op) {
       this.op = op;
+      return this;
     }
 
     public void unsetOp() {
@@ -4160,8 +4455,9 @@ public class Thrudex {
       return this.data;
     }
 
-    public void setData(String data) {
+    public admin_args setData(String data) {
       this.data = data;
+      return this;
     }
 
     public void unsetData() {
@@ -4266,6 +4562,33 @@ public class Thrudex {
       return 0;
     }
 
+    public int compareTo(admin_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      admin_args typedOther = (admin_args)other;
+
+      lastComparison = Boolean.valueOf(isSetOp()).compareTo(isSetOp());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(op, typedOther.op);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetData()).compareTo(isSetData());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(data, typedOther.data);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      return 0;
+    }
+
     public void read(TProtocol iprot) throws TException {
       TField field;
       iprot.readStructBegin();
@@ -4353,19 +4676,17 @@ public class Thrudex {
 
   }
 
-  public static class admin_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class admin_result implements TBase, java.io.Serializable, Cloneable, Comparable<admin_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("admin_result");
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)1);
 
     public String success;
-    public static final int SUCCESS = 0;
     public ThrudexException ex;
+    public static final int SUCCESS = 0;
     public static final int EX = 1;
 
-    private final Isset __isset = new Isset();
-    private static final class Isset implements java.io.Serializable {
-    }
+    // isset id assignments
 
     public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
       put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
@@ -4402,7 +4723,11 @@ public class Thrudex {
       }
     }
 
-    @Override
+    public admin_result deepCopy() {
+      return new admin_result(this);
+    }
+
+    @Deprecated
     public admin_result clone() {
       return new admin_result(this);
     }
@@ -4411,8 +4736,9 @@ public class Thrudex {
       return this.success;
     }
 
-    public void setSuccess(String success) {
+    public admin_result setSuccess(String success) {
       this.success = success;
+      return this;
     }
 
     public void unsetSuccess() {
@@ -4434,8 +4760,9 @@ public class Thrudex {
       return this.ex;
     }
 
-    public void setEx(ThrudexException ex) {
+    public admin_result setEx(ThrudexException ex) {
       this.ex = ex;
+      return this;
     }
 
     public void unsetEx() {
@@ -4537,6 +4864,33 @@ public class Thrudex {
 
     @Override
     public int hashCode() {
+      return 0;
+    }
+
+    public int compareTo(admin_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+      admin_result typedOther = (admin_result)other;
+
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = Boolean.valueOf(isSetEx()).compareTo(isSetEx());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      lastComparison = TBaseHelper.compareTo(ex, typedOther.ex);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
       return 0;
     }
 

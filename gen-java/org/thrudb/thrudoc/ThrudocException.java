@@ -12,12 +12,16 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import java.util.BitSet;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
 import org.apache.thrift.protocol.*;
 
-public class ThrudocException extends Exception implements TBase, java.io.Serializable, Cloneable {
+public class ThrudocException extends Exception implements TBase, java.io.Serializable, Cloneable, Comparable<ThrudocException> {
   private static final TStruct STRUCT_DESC = new TStruct("ThrudocException");
 
   public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
@@ -36,7 +40,11 @@ public class ThrudocException extends Exception implements TBase, java.io.Serial
   public ThrudocException(ThrudocException other) {
   }
 
-  @Override
+  public ThrudocException deepCopy() {
+    return new ThrudocException(this);
+  }
+
+  @Deprecated
   public ThrudocException clone() {
     return new ThrudocException(this);
   }
@@ -81,6 +89,17 @@ public class ThrudocException extends Exception implements TBase, java.io.Serial
 
   @Override
   public int hashCode() {
+    return 0;
+  }
+
+  public int compareTo(ThrudocException other) {
+    if (!getClass().equals(other.getClass())) {
+      return getClass().getName().compareTo(other.getClass().getName());
+    }
+
+    int lastComparison = 0;
+    ThrudocException typedOther = (ThrudocException)other;
+
     return 0;
   }
 

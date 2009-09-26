@@ -12,21 +12,23 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import java.util.BitSet;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
 import org.apache.thrift.protocol.*;
 
-public class ThrudexException extends Exception implements TBase, java.io.Serializable, Cloneable {
+public class ThrudexException extends Exception implements TBase, java.io.Serializable, Cloneable, Comparable<ThrudexException> {
   private static final TStruct STRUCT_DESC = new TStruct("ThrudexException");
   private static final TField WHAT_FIELD_DESC = new TField("what", TType.STRING, (short)1);
 
   public String what;
   public static final int WHAT = 1;
 
-  private final Isset __isset = new Isset();
-  private static final class Isset implements java.io.Serializable {
-  }
+  // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
     put(WHAT, new FieldMetaData("what", TFieldRequirementType.DEFAULT, 
@@ -56,7 +58,11 @@ public class ThrudexException extends Exception implements TBase, java.io.Serial
     }
   }
 
-  @Override
+  public ThrudexException deepCopy() {
+    return new ThrudexException(this);
+  }
+
+  @Deprecated
   public ThrudexException clone() {
     return new ThrudexException(this);
   }
@@ -65,8 +71,9 @@ public class ThrudexException extends Exception implements TBase, java.io.Serial
     return this.what;
   }
 
-  public void setWhat(String what) {
+  public ThrudexException setWhat(String what) {
     this.what = what;
+    return this;
   }
 
   public void unsetWhat() {
@@ -146,6 +153,25 @@ public class ThrudexException extends Exception implements TBase, java.io.Serial
 
   @Override
   public int hashCode() {
+    return 0;
+  }
+
+  public int compareTo(ThrudexException other) {
+    if (!getClass().equals(other.getClass())) {
+      return getClass().getName().compareTo(other.getClass().getName());
+    }
+
+    int lastComparison = 0;
+    ThrudexException typedOther = (ThrudexException)other;
+
+    lastComparison = Boolean.valueOf(isSetWhat()).compareTo(isSetWhat());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(what, typedOther.what);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     return 0;
   }
 

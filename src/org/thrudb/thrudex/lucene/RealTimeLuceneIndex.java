@@ -144,7 +144,8 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 		
 		//Parse Query
 		Query parsedQuery;
-		SearchResponse response = new SearchResponse();
+		SearchResponse response = new SearchResponse(-1,new ArrayList<Element>(),null);
+         
 		
 		//Construct the multiSearcher
 		ParallelMultiSearcher multiSearcher = null;
@@ -241,7 +242,7 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 				if(query.isSetPayload() && query.payload)
 					el.setPayload(d.get(PAYLOAD_KEY));
 			
-				response.addToElements(el);
+				response.getElements().add(el);
 			}
 			
 			return response;

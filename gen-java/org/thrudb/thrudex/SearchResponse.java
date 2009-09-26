@@ -12,28 +12,31 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import java.util.BitSet;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
 import org.apache.thrift.protocol.*;
 
-public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
+public class SearchResponse implements TBase, java.io.Serializable, Cloneable, Comparable<SearchResponse> {
   private static final TStruct STRUCT_DESC = new TStruct("SearchResponse");
   private static final TField TOTAL_FIELD_DESC = new TField("total", TType.I32, (short)1);
   private static final TField ELEMENTS_FIELD_DESC = new TField("elements", TType.LIST, (short)2);
   private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)3);
 
   public int total;
-  public static final int TOTAL = 1;
   public List<Element> elements;
-  public static final int ELEMENTS = 2;
   public ThrudexException ex;
+  public static final int TOTAL = 1;
+  public static final int ELEMENTS = 2;
   public static final int EX = 3;
 
-  private final Isset __isset = new Isset();
-  private static final class Isset implements java.io.Serializable {
-    public boolean total = false;
-  }
+  // isset id assignments
+  private static final int __TOTAL_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
     put(TOTAL, new FieldMetaData("total", TFieldRequirementType.DEFAULT, 
@@ -61,7 +64,7 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
   {
     this();
     this.total = total;
-    this.__isset.total = true;
+    setTotalIsSet(true);
     this.elements = elements;
     this.ex = ex;
   }
@@ -70,7 +73,8 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
    * Performs a deep copy on <i>other</i>.
    */
   public SearchResponse(SearchResponse other) {
-    __isset.total = other.__isset.total;
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
     this.total = other.total;
     if (other.isSetElements()) {
       List<Element> __this__elements = new ArrayList<Element>();
@@ -84,7 +88,11 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  @Override
+  public SearchResponse deepCopy() {
+    return new SearchResponse(this);
+  }
+
+  @Deprecated
   public SearchResponse clone() {
     return new SearchResponse(this);
   }
@@ -93,45 +101,32 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
     return this.total;
   }
 
-  public void setTotal(int total) {
+  public SearchResponse setTotal(int total) {
     this.total = total;
-    this.__isset.total = true;
+    setTotalIsSet(true);
+    return this;
   }
 
   public void unsetTotal() {
-    this.__isset.total = false;
+    __isset_bit_vector.clear(__TOTAL_ISSET_ID);
   }
 
   // Returns true if field total is set (has been asigned a value) and false otherwise
   public boolean isSetTotal() {
-    return this.__isset.total;
+    return __isset_bit_vector.get(__TOTAL_ISSET_ID);
   }
 
   public void setTotalIsSet(boolean value) {
-    this.__isset.total = value;
-  }
-
-  public int getElementsSize() {
-    return (this.elements == null) ? 0 : this.elements.size();
-  }
-
-  public java.util.Iterator<Element> getElementsIterator() {
-    return (this.elements == null) ? null : this.elements.iterator();
-  }
-
-  public void addToElements(Element elem) {
-    if (this.elements == null) {
-      this.elements = new ArrayList<Element>();
-    }
-    this.elements.add(elem);
+    __isset_bit_vector.set(__TOTAL_ISSET_ID, value);
   }
 
   public List<Element> getElements() {
     return this.elements;
   }
 
-  public void setElements(List<Element> elements) {
+  public SearchResponse setElements(List<Element> elements) {
     this.elements = elements;
+    return this;
   }
 
   public void unsetElements() {
@@ -153,8 +148,9 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
     return this.ex;
   }
 
-  public void setEx(ThrudexException ex) {
+  public SearchResponse setEx(ThrudexException ex) {
     this.ex = ex;
+    return this;
   }
 
   public void unsetEx() {
@@ -281,6 +277,41 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
     return 0;
   }
 
+  public int compareTo(SearchResponse other) {
+    if (!getClass().equals(other.getClass())) {
+      return getClass().getName().compareTo(other.getClass().getName());
+    }
+
+    int lastComparison = 0;
+    SearchResponse typedOther = (SearchResponse)other;
+
+    lastComparison = Boolean.valueOf(isSetTotal()).compareTo(isSetTotal());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(total, typedOther.total);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetElements()).compareTo(isSetElements());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(elements, typedOther.elements);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetEx()).compareTo(isSetEx());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(ex, typedOther.ex);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    return 0;
+  }
+
   public void read(TProtocol iprot) throws TException {
     TField field;
     iprot.readStructBegin();
@@ -295,7 +326,7 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
         case TOTAL:
           if (field.type == TType.I32) {
             this.total = iprot.readI32();
-            this.__isset.total = true;
+            setTotalIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -350,7 +381,8 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(ELEMENTS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.elements.size()));
-        for (Element _iter12 : this.elements)        {
+        for (Element _iter12 : this.elements)
+        {
           _iter12.write(oprot);
         }
         oprot.writeListEnd();

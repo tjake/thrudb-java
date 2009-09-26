@@ -2,6 +2,7 @@ package org.thrudb.thrudex.lucene;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
@@ -149,8 +150,9 @@ public class SimpleLuceneIndex implements LuceneIndex {
 			//Search		
 			TopFieldDocs result = mySearcher.search(parsedQuery,null,query.offset + query.limit,sortBy);
 			
-			SearchResponse response = new SearchResponse();
-			response.setTotal(result.totalHits);
+			
+			SearchResponse response = new SearchResponse(result.totalHits,new ArrayList<Element>(),null);
+	          
 			
 			FieldSelector fieldSelector;
 			if(query.isPayload()){
@@ -172,7 +174,7 @@ public class SimpleLuceneIndex implements LuceneIndex {
 				if(query.isSetPayload() && query.payload)
 					el.setPayload(d.get(PAYLOAD_KEY));
 			
-				response.addToElements(el);
+				response.getElements().add(el);
 			}
 			
 			return response;

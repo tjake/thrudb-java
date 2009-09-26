@@ -12,12 +12,16 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import java.util.BitSet;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
 import org.apache.thrift.protocol.*;
 
-public class Document implements TBase, java.io.Serializable, Cloneable {
+public class Document implements TBase, java.io.Serializable, Cloneable, Comparable<Document> {
   private static final TStruct STRUCT_DESC = new TStruct("Document");
   private static final TField INDEX_FIELD_DESC = new TField("index", TType.STRING, (short)1);
   private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
@@ -26,20 +30,19 @@ public class Document implements TBase, java.io.Serializable, Cloneable {
   private static final TField WEIGHT_FIELD_DESC = new TField("weight", TType.I32, (short)5);
 
   public String index;
-  public static final int INDEX = 1;
   public String key;
-  public static final int KEY = 2;
   public List<Field> fields;
-  public static final int FIELDS = 3;
   public String payload;
-  public static final int PAYLOAD = 4;
   public int weight;
+  public static final int INDEX = 1;
+  public static final int KEY = 2;
+  public static final int FIELDS = 3;
+  public static final int PAYLOAD = 4;
   public static final int WEIGHT = 5;
 
-  private final Isset __isset = new Isset();
-  private static final class Isset implements java.io.Serializable {
-    public boolean weight = false;
-  }
+  // isset id assignments
+  private static final int __WEIGHT_ISSET_ID = 0;
+  private BitSet __isset_bit_vector = new BitSet(1);
 
   public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
     put(INDEX, new FieldMetaData("index", TFieldRequirementType.DEFAULT, 
@@ -77,13 +80,15 @@ public class Document implements TBase, java.io.Serializable, Cloneable {
     this.fields = fields;
     this.payload = payload;
     this.weight = weight;
-    this.__isset.weight = true;
+    setWeightIsSet(true);
   }
 
   /**
    * Performs a deep copy on <i>other</i>.
    */
   public Document(Document other) {
+    __isset_bit_vector.clear();
+    __isset_bit_vector.or(other.__isset_bit_vector);
     if (other.isSetIndex()) {
       this.index = other.index;
     }
@@ -100,11 +105,14 @@ public class Document implements TBase, java.io.Serializable, Cloneable {
     if (other.isSetPayload()) {
       this.payload = other.payload;
     }
-    __isset.weight = other.__isset.weight;
     this.weight = other.weight;
   }
 
-  @Override
+  public Document deepCopy() {
+    return new Document(this);
+  }
+
+  @Deprecated
   public Document clone() {
     return new Document(this);
   }
@@ -113,8 +121,9 @@ public class Document implements TBase, java.io.Serializable, Cloneable {
     return this.index;
   }
 
-  public void setIndex(String index) {
+  public Document setIndex(String index) {
     this.index = index;
+    return this;
   }
 
   public void unsetIndex() {
@@ -136,8 +145,9 @@ public class Document implements TBase, java.io.Serializable, Cloneable {
     return this.key;
   }
 
-  public void setKey(String key) {
+  public Document setKey(String key) {
     this.key = key;
+    return this;
   }
 
   public void unsetKey() {
@@ -155,27 +165,13 @@ public class Document implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  public int getFieldsSize() {
-    return (this.fields == null) ? 0 : this.fields.size();
-  }
-
-  public java.util.Iterator<Field> getFieldsIterator() {
-    return (this.fields == null) ? null : this.fields.iterator();
-  }
-
-  public void addToFields(Field elem) {
-    if (this.fields == null) {
-      this.fields = new ArrayList<Field>();
-    }
-    this.fields.add(elem);
-  }
-
   public List<Field> getFields() {
     return this.fields;
   }
 
-  public void setFields(List<Field> fields) {
+  public Document setFields(List<Field> fields) {
     this.fields = fields;
+    return this;
   }
 
   public void unsetFields() {
@@ -197,8 +193,9 @@ public class Document implements TBase, java.io.Serializable, Cloneable {
     return this.payload;
   }
 
-  public void setPayload(String payload) {
+  public Document setPayload(String payload) {
     this.payload = payload;
+    return this;
   }
 
   public void unsetPayload() {
@@ -220,22 +217,23 @@ public class Document implements TBase, java.io.Serializable, Cloneable {
     return this.weight;
   }
 
-  public void setWeight(int weight) {
+  public Document setWeight(int weight) {
     this.weight = weight;
-    this.__isset.weight = true;
+    setWeightIsSet(true);
+    return this;
   }
 
   public void unsetWeight() {
-    this.__isset.weight = false;
+    __isset_bit_vector.clear(__WEIGHT_ISSET_ID);
   }
 
   // Returns true if field weight is set (has been asigned a value) and false otherwise
   public boolean isSetWeight() {
-    return this.__isset.weight;
+    return __isset_bit_vector.get(__WEIGHT_ISSET_ID);
   }
 
   public void setWeightIsSet(boolean value) {
-    this.__isset.weight = value;
+    __isset_bit_vector.set(__WEIGHT_ISSET_ID, value);
   }
 
   public void setFieldValue(int fieldID, Object value) {
@@ -391,6 +389,57 @@ public class Document implements TBase, java.io.Serializable, Cloneable {
     return 0;
   }
 
+  public int compareTo(Document other) {
+    if (!getClass().equals(other.getClass())) {
+      return getClass().getName().compareTo(other.getClass().getName());
+    }
+
+    int lastComparison = 0;
+    Document typedOther = (Document)other;
+
+    lastComparison = Boolean.valueOf(isSetIndex()).compareTo(isSetIndex());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(index, typedOther.index);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetFields()).compareTo(isSetFields());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(fields, typedOther.fields);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetPayload()).compareTo(isSetPayload());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(payload, typedOther.payload);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetWeight()).compareTo(isSetWeight());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(weight, typedOther.weight);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    return 0;
+  }
+
   public void read(TProtocol iprot) throws TException {
     TField field;
     iprot.readStructBegin();
@@ -444,7 +493,7 @@ public class Document implements TBase, java.io.Serializable, Cloneable {
         case WEIGHT:
           if (field.type == TType.I32) {
             this.weight = iprot.readI32();
-            this.__isset.weight = true;
+            setWeightIsSet(true);
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
@@ -480,7 +529,8 @@ public class Document implements TBase, java.io.Serializable, Cloneable {
       oprot.writeFieldBegin(FIELDS_FIELD_DESC);
       {
         oprot.writeListBegin(new TList(TType.STRUCT, this.fields.size()));
-        for (Field _iter3 : this.fields)        {
+        for (Field _iter3 : this.fields)
+        {
           _iter3.write(oprot);
         }
         oprot.writeListEnd();

@@ -12,27 +12,29 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import java.util.BitSet;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
 import org.apache.thrift.protocol.*;
 
-public class Element implements TBase, java.io.Serializable, Cloneable {
+public class Element implements TBase, java.io.Serializable, Cloneable, Comparable<Element> {
   private static final TStruct STRUCT_DESC = new TStruct("Element");
   private static final TField INDEX_FIELD_DESC = new TField("index", TType.STRING, (short)1);
   private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
   private static final TField PAYLOAD_FIELD_DESC = new TField("payload", TType.STRING, (short)3);
 
   public String index;
-  public static final int INDEX = 1;
   public String key;
-  public static final int KEY = 2;
   public String payload;
+  public static final int INDEX = 1;
+  public static final int KEY = 2;
   public static final int PAYLOAD = 3;
 
-  private final Isset __isset = new Isset();
-  private static final class Isset implements java.io.Serializable {
-  }
+  // isset id assignments
 
   public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
     put(INDEX, new FieldMetaData("index", TFieldRequirementType.DEFAULT, 
@@ -76,7 +78,11 @@ public class Element implements TBase, java.io.Serializable, Cloneable {
     }
   }
 
-  @Override
+  public Element deepCopy() {
+    return new Element(this);
+  }
+
+  @Deprecated
   public Element clone() {
     return new Element(this);
   }
@@ -85,8 +91,9 @@ public class Element implements TBase, java.io.Serializable, Cloneable {
     return this.index;
   }
 
-  public void setIndex(String index) {
+  public Element setIndex(String index) {
     this.index = index;
+    return this;
   }
 
   public void unsetIndex() {
@@ -108,8 +115,9 @@ public class Element implements TBase, java.io.Serializable, Cloneable {
     return this.key;
   }
 
-  public void setKey(String key) {
+  public Element setKey(String key) {
     this.key = key;
+    return this;
   }
 
   public void unsetKey() {
@@ -131,8 +139,9 @@ public class Element implements TBase, java.io.Serializable, Cloneable {
     return this.payload;
   }
 
-  public void setPayload(String payload) {
+  public Element setPayload(String payload) {
     this.payload = payload;
+    return this;
   }
 
   public void unsetPayload() {
@@ -256,6 +265,41 @@ public class Element implements TBase, java.io.Serializable, Cloneable {
 
   @Override
   public int hashCode() {
+    return 0;
+  }
+
+  public int compareTo(Element other) {
+    if (!getClass().equals(other.getClass())) {
+      return getClass().getName().compareTo(other.getClass().getName());
+    }
+
+    int lastComparison = 0;
+    Element typedOther = (Element)other;
+
+    lastComparison = Boolean.valueOf(isSetIndex()).compareTo(isSetIndex());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(index, typedOther.index);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetPayload()).compareTo(isSetPayload());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(payload, typedOther.payload);
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
     return 0;
   }
 

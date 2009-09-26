@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lucandra.CassandraUtils;
+
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
@@ -16,6 +18,7 @@ import org.apache.lucene.analysis.StopAnalyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.thrift.TException;
+import org.apache.thrift.transport.TTransportException;
 import org.thrudb.thrudex.Document;
 import org.thrudb.thrudex.Element;
 import org.thrudb.thrudex.Field;
@@ -24,6 +27,8 @@ import org.thrudb.thrudex.SearchResponse;
 import org.thrudb.thrudex.ThrudexException;
 import org.thrudb.thrudex.ThrudexExceptionImpl;
 import org.thrudb.thrudex.Thrudex.Iface;
+
+import sun.awt.windows.ThemeReader;
 
 /**
  * Manages a set of lucene indexes. We keep this one lucene backend per index
@@ -75,9 +80,11 @@ public class ThrudexLuceneHandler implements Iface {
 
 		try {
 			// indexMap.put(name, new SimpleLuceneIndex(indexRoot,name));
-			indexMap.put(name, new RealTimeLuceneIndex(indexRoot, name));
-		} catch (IOException e) {
-			throw new ThrudexException(e.toString());
+			//indexMap.put(name, new RealTimeLuceneIndex(indexRoot, name));
+		    
+		    indexMap.put(name, new LucandraIndex(CassandraUtils.createConnection(),name));
+		} catch (TTransportException e){
+		    throw new ThrudexException(e.getLocalizedMessage());
 		}
 	}
 
@@ -114,7 +121,7 @@ public class ThrudexLuceneHandler implements Iface {
 		luceneDocument.add(new org.apache.lucene.document.Field(
 				LuceneIndex.DOCUMENT_KEY, d.key,
 				org.apache.lucene.document.Field.Store.YES,
-				org.apache.lucene.document.Field.Index.NOT_ANALYZED));
+				org.apache.lucene.document.Field.Index.NO));
 
 		// Start analyzer
 		Analyzer defaultAnalyzer = getAnalyzer(org.thrudb.thrudex.Analyzer.STANDARD);
@@ -162,7 +169,7 @@ public class ThrudexLuceneHandler implements Iface {
 			luceneDocument.add(new org.apache.lucene.document.Field(
 					LuceneIndex.PAYLOAD_KEY, d.payload,
 					org.apache.lucene.document.Field.Store.YES,
-					org.apache.lucene.document.Field.Index.NOT_ANALYZED));
+					org.apache.lucene.document.Field.Index.NO));
 		}
 
 		// Document is not ready to put into the index
@@ -239,6 +246,8 @@ public class ThrudexLuceneHandler implements Iface {
 		if (!isValidIndex(s.index))
 			throw new ThrudexExceptionImpl("No Index Found: " + s.index);
 
+		long start = System.currentTimeMillis();
+				
 		// Build the query analyzer
 		Analyzer defaultAnalyzer = getAnalyzer(s.getDefaultAnalyzer());
 		PerFieldAnalyzerWrapper qAnalyzer = new PerFieldAnalyzerWrapper(
@@ -248,8 +257,14 @@ public class ThrudexLuceneHandler implements Iface {
 				qAnalyzer.addAnalyzer(field, getAnalyzer(s.fieldAnalyzers
 						.get(field)));
 		}
+	
+		SearchResponse r =  indexMap.get(s.index).search(s, qAnalyzer);
 
-		return indexMap.get(s.index).search(s, qAnalyzer);
+		long end = System.currentTimeMillis();
+		
+		logger.info("Search took: "+(end-start)+"ms");
+		
+		return r;
 	}
 
 	public List<SearchResponse> searchList(List<SearchQuery> queries)

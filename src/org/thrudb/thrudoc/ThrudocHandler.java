@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
+import org.thrudb.logEntry;
 import org.thrudb.thrudoc.Thrudoc.Iface;
 import org.thrudb.thrudoc.tokyocabinet.TokyoCabinetDB;
 
@@ -223,5 +224,7 @@ public class ThrudocHandler implements Iface {
 		
 		return bucketMap.get(bucket).scan(seed,count);	
 	}
+
+   
 
 }

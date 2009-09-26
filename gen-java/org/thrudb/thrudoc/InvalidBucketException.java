@@ -12,12 +12,16 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import java.util.BitSet;
+import java.util.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
 import org.apache.thrift.protocol.*;
 
-public class InvalidBucketException extends Exception implements TBase, java.io.Serializable, Cloneable {
+public class InvalidBucketException extends Exception implements TBase, java.io.Serializable, Cloneable, Comparable<InvalidBucketException> {
   private static final TStruct STRUCT_DESC = new TStruct("InvalidBucketException");
 
   public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
@@ -36,7 +40,11 @@ public class InvalidBucketException extends Exception implements TBase, java.io.
   public InvalidBucketException(InvalidBucketException other) {
   }
 
-  @Override
+  public InvalidBucketException deepCopy() {
+    return new InvalidBucketException(this);
+  }
+
+  @Deprecated
   public InvalidBucketException clone() {
     return new InvalidBucketException(this);
   }
@@ -81,6 +89,17 @@ public class InvalidBucketException extends Exception implements TBase, java.io.
 
   @Override
   public int hashCode() {
+    return 0;
+  }
+
+  public int compareTo(InvalidBucketException other) {
+    if (!getClass().equals(other.getClass())) {
+      return getClass().getName().compareTo(other.getClass().getName());
+    }
+
+    int lastComparison = 0;
+    InvalidBucketException typedOther = (InvalidBucketException)other;
+
     return 0;
   }
 

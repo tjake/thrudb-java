@@ -2,16 +2,15 @@ package org.thrudb.thrudex.lucene;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 
-import org.apache.thrift.TException;
+import org.thrudb.thrudex.Analyzer;
 import org.thrudb.thrudex.Document;
 import org.thrudb.thrudex.Field;
-import org.thrudb.thrudex.Analyzer;
 import org.thrudb.thrudex.SearchQuery;
 import org.thrudb.thrudex.SearchResponse;
-import org.thrudb.thrudex.ThrudexException;
 
 public class RealTimeLuceneIndexTests extends TestCase {
 
@@ -54,7 +53,9 @@ public class RealTimeLuceneIndexTests extends TestCase {
 
 			SearchQuery search = new SearchQuery();
 			search.setIndex(INDEX_NAME);
-			search.putToFieldAnalyzers("category", Analyzer.KEYWORD);
+			search.setFieldAnalyzers(new HashMap<String,Integer>());
+			//search.setToFieldAnalyzers("category", Analyzer.KEYWORD);
+			search.getFieldAnalyzers().put("category", Analyzer.KEYWORD);
 			
 			search.setQuery("category:\"science_fiction\"");
 			
@@ -64,7 +65,7 @@ public class RealTimeLuceneIndexTests extends TestCase {
 			
 			
 		} catch (Throwable t) {
-			//t.printStackTrace();
+			t.printStackTrace();
 			fail(t.toString());
 		} 
 	}
