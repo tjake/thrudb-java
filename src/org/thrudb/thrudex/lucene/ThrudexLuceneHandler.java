@@ -38,302 +38,282 @@ import sun.awt.windows.ThemeReader;
  */
 public class ThrudexLuceneHandler implements Iface {
 
-	private volatile Map<Integer, Analyzer> analyzers = new HashMap<Integer, Analyzer>();
-	private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
-	private volatile Map<String, LuceneIndex> indexMap = new HashMap<String, LuceneIndex>();
-	private String indexRoot;
+    private volatile Map<Integer, Analyzer> analyzers = new HashMap<Integer, Analyzer>();
+    private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
+    private volatile Map<String, LuceneIndex> indexMap = new HashMap<String, LuceneIndex>();
+    private String indexRoot;
 
-	public ThrudexLuceneHandler(String indexRoot) {
-		this.indexRoot = indexRoot;
+    public ThrudexLuceneHandler(String indexRoot) {
+        this.indexRoot = indexRoot;
 
-		Runtime.getRuntime()
-				.addShutdownHook(new IndexShutdownHandler(indexMap));
-	}
+        Runtime.getRuntime().addShutdownHook(new IndexShutdownHandler(indexMap));
+    }
 
-	public String admin(String op, String data) throws ThrudexException,
-			TException {
+    public String admin(String op, String data) throws ThrudexException, TException {
 
-		if (op.equals("create_index"))
-			addIndex(data);
+        if (op.equals("create_index"))
+            addIndex(data);
 
-		if (op.equals("optimize")) {
-			if (indexMap.containsKey(data)) {
-				try {
-					indexMap.get(data).optimize();
-				} catch (ThrudexException e) {
-					return e.toString();
-				}
-			}
+        if (op.equals("optimize")) {
+            if (indexMap.containsKey(data)) {
+                try {
+                    indexMap.get(data).optimize();
+                } catch (ThrudexException e) {
+                    return e.toString();
+                }
+            }
 
-		}
+        }
 
-		return "ok";
-	}
+        return "ok";
+    }
 
-	public synchronized void addIndex(String name) throws ThrudexException {
+    public synchronized void addIndex(String name) throws ThrudexException {
 
-		if (name == null || name.trim().equals(""))
-			return;
+        if (name == null || name.trim().equals(""))
+            return;
 
-		if (indexMap.containsKey(name))
-			return;
+        if (indexMap.containsKey(name))
+            return;
 
-		try {
-			// indexMap.put(name, new SimpleLuceneIndex(indexRoot,name));
-			//indexMap.put(name, new RealTimeLuceneIndex(indexRoot, name));
-		    
-		    indexMap.put(name, new LucandraIndex(CassandraUtils.createConnection(),name));
-		} catch (TTransportException e){
-		    throw new ThrudexException(e.getLocalizedMessage());
-		}
-	}
+        // indexMap.put(name, new SimpleLuceneIndex(indexRoot,name));
+        // indexMap.put(name, new RealTimeLuceneIndex(indexRoot, name));
 
-	/**
-	 * Returns the list of available index names
-	 */
-	public List<String> getIndices() throws TException {
-		return new ArrayList<String>(indexMap.keySet());
-	}
+        indexMap.put(name, new LucandraIndex(name));
 
-	/**
-	 * This method does nothing, but lets client check the server
-	 */
-	public void ping() throws TException {
+    }
 
-	}
+    /**
+     * Returns the list of available index names
+     */
+    public List<String> getIndices() throws TException {
+        return new ArrayList<String>(indexMap.keySet());
+    }
 
-	/**
-	 * Add/Replace a document
-	 */
-	public void put(Document d) throws ThrudexException, TException {
+    /**
+     * This method does nothing, but lets client check the server
+     */
+    public void ping() throws TException {
 
-		// make sure index is valid
-		if (!isValidIndex(d.index))
-			throw new ThrudexExceptionImpl("No Index Found: " + d.index);
+    }
 
-		// make sure document has a key
-		if (!d.isSetKey() || d.key.trim().equals(""))
-			throw new ThrudexExceptionImpl("No Document key found");
+    /**
+     * Add/Replace a document
+     */
+    public void put(Document d) throws ThrudexException, TException {
 
-		// Start new lucene document
-		org.apache.lucene.document.Document luceneDocument = new org.apache.lucene.document.Document();
+        // make sure index is valid
+        if (!isValidIndex(d.index))
+            throw new ThrudexExceptionImpl("No Index Found: " + d.index);
 
-		luceneDocument.add(new org.apache.lucene.document.Field(
-				LuceneIndex.DOCUMENT_KEY, d.key,
-				org.apache.lucene.document.Field.Store.YES,
-				org.apache.lucene.document.Field.Index.NO));
+        // make sure document has a key
+        if (!d.isSetKey() || d.key.trim().equals(""))
+            throw new ThrudexExceptionImpl("No Document key found");
 
-		// Start analyzer
-		Analyzer defaultAnalyzer = getAnalyzer(org.thrudb.thrudex.Analyzer.STANDARD);
-		PerFieldAnalyzerWrapper qAnalyzer = new PerFieldAnalyzerWrapper(
-				defaultAnalyzer);
+        // Start new lucene document
+        org.apache.lucene.document.Document luceneDocument = new org.apache.lucene.document.Document();
 
-		// Add fields
-		for (Field field : d.fields) {
+        luceneDocument.add(new org.apache.lucene.document.Field(LuceneIndex.DOCUMENT_KEY, d.key, org.apache.lucene.document.Field.Store.YES,
+                org.apache.lucene.document.Field.Index.NO));
 
-			if (!field.isSetKey())
-				throw new ThrudexExceptionImpl("Field key not set");
+        // Start analyzer
+        Analyzer defaultAnalyzer = getAnalyzer(org.thrudb.thrudex.Analyzer.STANDARD);
+        PerFieldAnalyzerWrapper qAnalyzer = new PerFieldAnalyzerWrapper(defaultAnalyzer);
 
-			// Convert Field store type to Lucene type
-			org.apache.lucene.document.Field.Store fieldStoreType;
-			if (field.isStore())
-				fieldStoreType = org.apache.lucene.document.Field.Store.YES;
-			else
-				fieldStoreType = org.apache.lucene.document.Field.Store.NO;
+        // Add fields
+        for (Field field : d.fields) {
 
-			// Create Lucene Field
-			org.apache.lucene.document.Field luceneField = new org.apache.lucene.document.Field(
-					field.key, field.value, fieldStoreType,
-					org.apache.lucene.document.Field.Index.ANALYZED);
+            if (!field.isSetKey())
+                throw new ThrudexExceptionImpl("Field key not set");
 
-			if (field.isSetWeight())
-				luceneField.setBoost(field.weight);
+            // Convert Field store type to Lucene type
+            org.apache.lucene.document.Field.Store fieldStoreType;
+            if (field.isStore())
+                fieldStoreType = org.apache.lucene.document.Field.Store.YES;
+            else
+                fieldStoreType = org.apache.lucene.document.Field.Store.NO;
 
-			luceneDocument.add(luceneField);
+            // Create Lucene Field
+            org.apache.lucene.document.Field luceneField = new org.apache.lucene.document.Field(field.key, field.value, fieldStoreType,
+                    org.apache.lucene.document.Field.Index.ANALYZED);
 
-			// Create sortable field?
-			if (field.isSetSortable() && field.sortable) {
+            if (field.isSetWeight())
+                luceneField.setBoost(field.weight);
 
-				luceneDocument.add(new org.apache.lucene.document.Field(
-						field.key + "_sort", field.value,
-						org.apache.lucene.document.Field.Store.YES,
-						org.apache.lucene.document.Field.Index.NOT_ANALYZED));
-			}
+            luceneDocument.add(luceneField);
 
-			// Add field specific analyzer to qAnalyzer
-			qAnalyzer.addAnalyzer(field.key, getAnalyzer(field.getAnalyzer()));
-		}
+            // Create sortable field?
+            if (field.isSetSortable() && field.sortable) {
 
-		// Add payload
-		if (d.isSetPayload()) {
-			luceneDocument.add(new org.apache.lucene.document.Field(
-					LuceneIndex.PAYLOAD_KEY, d.payload,
-					org.apache.lucene.document.Field.Store.YES,
-					org.apache.lucene.document.Field.Index.NO));
-		}
+                luceneDocument.add(new org.apache.lucene.document.Field(field.key + "_sort", field.value, org.apache.lucene.document.Field.Store.YES,
+                        org.apache.lucene.document.Field.Index.NOT_ANALYZED));
+            }
 
-		// Document is not ready to put into the index
-		indexMap.get(d.index).put(d.key, luceneDocument, qAnalyzer);
-	}
+            // Add field specific analyzer to qAnalyzer
+            qAnalyzer.addAnalyzer(field.key, getAnalyzer(field.getAnalyzer()));
+        }
 
-	/**
-	 * Adds a list of documents to an index
-	 * 
-	 * Rather than returning on any error, this code captures any errors for
-	 * specific documents and puts them into a list
-	 */
-	public List<ThrudexException> putList(List<Document> documents)
-			throws ThrudexException, TException {
+        // Add payload
+        if (d.isSetPayload()) {
+            luceneDocument.add(new org.apache.lucene.document.Field(LuceneIndex.PAYLOAD_KEY, d.payload, org.apache.lucene.document.Field.Store.YES,
+                    org.apache.lucene.document.Field.Index.NO));
+        }
 
-		List<ThrudexException> exList = new ArrayList<ThrudexException>();
+        // Document is not ready to put into the index
+        indexMap.get(d.index).put(d.key, luceneDocument, qAnalyzer);
+    }
 
-		for (Document document : documents) {
-			try {
-				put(document);
-			} catch (ThrudexException ex) {
+    /**
+     * Adds a list of documents to an index
+     * 
+     * Rather than returning on any error, this code captures any errors for
+     * specific documents and puts them into a list
+     */
+    public List<ThrudexException> putList(List<Document> documents) throws ThrudexException, TException {
 
-				ex.what += document.key;
+        List<ThrudexException> exList = new ArrayList<ThrudexException>();
 
-				exList.add(ex);
-			}
-		}
+        for (Document document : documents) {
+            try {
+                put(document);
+            } catch (ThrudexException ex) {
 
-		return exList;
-	}
+                ex.what += document.key;
 
-	/**
-	 * Removes a document from an index
-	 */
-	public void remove(Element el) throws ThrudexException, TException {
+                exList.add(ex);
+            }
+        }
 
-		// make sure index is valid
-		if (!isValidIndex(el.index))
-			throw new ThrudexExceptionImpl("No Index Found: " + el.index);
+        return exList;
+    }
 
-		// make sure document has a key
-		if (!el.isSetKey() || el.key.trim().equals(""))
-			throw new ThrudexExceptionImpl("No Document key found");
+    /**
+     * Removes a document from an index
+     */
+    public void remove(Element el) throws ThrudexException, TException {
 
-		indexMap.get(el.index).remove(el.key);
-	}
+        // make sure index is valid
+        if (!isValidIndex(el.index))
+            throw new ThrudexExceptionImpl("No Index Found: " + el.index);
 
-	/**
-	 * Removes a set of documents.
-	 * 
-	 * Captures any errors for sub-documents
-	 */
-	public List<ThrudexException> removeList(List<Element> elements)
-			throws ThrudexException, TException {
+        // make sure document has a key
+        if (!el.isSetKey() || el.key.trim().equals(""))
+            throw new ThrudexExceptionImpl("No Document key found");
 
-		List<ThrudexException> exList = new ArrayList<ThrudexException>();
+        indexMap.get(el.index).remove(el.key);
+    }
 
-		for (Element el : elements) {
-			try {
-				remove(el);
-			} catch (ThrudexException ex) {
-				ex.what += el.key;
+    /**
+     * Removes a set of documents.
+     * 
+     * Captures any errors for sub-documents
+     */
+    public List<ThrudexException> removeList(List<Element> elements) throws ThrudexException, TException {
 
-				exList.add(ex);
-			}
-		}
+        List<ThrudexException> exList = new ArrayList<ThrudexException>();
 
-		return exList;
-	}
+        for (Element el : elements) {
+            try {
+                remove(el);
+            } catch (ThrudexException ex) {
+                ex.what += el.key;
 
-	public SearchResponse search(SearchQuery s) throws ThrudexException,
-			TException {
-		// make sure index is valid
-		if (!isValidIndex(s.index))
-			throw new ThrudexExceptionImpl("No Index Found: " + s.index);
+                exList.add(ex);
+            }
+        }
 
-		long start = System.currentTimeMillis();
-				
-		// Build the query analyzer
-		Analyzer defaultAnalyzer = getAnalyzer(s.getDefaultAnalyzer());
-		PerFieldAnalyzerWrapper qAnalyzer = new PerFieldAnalyzerWrapper(
-				defaultAnalyzer);
-		if (s.isSetFieldAnalyzers()) {
-			for (String field : s.fieldAnalyzers.keySet())
-				qAnalyzer.addAnalyzer(field, getAnalyzer(s.fieldAnalyzers
-						.get(field)));
-		}
-	
-		SearchResponse r =  indexMap.get(s.index).search(s, qAnalyzer);
+        return exList;
+    }
 
-		long end = System.currentTimeMillis();
-		
-		logger.info("Search took: "+(end-start)+"ms");
-		
-		return r;
-	}
+    public SearchResponse search(SearchQuery s) throws ThrudexException, TException {
+        // make sure index is valid
+        if (!isValidIndex(s.index))
+            throw new ThrudexExceptionImpl("No Index Found: " + s.index);
 
-	public List<SearchResponse> searchList(List<SearchQuery> queries)
-			throws ThrudexException, TException {
+        long start = System.currentTimeMillis();
 
-		List<SearchResponse> responses = new ArrayList<SearchResponse>();
+        // Build the query analyzer
+        Analyzer defaultAnalyzer = getAnalyzer(s.getDefaultAnalyzer());
+        PerFieldAnalyzerWrapper qAnalyzer = new PerFieldAnalyzerWrapper(defaultAnalyzer);
+        if (s.isSetFieldAnalyzers()) {
+            for (String field : s.fieldAnalyzers.keySet())
+                qAnalyzer.addAnalyzer(field, getAnalyzer(s.fieldAnalyzers.get(field)));
+        }
 
-		for (SearchQuery query : queries) {
-			responses.add(search(query));
-		}
+        SearchResponse r = indexMap.get(s.index).search(s, qAnalyzer);
 
-		return responses;
-	}
+        long end = System.currentTimeMillis();
 
-	public boolean isValidIndex(String indexName) throws ThrudexException {
-		if (indexMap.containsKey(indexName))
-			return true;
+        logger.info("Search took: " + (end - start) + "ms");
 
-		synchronized (indexMap) {
+        return r;
+    }
 
-			// double lock check
-			if (indexMap.containsKey(indexName))
-				return true;
+    public List<SearchResponse> searchList(List<SearchQuery> queries) throws ThrudexException, TException {
 
-			String indexLocation = indexRoot + "/" + indexName;
+        List<SearchResponse> responses = new ArrayList<SearchResponse>();
 
-			if (IndexReader.indexExists(indexLocation)) {
-				addIndex(indexName); // really just reopening
-				return true;
-			} else {
-				return false;
-			}
-		}
-	}
+        for (SearchQuery query : queries) {
+            responses.add(search(query));
+        }
 
-	protected Analyzer getAnalyzer(int analyzerType) throws ThrudexException {
-		Analyzer analyzer = analyzers.get(analyzerType);
-		if (analyzer == null) {
+        return responses;
+    }
 
-			synchronized (analyzers) {
-				
-				//double lock check
-				if( (analyzer = analyzers.get(analyzerType)) != null)
-					return analyzer;
-				
-				switch (analyzerType) {
-				case org.thrudb.thrudex.Analyzer.STANDARD:
-					analyzer = new StandardAnalyzer();
-					break;
-				case org.thrudb.thrudex.Analyzer.KEYWORD:
-					analyzer = new KeywordAnalyzer();
-					break;
-				case org.thrudb.thrudex.Analyzer.SIMPLE:
-					analyzer = new SimpleAnalyzer();
-					break;
-				case org.thrudb.thrudex.Analyzer.STOP:
-					analyzer = new StopAnalyzer();
-					break;
-				case org.thrudb.thrudex.Analyzer.WHITESPACE:
-					analyzer = new WhitespaceAnalyzer();
-					break;
-				default:
-					throw new ThrudexExceptionImpl("Unknown QueryAnalyzer: "
-							+ analyzerType);
-				}
-				analyzers.put(analyzerType, analyzer);
-			}
-		}
-		return (analyzer);
-	}
+    public boolean isValidIndex(String indexName) throws ThrudexException {
+        if (indexMap.containsKey(indexName))
+            return true;
+
+        synchronized (indexMap) {
+
+            // double lock check
+            if (indexMap.containsKey(indexName))
+                return true;
+
+            String indexLocation = indexRoot + "/" + indexName;
+
+            if (IndexReader.indexExists(indexLocation)) {
+                addIndex(indexName); // really just reopening
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    protected Analyzer getAnalyzer(int analyzerType) throws ThrudexException {
+        Analyzer analyzer = analyzers.get(analyzerType);
+        if (analyzer == null) {
+
+            synchronized (analyzers) {
+
+                // double lock check
+                if ((analyzer = analyzers.get(analyzerType)) != null)
+                    return analyzer;
+
+                switch (analyzerType) {
+                case org.thrudb.thrudex.Analyzer.STANDARD:
+                    analyzer = new StandardAnalyzer();
+                    break;
+                case org.thrudb.thrudex.Analyzer.KEYWORD:
+                    analyzer = new KeywordAnalyzer();
+                    break;
+                case org.thrudb.thrudex.Analyzer.SIMPLE:
+                    analyzer = new SimpleAnalyzer();
+                    break;
+                case org.thrudb.thrudex.Analyzer.STOP:
+                    analyzer = new StopAnalyzer();
+                    break;
+                case org.thrudb.thrudex.Analyzer.WHITESPACE:
+                    analyzer = new WhitespaceAnalyzer();
+                    break;
+                default:
+                    throw new ThrudexExceptionImpl("Unknown QueryAnalyzer: " + analyzerType);
+                }
+                analyzers.put(analyzerType, analyzer);
+            }
+        }
+        return (analyzer);
+    }
 
 }

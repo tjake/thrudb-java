@@ -3,6 +3,7 @@ package org.thrudb.thrudex.lucene;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import lucandra.CassandraUtils;
 import lucandra.IndexReader;
 import lucandra.IndexWriter;
 
@@ -17,6 +18,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TopFieldDocs;
+import org.apache.thrift.transport.TTransportException;
 import org.thrudb.thrudex.Element;
 import org.thrudb.thrudex.SearchQuery;
 import org.thrudb.thrudex.SearchResponse;
@@ -25,20 +27,17 @@ import org.thrudb.thrudex.ThrudexExceptionImpl;
 
 public class LucandraIndex implements LuceneIndex {
 
-    private final Cassandra.Client cassandraClient;
+    
     private final String indexName;
 
     private static Logger logger = Logger.getLogger(LucandraIndex.class);
-    // private final IndexReader indexReader;
-    private final IndexWriter indexWriter;
+   
+    private ThreadLocal<IndexReader> indexReaders = new ThreadLocal<IndexReader>();
+    private ThreadLocal<IndexWriter> indexWriters = new ThreadLocal<IndexWriter>();
 
-    public LucandraIndex(Cassandra.Client cassandraClient, String indexName) {
-        this.cassandraClient = cassandraClient;
-
+    public LucandraIndex(String indexName) {
+        
         this.indexName = indexName;
-
-        // this.indexReader = new IndexReader(indexName, cassandraClient);
-        this.indexWriter = new IndexWriter(indexName, cassandraClient);
 
     }
 
@@ -47,8 +46,53 @@ public class LucandraIndex implements LuceneIndex {
 
     }
 
+    private IndexWriter getIndexWriter(){
+        IndexWriter indexWriter = indexWriters.get();
+        IndexReader indexReader;
+        
+        if(indexWriter == null){
+            try{
+                Cassandra.Client client = CassandraUtils.createConnection();
+                indexWriter = new IndexWriter(indexName, client);
+                indexReader = new IndexReader(indexName, client);
+            
+                indexWriters.set(indexWriter);
+                indexReaders.set(indexReader);
+                
+            }catch(TTransportException e){
+                throw new RuntimeException("Error connecting to cassandra",e);
+            }
+        }
+        
+        return indexWriter;
+    }
+    
+    private IndexReader getIndexReader(){
+        IndexReader indexReader = indexReaders.get();
+        IndexWriter indexWriter;
+        
+        if(indexReader == null){
+            try{
+                Cassandra.Client client = CassandraUtils.createConnection();
+                indexWriter = new IndexWriter(indexName, client);
+                indexReader = new IndexReader(indexName, client);
+            
+                indexWriters.set(indexWriter);
+                indexReaders.set(indexReader);
+                
+            }catch(TTransportException e){
+                throw new RuntimeException("Error connecting to cassandra",e);
+            }
+        }
+        
+        return indexReader;
+    }
+    
     @Override
     public void put(String key, Document document, Analyzer analyzer) throws ThrudexException {
+        
+        IndexWriter indexWriter = getIndexWriter();
+        
         try {
             indexWriter.addDocument(document, analyzer);
         } catch (IOException e) {
@@ -66,7 +110,7 @@ public class LucandraIndex implements LuceneIndex {
         
         long start = System.currentTimeMillis();
         
-        IndexReader indexReader = new IndexReader(indexName, cassandraClient);
+        IndexReader indexReader = getIndexReader();
 
         if (!query.isSetQuery() || query.query.trim().equals(""))
             throw new ThrudexExceptionImpl("Empty Query");
