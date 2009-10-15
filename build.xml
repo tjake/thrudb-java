@@ -3,27 +3,38 @@
 
         <description>Thrudb Tutorial</description>
 
-        <property name="src" location="src" />
-        <property name="gen" location="gen-java" />
-        <property name="build" location="build" />
-        <property name="cpath" location="lib/libthrift.jar;lib/lucene-core-2.4.1.jar;lib/log4j-1.2.15.jar;lib/tokyocabinet.jar" />
+        <property name="src"           location="src" />
+        <property name="gen"           location="gen-java" />
+        <property name="build"         location="build" />
+        <property name="build.classes" location="${build}/classes"/>
+        <property name="lib"           location="lib" />
+
+        <path id="thrudb.classpath">
+          <pathelement location="${build.classes}"/>
+          <fileset dir="${lib}">
+            <include name="**/*.jar" />
+          </fileset>
+        </path>
 
         <target name="init">
                 <tstamp />
                 <mkdir dir="${build}" />
+                <mkdir dir="${build.classes}" />
         </target>
 
         <target name="compile" depends="init">
-                <javac srcdir="${gen}" destdir="${build}" classpath="${cpath}">
-                        <compilerarg value="-Xlint:unchecked" />
+                <javac srcdir="${gen}" destdir="${build.classes}" source="1.5">
+                  <classpath refid="thrudb.classpath"/>
+                  <compilerarg value="-Xlint:unchecked" />
                 </javac>
-                <javac srcdir="${src}" destdir="${build}" classpath="${cpath}:${gen}">
-                        <compilerarg value="-Xlint:unchecked" />
+                <javac srcdir="${src}" destdir="${build.classes}" source="1.5">
+                  <classpath refid="thrudb.classpath"/>
+                  <compilerarg value="-Xlint:unchecked" />
                 </javac>
         </target>
 
         <target name="thrudb.jar" depends="compile">
-                <jar jarfile="thrudb.jar" basedir="${build}" />
+                <jar jarfile="thrudb.jar" basedir="${build.classes}" />
         </target>
 
         <target name="clean">
@@ -32,26 +43,16 @@
         </target>
 
         <target name="thrudex" depends="thrudb.jar">
-                <java classname="org.thrudb.thrudex.ThrudexServer" fork="true" spawn="true" maxmemory="128m">
-                        <arg line="-f /Users/jake/projects/thrudb/tutorial/thrudex.conf" />
-                        <classpath>
-                                <pathelement location="thrudb.jar" />
-                                <pathelement location="lib/libthrift.jar" />
-                                <pathelement location="lib/log4j-1.2.15.jar" />
-                                <pathelement location="lib/lucene-core-2.4.1.jar" />
-                        </classpath>
+                <java classname="org.thrudb.thrudex.ThrudexServer" fork="true" maxmemory="1G">
+                        <arg line="-f thrudex.conf" />
+                        <classpath refid="thrudb.classpath"/>
                 </java>
         </target>
 
         <target name="thrudoc" depends="thrudb.jar">
                 <java classname="org.thrudb.thrudoc.ThrudocServer" fork="true" spawn="true" maxmemory="128m">
                         <arg line="-f /Users/jake/projects/thrudb/tutorial/thrudoc.conf" />
-                        <classpath>
-                                <pathelement location="thrudb.jar" />
-                                <pathelement location="lib/libthrift.jar" />
-                                <pathelement location="lib/log4j-1.2.15.jar" />
-                                <pathelement location="lib/tokyocabinet.jar" />
-                        </classpath>
+                        <classpath refid="thrudb.classpath"/>
                 </java>
         </target>
 

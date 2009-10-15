@@ -41,7 +41,7 @@ public class LucandraIndex implements LuceneIndex {
 
     }
 
-    @Override
+
     public void optimize() throws ThrudexException {
 
     }
@@ -88,7 +88,7 @@ public class LucandraIndex implements LuceneIndex {
         return indexReader;
     }
     
-    @Override
+
     public void put(String key, Document document, Analyzer analyzer) throws ThrudexException {
         
         IndexWriter indexWriter = getIndexWriter();
@@ -100,12 +100,12 @@ public class LucandraIndex implements LuceneIndex {
         }
     }
 
-    @Override
+
     public void remove(String key) throws ThrudexException {
 
     }
 
-    @Override
+
     public SearchResponse search(SearchQuery query, Analyzer analyzer) throws ThrudexException {
         
         long start = System.currentTimeMillis();
@@ -178,7 +178,7 @@ public class LucandraIndex implements LuceneIndex {
         }
     }
 
-    @Override
+
     public void shutdown() {
 
     }
