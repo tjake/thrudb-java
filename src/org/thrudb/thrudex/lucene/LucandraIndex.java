@@ -170,6 +170,7 @@ public class LucandraIndex implements LuceneIndex {
                 response.getElements().add(el);
             }
 
+            indexReader.reopen();
             return response;
 
         } catch (IOException e) {

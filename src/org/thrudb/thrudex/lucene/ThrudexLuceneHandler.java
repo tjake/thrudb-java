@@ -6,29 +6,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lucandra.CassandraUtils;
-
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.SimpleAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.StopAnalyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.thrift.TException;
-import org.apache.thrift.transport.TTransportException;
 import org.thrudb.thrudex.Document;
 import org.thrudb.thrudex.Element;
 import org.thrudb.thrudex.Field;
 import org.thrudb.thrudex.SearchQuery;
 import org.thrudb.thrudex.SearchResponse;
+import org.thrudb.thrudex.ThrudexBackendType;
 import org.thrudb.thrudex.ThrudexException;
 import org.thrudb.thrudex.ThrudexExceptionImpl;
 import org.thrudb.thrudex.Thrudex.Iface;
-
-import sun.awt.windows.ThemeReader;
 
 /**
  * Manages a set of lucene indexes. We keep this one lucene backend per index
@@ -42,14 +38,16 @@ public class ThrudexLuceneHandler implements Iface {
     private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
     private volatile Map<String, LuceneIndex> indexMap = new HashMap<String, LuceneIndex>();
     private String indexRoot;
+    private ThrudexBackendType backendType;
 
-    public ThrudexLuceneHandler(String indexRoot) {
+    public ThrudexLuceneHandler(String indexRoot, ThrudexBackendType backendType) {
         this.indexRoot = indexRoot;
+        this.backendType = backendType;
 
         Runtime.getRuntime().addShutdownHook(new IndexShutdownHandler(indexMap));
     }
 
-    public String admin(String op, String data) throws ThrudexException, TException {
+    public synchronized String admin(String op, String data) throws ThrudexException, TException {
 
         if (op.equals("create_index"))
             addIndex(data);
@@ -62,7 +60,13 @@ public class ThrudexLuceneHandler implements Iface {
                     return e.toString();
                 }
             }
+        }
 
+        if (op.equals("shutdown")) {
+            if (indexMap.containsKey(data)) {
+                indexMap.get(data).shutdown();
+                indexMap.remove(data);
+            }
         }
 
         return "ok";
@@ -76,10 +80,21 @@ public class ThrudexLuceneHandler implements Iface {
         if (indexMap.containsKey(name))
             return;
 
-        // indexMap.put(name, new SimpleLuceneIndex(indexRoot,name));
-        // indexMap.put(name, new RealTimeLuceneIndex(indexRoot, name));
-
-        indexMap.put(name, new LucandraIndex(name));
+        try {
+            switch (backendType) {
+            case SIMPLE:
+                indexMap.put(name, new SimpleLuceneIndex(indexRoot, name));
+                break;
+            case REALTIME:
+                indexMap.put(name, new RealTimeLuceneIndex(indexRoot, name));
+                break;
+            case LUCANDRA:
+                indexMap.put(name, new LucandraIndex(name));
+                break;
+            }
+        } catch (IOException e) {
+            throw new ThrudexException(e.getLocalizedMessage());
+        }
 
     }
 
@@ -270,13 +285,18 @@ public class ThrudexLuceneHandler implements Iface {
             if (indexMap.containsKey(indexName))
                 return true;
 
-            String indexLocation = indexRoot + "/" + indexName;
+            if (backendType != ThrudexBackendType.LUCANDRA) {
+                String indexLocation = indexRoot + "/" + indexName;
 
-            if (IndexReader.indexExists(indexLocation)) {
-                addIndex(indexName); // really just reopening
-                return true;
+                if (IndexReader.indexExists(indexLocation)) {
+                    addIndex(indexName); // really just reopening
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
-                return false;
+                addIndex(indexName);
+                return true;
             }
         }
     }

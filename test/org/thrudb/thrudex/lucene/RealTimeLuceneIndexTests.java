@@ -11,6 +11,7 @@ import org.thrudb.thrudex.Document;
 import org.thrudb.thrudex.Field;
 import org.thrudb.thrudex.SearchQuery;
 import org.thrudb.thrudex.SearchResponse;
+import org.thrudb.thrudex.ThrudexBackendType;
 
 public class RealTimeLuceneIndexTests extends TestCase {
 
@@ -37,7 +38,7 @@ public class RealTimeLuceneIndexTests extends TestCase {
 				fail("can't remove test index dir");
 		}
 
-		index = new ThrudexLuceneHandler(INDEX_BASE_PATH);
+		index = new ThrudexLuceneHandler(INDEX_BASE_PATH, ThrudexBackendType.REALTIME);
 		index.addIndex(INDEX_NAME);
 
 	}
