@@ -368,7 +368,7 @@ public class RealTimeLuceneIndex implements LuceneIndex, Runnable {
 		}*/
 	}
 
-    @Override
+    
     public String getPayload(String key) throws ThrudexException {
         // TODO Auto-generated method stub
         return null;

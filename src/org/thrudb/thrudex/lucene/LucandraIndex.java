@@ -191,7 +191,6 @@ public class LucandraIndex implements LuceneIndex {
     }
 
 
-    @Override
     public String getPayload(String key) throws ThrudexException{
         
         IndexReader indexReader = getIndexReader();
