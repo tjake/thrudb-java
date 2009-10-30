@@ -35,16 +35,16 @@ struct Document
 {
         1: string      index
         2: string      key,
-        3: list<Field> fields,
-        4: string      payload,
-        5: i32         weight = 1
+        3: optional list<Field> fields,
+        4: optional string      payload,
+        5: optional i32         weight = 1
 }
 
 struct Element
 {
         1:string index,
         2:string key,
-        3:string payload
+        3:optional string payload
 }
 
 struct SearchQuery
@@ -76,6 +76,7 @@ service Thrudex
         void           ping(),
         list<string>   getIndices(),
 
+        string         getPayload(1:Element  e)   throws(1:ThrudexException ex),
         void           put   (1:Document d)       throws(1:ThrudexException ex),
         void           remove(1:Element  e)       throws(1:ThrudexException ex),
         SearchResponse search(1:SearchQuery s)    throws(1:ThrudexException ex),

@@ -49,12 +49,12 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
         new FieldValueMetaData(TType.STRING)));
     put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.DEFAULT, 
+    put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.OPTIONAL, 
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, Field.class))));
-    put(PAYLOAD, new FieldMetaData("payload", TFieldRequirementType.DEFAULT, 
+    put(PAYLOAD, new FieldMetaData("payload", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
-    put(WEIGHT, new FieldMetaData("weight", TFieldRequirementType.DEFAULT, 
+    put(WEIGHT, new FieldMetaData("weight", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.I32)));
   }});
 
@@ -372,8 +372,8 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
         return false;
     }
 
-    boolean this_present_weight = true;
-    boolean that_present_weight = true;
+    boolean this_present_weight = true && this.isSetWeight();
+    boolean that_present_weight = true && that.isSetWeight();
     if (this_present_weight || that_present_weight) {
       if (!(this_present_weight && that_present_weight))
         return false;
@@ -526,25 +526,31 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
       oprot.writeFieldEnd();
     }
     if (this.fields != null) {
-      oprot.writeFieldBegin(FIELDS_FIELD_DESC);
-      {
-        oprot.writeListBegin(new TList(TType.STRUCT, this.fields.size()));
-        for (Field _iter3 : this.fields)
+      if (isSetFields()) {
+        oprot.writeFieldBegin(FIELDS_FIELD_DESC);
         {
-          _iter3.write(oprot);
+          oprot.writeListBegin(new TList(TType.STRUCT, this.fields.size()));
+          for (Field _iter3 : this.fields)
+          {
+            _iter3.write(oprot);
+          }
+          oprot.writeListEnd();
         }
-        oprot.writeListEnd();
+        oprot.writeFieldEnd();
       }
-      oprot.writeFieldEnd();
     }
     if (this.payload != null) {
-      oprot.writeFieldBegin(PAYLOAD_FIELD_DESC);
-      oprot.writeString(this.payload);
+      if (isSetPayload()) {
+        oprot.writeFieldBegin(PAYLOAD_FIELD_DESC);
+        oprot.writeString(this.payload);
+        oprot.writeFieldEnd();
+      }
+    }
+    if (isSetWeight()) {
+      oprot.writeFieldBegin(WEIGHT_FIELD_DESC);
+      oprot.writeI32(this.weight);
       oprot.writeFieldEnd();
     }
-    oprot.writeFieldBegin(WEIGHT_FIELD_DESC);
-    oprot.writeI32(this.weight);
-    oprot.writeFieldEnd();
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -569,26 +575,32 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
       sb.append(this.key);
     }
     first = false;
-    if (!first) sb.append(", ");
-    sb.append("fields:");
-    if (this.fields == null) {
-      sb.append("null");
-    } else {
-      sb.append(this.fields);
+    if (isSetFields()) {
+      if (!first) sb.append(", ");
+      sb.append("fields:");
+      if (this.fields == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.fields);
+      }
+      first = false;
     }
-    first = false;
-    if (!first) sb.append(", ");
-    sb.append("payload:");
-    if (this.payload == null) {
-      sb.append("null");
-    } else {
-      sb.append(this.payload);
+    if (isSetPayload()) {
+      if (!first) sb.append(", ");
+      sb.append("payload:");
+      if (this.payload == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.payload);
+      }
+      first = false;
     }
-    first = false;
-    if (!first) sb.append(", ");
-    sb.append("weight:");
-    sb.append(this.weight);
-    first = false;
+    if (isSetWeight()) {
+      if (!first) sb.append(", ");
+      sb.append("weight:");
+      sb.append(this.weight);
+      first = false;
+    }
     sb.append(")");
     return sb.toString();
   }

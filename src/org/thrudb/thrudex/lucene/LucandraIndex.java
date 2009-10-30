@@ -2,12 +2,18 @@ package org.thrudb.thrudex.lucene;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import lucandra.CassandraUtils;
 import lucandra.IndexReader;
 import lucandra.IndexWriter;
 
 import org.apache.cassandra.service.Cassandra;
+import org.apache.cassandra.service.ColumnOrSuperColumn;
+import org.apache.cassandra.service.ColumnParent;
+import org.apache.cassandra.service.ConsistencyLevel;
+import org.apache.cassandra.service.SlicePredicate;
+import org.apache.cassandra.service.SliceRange;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
@@ -17,6 +23,7 @@ import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TopFieldDocs;
 import org.apache.thrift.transport.TTransportException;
 import org.thrudb.thrudex.Element;
@@ -129,7 +136,7 @@ public class LucandraIndex implements LuceneIndex {
             }
 
             // Set Sort
-            Sort sortBy = new Sort();
+            Sort sortBy = new Sort(SortField.FIELD_SCORE);
 
             if (query.isSetSortby() && !query.sortby.trim().equals(""))
                 sortBy.setSort(query.getSortby() + "_sort", query.desc);
@@ -183,4 +190,43 @@ public class LucandraIndex implements LuceneIndex {
 
     }
 
+
+    @Override
+    public String getPayload(String key) throws ThrudexException{
+        
+        IndexReader indexReader = getIndexReader();
+        
+        String dockey = indexName +"/"+key;
+        
+        ColumnParent columnParent = new ColumnParent();
+        columnParent.setColumn_family(CassandraUtils.docColumnFamily);
+        
+
+        //get all columns
+        SlicePredicate slicePredicate = new SlicePredicate();
+        slicePredicate.setSlice_range(new SliceRange(new byte[] {}, new byte[] {}, false, 100));
+
+        long start = System.currentTimeMillis();
+
+        try {
+            List<ColumnOrSuperColumn> cols = indexReader.getClient().get_slice(CassandraUtils.keySpace, dockey, columnParent, slicePredicate, ConsistencyLevel.ONE);
+
+            
+            for (ColumnOrSuperColumn col : cols) {
+                if((new String(col.column.name, "UTF-8")).equalsIgnoreCase(PAYLOAD_KEY)){
+                    return new String(col.column.value, "UTF-8");
+                }
+            }
+           
+
+        } catch (Exception e) {
+            throw new ThrudexException  (e.getLocalizedMessage());
+        }
+        
+       
+        return null;
+    }
+
+    
+    
 }

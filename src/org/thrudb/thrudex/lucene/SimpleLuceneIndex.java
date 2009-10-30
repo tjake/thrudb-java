@@ -197,4 +197,10 @@ public class SimpleLuceneIndex implements LuceneIndex {
 		
 	}
 
+    @Override
+    public String getPayload(String key) throws ThrudexException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

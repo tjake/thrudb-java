@@ -17,6 +17,7 @@ public interface LuceneIndex {
 	static final String DOCUMENT_KEY = "__KEY__";
 	static final String PAYLOAD_KEY  = "__PAYLOAD__";
 	
+	String          getPayload(String key) throws ThrudexException;
 	void            put(String key, Document document, Analyzer analyzer) throws ThrudexException;
 	void            remove(String key) throws ThrudexException;
 	SearchResponse  search(SearchQuery query, Analyzer analyzer) throws ThrudexException;

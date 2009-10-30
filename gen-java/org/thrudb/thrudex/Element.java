@@ -41,7 +41,7 @@ public class Element implements TBase, java.io.Serializable, Cloneable, Comparab
         new FieldValueMetaData(TType.STRING)));
     put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    put(PAYLOAD, new FieldMetaData("payload", TFieldRequirementType.DEFAULT, 
+    put(PAYLOAD, new FieldMetaData("payload", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
   }});
 
@@ -363,9 +363,11 @@ public class Element implements TBase, java.io.Serializable, Cloneable, Comparab
       oprot.writeFieldEnd();
     }
     if (this.payload != null) {
-      oprot.writeFieldBegin(PAYLOAD_FIELD_DESC);
-      oprot.writeString(this.payload);
-      oprot.writeFieldEnd();
+      if (isSetPayload()) {
+        oprot.writeFieldBegin(PAYLOAD_FIELD_DESC);
+        oprot.writeString(this.payload);
+        oprot.writeFieldEnd();
+      }
     }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
@@ -391,14 +393,16 @@ public class Element implements TBase, java.io.Serializable, Cloneable, Comparab
       sb.append(this.key);
     }
     first = false;
-    if (!first) sb.append(", ");
-    sb.append("payload:");
-    if (this.payload == null) {
-      sb.append("null");
-    } else {
-      sb.append(this.payload);
+    if (isSetPayload()) {
+      if (!first) sb.append(", ");
+      sb.append("payload:");
+      if (this.payload == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.payload);
+      }
+      first = false;
     }
-    first = false;
     sb.append(")");
     return sb.toString();
   }

@@ -336,4 +336,14 @@ public class ThrudexLuceneHandler implements Iface {
         return (analyzer);
     }
 
+    @Override
+    public String getPayload(Element e) throws ThrudexException, TException {
+        // make sure index is valid
+        if (!isValidIndex(e.index))
+            throw new ThrudexExceptionImpl("No Index Found: " + e.index);
+
+        
+        return indexMap.get(e.index).getPayload(e.key);
+    }
+
 }
