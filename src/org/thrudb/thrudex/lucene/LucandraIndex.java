@@ -195,7 +195,7 @@ public class LucandraIndex implements LuceneIndex {
         
         IndexReader indexReader = getIndexReader();
         
-        String dockey = indexName +"/"+key;
+        String dockey = indexName + CassandraUtils.delimeter +key;
         
         ColumnParent columnParent = new ColumnParent();
         columnParent.setColumn_family(CassandraUtils.docColumnFamily);
