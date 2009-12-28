@@ -13,6 +13,7 @@ import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.StopAnalyzer;
 import org.apache.lucene.analysis.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.thrift.TException;
@@ -326,6 +327,9 @@ public class ThrudexLuceneHandler implements Iface {
                     break;
                 case org.thrudb.thrudex.Analyzer.WHITESPACE:
                     analyzer = new WhitespaceAnalyzer();
+                    break;
+                case org.thrudb.thrudex.Analyzer.CJK:
+                    analyzer = new CJKAnalyzer();
                     break;
                 default:
                     throw new ThrudexExceptionImpl("Unknown QueryAnalyzer: " + analyzerType);
