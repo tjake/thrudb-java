@@ -31,6 +31,9 @@ public class InvalidParametersException extends Exception implements TBase, java
     FieldMetaData.addStructMetaDataMap(InvalidParametersException.class, metaDataMap);
   }
 
+  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+  }});
+
   public InvalidParametersException() {
   }
 

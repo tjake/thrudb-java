@@ -1536,6 +1536,10 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(create_bucket_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+    }});
+
     public create_bucket_args() {
     }
 
@@ -1756,6 +1760,10 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(create_bucket_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("ex1", new Integer(EX1));
+    }});
 
     public create_bucket_result() {
     }
@@ -1978,6 +1986,10 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(delete_bucket_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+    }});
+
     public delete_bucket_args() {
     }
 
@@ -2199,6 +2211,10 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(delete_bucket_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("ex1", new Integer(EX1));
+    }});
+
     public delete_bucket_result() {
     }
 
@@ -2412,6 +2428,9 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(get_bucket_list_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    }});
+
     public get_bucket_list_args() {
     }
 
@@ -2556,6 +2575,11 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(get_bucket_list_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex1", new Integer(EX1));
+    }});
+
     public get_bucket_list_result() {
     }
 
@@ -2591,6 +2615,21 @@ public class Thrudoc {
     @Deprecated
     public get_bucket_list_result clone() {
       return new get_bucket_list_result(this);
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    public java.util.Iterator<String> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
+    }
+
+    public void addToSuccess(String elem) {
+      if (this.success == null) {
+        this.success = new HashSet<String>();
+      }
+      this.success.add(elem);
     }
 
     public Set<String> getSuccess() {
@@ -2860,6 +2899,12 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(incr_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+      put("amount", new Integer(AMOUNT));
+    }});
 
     public incr_args() {
       this.amount = 1;
@@ -3249,6 +3294,12 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(incr_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
+
     public incr_result() {
     }
 
@@ -3635,6 +3686,12 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(decr_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+      put("amount", new Integer(AMOUNT));
+    }});
 
     public decr_args() {
       this.amount = 1;
@@ -4024,6 +4081,12 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(decr_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
+
     public decr_result() {
     }
 
@@ -4408,6 +4471,12 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(put_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+      put("value", new Integer(VALUE));
+    }});
 
     public put_args() {
     }
@@ -4799,6 +4868,11 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(put_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
+
     public put_result() {
     }
 
@@ -5103,6 +5177,11 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(get_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+    }});
 
     public get_args() {
     }
@@ -5413,6 +5492,12 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(get_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
 
     public get_result() {
     }
@@ -5803,6 +5888,11 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(remove_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+    }});
+
     public remove_args() {
     }
 
@@ -6107,6 +6197,11 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(remove_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
 
     public remove_result() {
     }
@@ -6417,6 +6512,12 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(push_front_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+      put("value", new Integer(VALUE));
+    }});
 
     public push_front_args() {
     }
@@ -6808,6 +6909,11 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(push_front_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
+
     public push_front_result() {
     }
 
@@ -7117,6 +7223,12 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(push_back_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+      put("value", new Integer(VALUE));
+    }});
 
     public push_back_args() {
     }
@@ -7508,6 +7620,11 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(push_back_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
+
     public push_back_result() {
     }
 
@@ -7812,6 +7929,11 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(pop_front_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+    }});
 
     public pop_front_args() {
     }
@@ -8122,6 +8244,12 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(pop_front_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
 
     public pop_front_result() {
     }
@@ -8512,6 +8640,11 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(pop_back_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+    }});
+
     public pop_back_args() {
     }
 
@@ -8821,6 +8954,12 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(pop_back_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
 
     public pop_back_result() {
     }
@@ -9218,6 +9357,12 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(remove_at_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+      put("pos", new Integer(POS));
+    }});
+
     public remove_at_args() {
     }
 
@@ -9601,6 +9746,12 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(remove_at_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
 
     public remove_at_result() {
     }
@@ -10002,6 +10153,13 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(insert_at_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+      put("value", new Integer(VALUE));
+      put("pos", new Integer(POS));
+    }});
 
     public insert_at_args() {
     }
@@ -10467,6 +10625,11 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(insert_at_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
+
     public insert_at_result() {
     }
 
@@ -10783,6 +10946,13 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(replace_at_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+      put("value", new Integer(VALUE));
+      put("pos", new Integer(POS));
+    }});
 
     public replace_at_args() {
     }
@@ -11248,6 +11418,11 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(replace_at_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
+
     public replace_at_result() {
     }
 
@@ -11559,6 +11734,12 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(retrieve_at_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+      put("pos", new Integer(POS));
+    }});
 
     public retrieve_at_args() {
     }
@@ -11943,6 +12124,12 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(retrieve_at_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
 
     public retrieve_at_result() {
     }
@@ -12345,6 +12532,13 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(range_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+      put("start", new Integer(START));
+      put("end", new Integer(END));
+    }});
 
     public range_args() {
     }
@@ -12803,6 +12997,12 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(range_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
+
     public range_result() {
     }
 
@@ -12845,6 +13045,21 @@ public class Thrudoc {
     @Deprecated
     public range_result clone() {
       return new range_result(this);
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    public java.util.Iterator<byte[]> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
+    }
+
+    public void addToSuccess(byte[] elem) {
+      if (this.success == null) {
+        this.success = new ArrayList<byte[]>();
+      }
+      this.success.add(elem);
     }
 
     public List<byte[]> getSuccess() {
@@ -13209,6 +13424,11 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(length_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("key", new Integer(KEY));
+    }});
+
     public length_args() {
     }
 
@@ -13520,6 +13740,12 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(length_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
 
     public length_result() {
     }
@@ -13908,6 +14134,12 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(scan_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("bucket", new Integer(BUCKET));
+      put("seed", new Integer(SEED));
+      put("limit", new Integer(LIMIT));
+    }});
+
     public scan_args() {
     }
 
@@ -14293,6 +14525,12 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(scan_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex1", new Integer(EX1));
+      put("ex2", new Integer(EX2));
+    }});
+
     public scan_result() {
     }
 
@@ -14333,6 +14571,21 @@ public class Thrudoc {
     @Deprecated
     public scan_result clone() {
       return new scan_result(this);
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    public java.util.Iterator<String> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
+    }
+
+    public void addToSuccess(String elem) {
+      if (this.success == null) {
+        this.success = new ArrayList<String>();
+      }
+      this.success.add(elem);
     }
 
     public List<String> getSuccess() {
@@ -14697,6 +14950,11 @@ public class Thrudoc {
       FieldMetaData.addStructMetaDataMap(admin_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("op", new Integer(OP));
+      put("data", new Integer(DATA));
+    }});
+
     public admin_args() {
     }
 
@@ -15001,6 +15259,11 @@ public class Thrudoc {
     static {
       FieldMetaData.addStructMetaDataMap(admin_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("e", new Integer(E));
+    }});
 
     public admin_result() {
     }

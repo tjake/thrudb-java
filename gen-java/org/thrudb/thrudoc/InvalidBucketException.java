@@ -31,6 +31,9 @@ public class InvalidBucketException extends Exception implements TBase, java.io.
     FieldMetaData.addStructMetaDataMap(InvalidBucketException.class, metaDataMap);
   }
 
+  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+  }});
+
   public InvalidBucketException() {
   }
 

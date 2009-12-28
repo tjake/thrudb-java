@@ -49,18 +49,22 @@ public class Element implements TBase, java.io.Serializable, Cloneable, Comparab
     FieldMetaData.addStructMetaDataMap(Element.class, metaDataMap);
   }
 
+  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    put("index", new Integer(INDEX));
+    put("key", new Integer(KEY));
+    put("payload", new Integer(PAYLOAD));
+  }});
+
   public Element() {
   }
 
   public Element(
     String index,
-    String key,
-    String payload)
+    String key)
   {
     this();
     this.index = index;
     this.key = key;
-    this.payload = payload;
   }
 
   /**

@@ -31,6 +31,9 @@ public class ThrudocException extends Exception implements TBase, java.io.Serial
     FieldMetaData.addStructMetaDataMap(ThrudocException.class, metaDataMap);
   }
 
+  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+  }});
+
   public ThrudocException() {
   }
 

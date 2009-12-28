@@ -73,6 +73,15 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     FieldMetaData.addStructMetaDataMap(Field.class, metaDataMap);
   }
 
+  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    put("key", new Integer(KEY));
+    put("value", new Integer(VALUE));
+    put("store", new Integer(STORE));
+    put("weight", new Integer(WEIGHT));
+    put("sortable", new Integer(SORTABLE));
+    put("analyzer", new Integer(ANALYZER));
+  }});
+
   public Field() {
     this.store = true;
 

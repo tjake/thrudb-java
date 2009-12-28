@@ -729,6 +729,9 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(ping_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    }});
+
     public ping_args() {
     }
 
@@ -859,6 +862,9 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(ping_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    }});
+
     public ping_result() {
     }
 
@@ -987,6 +993,9 @@ public class Thrudex {
     static {
       FieldMetaData.addStructMetaDataMap(getIndices_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    }});
 
     public getIndices_args() {
     }
@@ -1127,6 +1136,10 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(getIndices_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+    }});
+
     public getIndices_result() {
     }
 
@@ -1157,6 +1170,21 @@ public class Thrudex {
     @Deprecated
     public getIndices_result clone() {
       return new getIndices_result(this);
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    public java.util.Iterator<String> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
+    }
+
+    public void addToSuccess(String elem) {
+      if (this.success == null) {
+        this.success = new ArrayList<String>();
+      }
+      this.success.add(elem);
     }
 
     public List<String> getSuccess() {
@@ -1367,6 +1395,10 @@ public class Thrudex {
     static {
       FieldMetaData.addStructMetaDataMap(getPayload_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("e", new Integer(E));
+    }});
 
     public getPayload_args() {
     }
@@ -1594,6 +1626,11 @@ public class Thrudex {
     static {
       FieldMetaData.addStructMetaDataMap(getPayload_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex", new Integer(EX));
+    }});
 
     public getPayload_result() {
     }
@@ -1894,6 +1931,10 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(put_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("d", new Integer(D));
+    }});
+
     public put_args() {
     }
 
@@ -2116,6 +2157,10 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(put_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("ex", new Integer(EX));
+    }});
+
     public put_result() {
     }
 
@@ -2336,6 +2381,10 @@ public class Thrudex {
     static {
       FieldMetaData.addStructMetaDataMap(remove_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("e", new Integer(E));
+    }});
 
     public remove_args() {
     }
@@ -2559,6 +2608,10 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(remove_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("ex", new Integer(EX));
+    }});
+
     public remove_result() {
     }
 
@@ -2780,6 +2833,10 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(search_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("s", new Integer(S));
+    }});
+
     public search_args() {
     }
 
@@ -2987,6 +3044,11 @@ public class Thrudex {
     static {
       FieldMetaData.addStructMetaDataMap(search_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex", new Integer(EX));
+    }});
 
     public search_result() {
     }
@@ -3289,6 +3351,10 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(putList_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("documents", new Integer(DOCUMENTS));
+    }});
+
     public putList_args() {
     }
 
@@ -3319,6 +3385,21 @@ public class Thrudex {
     @Deprecated
     public putList_args clone() {
       return new putList_args(this);
+    }
+
+    public int getDocumentsSize() {
+      return (this.documents == null) ? 0 : this.documents.size();
+    }
+
+    public java.util.Iterator<Document> getDocumentsIterator() {
+      return (this.documents == null) ? null : this.documents.iterator();
+    }
+
+    public void addToDocuments(Document elem) {
+      if (this.documents == null) {
+        this.documents = new ArrayList<Document>();
+      }
+      this.documents.add(elem);
     }
 
     public List<Document> getDocuments() {
@@ -3538,6 +3619,11 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(putList_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex", new Integer(EX));
+    }});
+
     public putList_result() {
     }
 
@@ -3573,6 +3659,21 @@ public class Thrudex {
     @Deprecated
     public putList_result clone() {
       return new putList_result(this);
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    public java.util.Iterator<ThrudexException> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
+    }
+
+    public void addToSuccess(ThrudexException elem) {
+      if (this.success == null) {
+        this.success = new ArrayList<ThrudexException>();
+      }
+      this.success.add(elem);
     }
 
     public List<ThrudexException> getSuccess() {
@@ -3860,6 +3961,10 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(removeList_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("elements", new Integer(ELEMENTS));
+    }});
+
     public removeList_args() {
     }
 
@@ -3890,6 +3995,21 @@ public class Thrudex {
     @Deprecated
     public removeList_args clone() {
       return new removeList_args(this);
+    }
+
+    public int getElementsSize() {
+      return (this.elements == null) ? 0 : this.elements.size();
+    }
+
+    public java.util.Iterator<Element> getElementsIterator() {
+      return (this.elements == null) ? null : this.elements.iterator();
+    }
+
+    public void addToElements(Element elem) {
+      if (this.elements == null) {
+        this.elements = new ArrayList<Element>();
+      }
+      this.elements.add(elem);
     }
 
     public List<Element> getElements() {
@@ -4109,6 +4229,11 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(removeList_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex", new Integer(EX));
+    }});
+
     public removeList_result() {
     }
 
@@ -4144,6 +4269,21 @@ public class Thrudex {
     @Deprecated
     public removeList_result clone() {
       return new removeList_result(this);
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    public java.util.Iterator<ThrudexException> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
+    }
+
+    public void addToSuccess(ThrudexException elem) {
+      if (this.success == null) {
+        this.success = new ArrayList<ThrudexException>();
+      }
+      this.success.add(elem);
     }
 
     public List<ThrudexException> getSuccess() {
@@ -4431,6 +4571,10 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(searchList_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("q", new Integer(Q));
+    }});
+
     public searchList_args() {
     }
 
@@ -4461,6 +4605,21 @@ public class Thrudex {
     @Deprecated
     public searchList_args clone() {
       return new searchList_args(this);
+    }
+
+    public int getQSize() {
+      return (this.q == null) ? 0 : this.q.size();
+    }
+
+    public java.util.Iterator<SearchQuery> getQIterator() {
+      return (this.q == null) ? null : this.q.iterator();
+    }
+
+    public void addToQ(SearchQuery elem) {
+      if (this.q == null) {
+        this.q = new ArrayList<SearchQuery>();
+      }
+      this.q.add(elem);
     }
 
     public List<SearchQuery> getQ() {
@@ -4661,6 +4820,11 @@ public class Thrudex {
       FieldMetaData.addStructMetaDataMap(searchList_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex", new Integer(EX));
+    }});
+
     public searchList_result() {
     }
 
@@ -4696,6 +4860,21 @@ public class Thrudex {
     @Deprecated
     public searchList_result clone() {
       return new searchList_result(this);
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    public java.util.Iterator<SearchResponse> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
+    }
+
+    public void addToSuccess(SearchResponse elem) {
+      if (this.success == null) {
+        this.success = new ArrayList<SearchResponse>();
+      }
+      this.success.add(elem);
     }
 
     public List<SearchResponse> getSuccess() {
@@ -4986,6 +5165,11 @@ public class Thrudex {
     static {
       FieldMetaData.addStructMetaDataMap(admin_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("op", new Integer(OP));
+      put("data", new Integer(DATA));
+    }});
 
     public admin_args() {
     }
@@ -5291,6 +5475,11 @@ public class Thrudex {
     static {
       FieldMetaData.addStructMetaDataMap(admin_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+      put("ex", new Integer(EX));
+    }});
 
     public admin_result() {
     }

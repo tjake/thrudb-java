@@ -62,6 +62,14 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
     FieldMetaData.addStructMetaDataMap(Document.class, metaDataMap);
   }
 
+  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    put("index", new Integer(INDEX));
+    put("key", new Integer(KEY));
+    put("fields", new Integer(FIELDS));
+    put("payload", new Integer(PAYLOAD));
+    put("weight", new Integer(WEIGHT));
+  }});
+
   public Document() {
     this.weight = 1;
 
@@ -69,18 +77,11 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
 
   public Document(
     String index,
-    String key,
-    List<Field> fields,
-    String payload,
-    int weight)
+    String key)
   {
     this();
     this.index = index;
     this.key = key;
-    this.fields = fields;
-    this.payload = payload;
-    this.weight = weight;
-    setWeightIsSet(true);
   }
 
   /**
@@ -163,6 +164,21 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
     if (!value) {
       this.key = null;
     }
+  }
+
+  public int getFieldsSize() {
+    return (this.fields == null) ? 0 : this.fields.size();
+  }
+
+  public java.util.Iterator<Field> getFieldsIterator() {
+    return (this.fields == null) ? null : this.fields.iterator();
+  }
+
+  public void addToFields(Field elem) {
+    if (this.fields == null) {
+      this.fields = new ArrayList<Field>();
+    }
+    this.fields.add(elem);
   }
 
   public List<Field> getFields() {

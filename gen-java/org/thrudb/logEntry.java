@@ -58,6 +58,12 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable, Compara
     FieldMetaData.addStructMetaDataMap(logEntry.class, metaDataMap);
   }
 
+  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    put("bucket", new Integer(BUCKET));
+    put("lsn", new Integer(LSN));
+    put("message", new Integer(MESSAGE));
+  }});
+
   public logEntry() {
   }
 

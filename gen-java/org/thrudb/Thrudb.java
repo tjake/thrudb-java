@@ -315,6 +315,10 @@ public class Thrudb {
       FieldMetaData.addStructMetaDataMap(getServiceStats_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("server", new Integer(SERVER));
+    }});
+
     public getServiceStats_args() {
     }
 
@@ -538,6 +542,10 @@ public class Thrudb {
       FieldMetaData.addStructMetaDataMap(getServiceStats_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+    }});
+
     public getServiceStats_result() {
     }
 
@@ -576,6 +584,17 @@ public class Thrudb {
     @Deprecated
     public getServiceStats_result clone() {
       return new getServiceStats_result(this);
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    public void putToSuccess(String key, long val) {
+      if (this.success == null) {
+        this.success = new HashMap<String,Long>();
+      }
+      this.success.put(key, val);
     }
 
     public Map<String,Long> getSuccess() {
@@ -763,6 +782,9 @@ public class Thrudb {
       FieldMetaData.addStructMetaDataMap(ping_args.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    }});
+
     public ping_args() {
     }
 
@@ -892,6 +914,9 @@ public class Thrudb {
     static {
       FieldMetaData.addStructMetaDataMap(ping_result.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    }});
 
     public ping_result() {
     }
@@ -1046,6 +1071,13 @@ public class Thrudb {
     static {
       FieldMetaData.addStructMetaDataMap(getLogSince_args.class, metaDataMap);
     }
+
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("server", new Integer(SERVER));
+      put("bucket", new Integer(BUCKET));
+      put("lsn", new Integer(LSN));
+      put("kbLimit", new Integer(KBLIMIT));
+    }});
 
     public getLogSince_args() {
     }
@@ -1501,6 +1533,10 @@ public class Thrudb {
       FieldMetaData.addStructMetaDataMap(getLogSince_result.class, metaDataMap);
     }
 
+    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+      put("success", new Integer(SUCCESS));
+    }});
+
     public getLogSince_result() {
     }
 
@@ -1531,6 +1567,21 @@ public class Thrudb {
     @Deprecated
     public getLogSince_result clone() {
       return new getLogSince_result(this);
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    public java.util.Iterator<logEntry> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
+    }
+
+    public void addToSuccess(logEntry elem) {
+      if (this.success == null) {
+        this.success = new ArrayList<logEntry>();
+      }
+      this.success.add(elem);
     }
 
     public List<logEntry> getSuccess() {

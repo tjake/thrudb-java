@@ -52,6 +52,12 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
     FieldMetaData.addStructMetaDataMap(SearchResponse.class, metaDataMap);
   }
 
+  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    put("total", new Integer(TOTAL));
+    put("elements", new Integer(ELEMENTS));
+    put("ex", new Integer(EX));
+  }});
+
   public SearchResponse() {
     this.total = -1;
 
@@ -118,6 +124,21 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
 
   public void setTotalIsSet(boolean value) {
     __isset_bit_vector.set(__TOTAL_ISSET_ID, value);
+  }
+
+  public int getElementsSize() {
+    return (this.elements == null) ? 0 : this.elements.size();
+  }
+
+  public java.util.Iterator<Element> getElementsIterator() {
+    return (this.elements == null) ? null : this.elements.iterator();
+  }
+
+  public void addToElements(Element elem) {
+    if (this.elements == null) {
+      this.elements = new ArrayList<Element>();
+    }
+    this.elements.add(elem);
   }
 
   public List<Element> getElements() {

@@ -19,13 +19,15 @@ public class Analyzer {
   public static final int SIMPLE = 3;
   public static final int STOP = 4;
   public static final int WHITESPACE = 5;
+  public static final int CJK = 6;
 
   public static final IntRangeSet VALID_VALUES = new IntRangeSet(
     STANDARD, 
     KEYWORD, 
     SIMPLE, 
     STOP, 
-    WHITESPACE );
+    WHITESPACE, 
+    CJK );
 
   public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>() {{
     put(STANDARD, "STANDARD");
@@ -33,5 +35,6 @@ public class Analyzer {
     put(SIMPLE, "SIMPLE");
     put(STOP, "STOP");
     put(WHITESPACE, "WHITESPACE");
+    put(CJK, "CJK");
   }};
 }

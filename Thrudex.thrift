@@ -17,7 +17,8 @@ enum Analyzer
         KEYWORD = 2,   # org.apache.lucene.analysis.KeywordAnalyzer
         SIMPLE = 3,    # org.apache.lucene.analysis.SimpleAnalyzer
         STOP = 4,      # org.apache.lucene.analysis.StopAnalyzer
-        WHITESPACE = 5 # org.apache.lucene.analysis.WhitespaceAnalyzer
+        WHITESPACE = 5,# org.apache.lucene.analysis.WhitespaceAnalyzer
+        CJK = 6
 }
 
 struct Field

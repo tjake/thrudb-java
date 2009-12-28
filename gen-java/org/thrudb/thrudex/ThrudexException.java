@@ -39,6 +39,10 @@ public class ThrudexException extends Exception implements TBase, java.io.Serial
     FieldMetaData.addStructMetaDataMap(ThrudexException.class, metaDataMap);
   }
 
+  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    put("what", new Integer(WHAT));
+  }});
+
   public ThrudexException() {
   }
 

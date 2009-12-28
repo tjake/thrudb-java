@@ -97,6 +97,19 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
     FieldMetaData.addStructMetaDataMap(SearchQuery.class, metaDataMap);
   }
 
+  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+    put("index", new Integer(INDEX));
+    put("query", new Integer(QUERY));
+    put("sortby", new Integer(SORTBY));
+    put("limit", new Integer(LIMIT));
+    put("offset", new Integer(OFFSET));
+    put("desc", new Integer(DESC));
+    put("randomize", new Integer(RANDOMIZE));
+    put("payload", new Integer(PAYLOAD));
+    put("defaultAnalyzer", new Integer(DEFAULTANALYZER));
+    put("fieldAnalyzers", new Integer(FIELDANALYZERS));
+  }});
+
   public SearchQuery() {
     this.limit = 10;
 
@@ -408,6 +421,17 @@ public class SearchQuery implements TBase, java.io.Serializable, Cloneable {
 
   public void setDefaultAnalyzerIsSet(boolean value) {
     __isset_bit_vector.set(__DEFAULTANALYZER_ISSET_ID, value);
+  }
+
+  public int getFieldAnalyzersSize() {
+    return (this.fieldAnalyzers == null) ? 0 : this.fieldAnalyzers.size();
+  }
+
+  public void putToFieldAnalyzers(String key, int val) {
+    if (this.fieldAnalyzers == null) {
+      this.fieldAnalyzers = new HashMap<String,Integer>();
+    }
+    this.fieldAnalyzers.put(key, val);
   }
 
   public Map<String,Integer> getFieldAnalyzers() {
