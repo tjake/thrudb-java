@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
@@ -21,8 +23,9 @@ import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
 import org.apache.thrift.protocol.*;
 
-public class Document implements TBase, java.io.Serializable, Cloneable, Comparable<Document> {
+public class Document implements TBase<Document._Fields>, java.io.Serializable, Cloneable, Comparable<Document> {
   private static final TStruct STRUCT_DESC = new TStruct("Document");
+
   private static final TField INDEX_FIELD_DESC = new TField("index", TType.STRING, (short)1);
   private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
   private static final TField FIELDS_FIELD_DESC = new TField("fields", TType.LIST, (short)3);
@@ -34,41 +37,87 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
   public List<Field> fields;
   public String payload;
   public int weight;
-  public static final int INDEX = 1;
-  public static final int KEY = 2;
-  public static final int FIELDS = 3;
-  public static final int PAYLOAD = 4;
-  public static final int WEIGHT = 5;
+
+  /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+  public enum _Fields implements TFieldIdEnum {
+    INDEX((short)1, "index"),
+    KEY((short)2, "key"),
+    FIELDS((short)3, "fields"),
+    PAYLOAD((short)4, "payload"),
+    WEIGHT((short)5, "weight");
+
+    private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+    private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+    static {
+      for (_Fields field : EnumSet.allOf(_Fields.class)) {
+        byId.put((int)field._thriftId, field);
+        byName.put(field.getFieldName(), field);
+      }
+    }
+
+    /**
+     * Find the _Fields constant that matches fieldId, or null if its not found.
+     */
+    public static _Fields findByThriftId(int fieldId) {
+      return byId.get(fieldId);
+    }
+
+    /**
+     * Find the _Fields constant that matches fieldId, throwing an exception
+     * if it is not found.
+     */
+    public static _Fields findByThriftIdOrThrow(int fieldId) {
+      _Fields fields = findByThriftId(fieldId);
+      if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+      return fields;
+    }
+
+    /**
+     * Find the _Fields constant that matches name, or null if its not found.
+     */
+    public static _Fields findByName(String name) {
+      return byName.get(name);
+    }
+
+    private final short _thriftId;
+    private final String _fieldName;
+
+    _Fields(short thriftId, String fieldName) {
+      _thriftId = thriftId;
+      _fieldName = fieldName;
+    }
+
+    public short getThriftFieldId() {
+      return _thriftId;
+    }
+
+    public String getFieldName() {
+      return _fieldName;
+    }
+  }
 
   // isset id assignments
   private static final int __WEIGHT_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
-  public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-    put(INDEX, new FieldMetaData("index", TFieldRequirementType.DEFAULT, 
+  public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+    put(_Fields.INDEX, new FieldMetaData("index", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+    put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    put(FIELDS, new FieldMetaData("fields", TFieldRequirementType.OPTIONAL, 
+    put(_Fields.FIELDS, new FieldMetaData("fields", TFieldRequirementType.OPTIONAL, 
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, Field.class))));
-    put(PAYLOAD, new FieldMetaData("payload", TFieldRequirementType.OPTIONAL, 
+    put(_Fields.PAYLOAD, new FieldMetaData("payload", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.STRING)));
-    put(WEIGHT, new FieldMetaData("weight", TFieldRequirementType.OPTIONAL, 
+    put(_Fields.WEIGHT, new FieldMetaData("weight", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.I32)));
   }});
 
   static {
     FieldMetaData.addStructMetaDataMap(Document.class, metaDataMap);
   }
-
-  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-    put("index", new Integer(INDEX));
-    put("key", new Integer(KEY));
-    put("fields", new Integer(FIELDS));
-    put("payload", new Integer(PAYLOAD));
-    put("weight", new Integer(WEIGHT));
-  }});
 
   public Document() {
     this.weight = 1;
@@ -131,7 +180,7 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
     this.index = null;
   }
 
-  // Returns true if field index is set (has been asigned a value) and false otherwise
+  /** Returns true if field index is set (has been asigned a value) and false otherwise */
   public boolean isSetIndex() {
     return this.index != null;
   }
@@ -155,7 +204,7 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
     this.key = null;
   }
 
-  // Returns true if field key is set (has been asigned a value) and false otherwise
+  /** Returns true if field key is set (has been asigned a value) and false otherwise */
   public boolean isSetKey() {
     return this.key != null;
   }
@@ -194,7 +243,7 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
     this.fields = null;
   }
 
-  // Returns true if field fields is set (has been asigned a value) and false otherwise
+  /** Returns true if field fields is set (has been asigned a value) and false otherwise */
   public boolean isSetFields() {
     return this.fields != null;
   }
@@ -218,7 +267,7 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
     this.payload = null;
   }
 
-  // Returns true if field payload is set (has been asigned a value) and false otherwise
+  /** Returns true if field payload is set (has been asigned a value) and false otherwise */
   public boolean isSetPayload() {
     return this.payload != null;
   }
@@ -243,7 +292,7 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
     __isset_bit_vector.clear(__WEIGHT_ISSET_ID);
   }
 
-  // Returns true if field weight is set (has been asigned a value) and false otherwise
+  /** Returns true if field weight is set (has been asigned a value) and false otherwise */
   public boolean isSetWeight() {
     return __isset_bit_vector.get(__WEIGHT_ISSET_ID);
   }
@@ -252,8 +301,8 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
     __isset_bit_vector.set(__WEIGHT_ISSET_ID, value);
   }
 
-  public void setFieldValue(int fieldID, Object value) {
-    switch (fieldID) {
+  public void setFieldValue(_Fields field, Object value) {
+    switch (field) {
     case INDEX:
       if (value == null) {
         unsetIndex();
@@ -294,13 +343,15 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
       }
       break;
 
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
   }
 
-  public Object getFieldValue(int fieldID) {
-    switch (fieldID) {
+  public void setFieldValue(int fieldID, Object value) {
+    setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+  }
+
+  public Object getFieldValue(_Fields field) {
+    switch (field) {
     case INDEX:
       return getIndex();
 
@@ -316,14 +367,17 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
     case WEIGHT:
       return new Integer(getWeight());
 
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
+    throw new IllegalStateException();
   }
 
-  // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
+  public Object getFieldValue(int fieldId) {
+    return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+  }
+
+  /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+  public boolean isSet(_Fields field) {
+    switch (field) {
     case INDEX:
       return isSetIndex();
     case KEY:
@@ -334,9 +388,12 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
       return isSetPayload();
     case WEIGHT:
       return isSetWeight();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
+    throw new IllegalStateException();
+  }
+
+  public boolean isSet(int fieldID) {
+    return isSet(_Fields.findByThriftIdOrThrow(fieldID));
   }
 
   @Override
@@ -413,45 +470,50 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
     int lastComparison = 0;
     Document typedOther = (Document)other;
 
-    lastComparison = Boolean.valueOf(isSetIndex()).compareTo(isSetIndex());
+    lastComparison = Boolean.valueOf(isSetIndex()).compareTo(typedOther.isSetIndex());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(index, typedOther.index);
+    if (isSetIndex()) {      lastComparison = TBaseHelper.compareTo(index, typedOther.index);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+    if (isSetKey()) {      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetFields()).compareTo(typedOther.isSetFields());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+    if (isSetFields()) {      lastComparison = TBaseHelper.compareTo(fields, typedOther.fields);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetPayload()).compareTo(typedOther.isSetPayload());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetFields()).compareTo(isSetFields());
+    if (isSetPayload()) {      lastComparison = TBaseHelper.compareTo(payload, typedOther.payload);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetWeight()).compareTo(typedOther.isSetWeight());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(fields, typedOther.fields);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetPayload()).compareTo(isSetPayload());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(payload, typedOther.payload);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetWeight()).compareTo(isSetWeight());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(weight, typedOther.weight);
-    if (lastComparison != 0) {
-      return lastComparison;
+    if (isSetWeight()) {      lastComparison = TBaseHelper.compareTo(weight, typedOther.weight);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
     }
     return 0;
   }
@@ -465,23 +527,22 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
       if (field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
-      {
-        case INDEX:
+      switch (field.id) {
+        case 1: // INDEX
           if (field.type == TType.STRING) {
             this.index = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case KEY:
+        case 2: // KEY
           if (field.type == TType.STRING) {
             this.key = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case FIELDS:
+        case 3: // FIELDS
           if (field.type == TType.LIST) {
             {
               TList _list0 = iprot.readListBegin();
@@ -499,14 +560,14 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case PAYLOAD:
+        case 4: // PAYLOAD
           if (field.type == TType.STRING) {
             this.payload = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case WEIGHT:
+        case 5: // WEIGHT
           if (field.type == TType.I32) {
             this.weight = iprot.readI32();
             setWeightIsSet(true);
@@ -516,12 +577,10 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
           break;
         default:
           TProtocolUtil.skip(iprot, field.type);
-          break;
       }
       iprot.readFieldEnd();
     }
     iprot.readStructEnd();
-
 
     // check for required fields of primitive type, which can't be checked in the validate method
     validate();
@@ -623,7 +682,6 @@ public class Document implements TBase, java.io.Serializable, Cloneable, Compara
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

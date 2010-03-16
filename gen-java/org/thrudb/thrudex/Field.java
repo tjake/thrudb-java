@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
@@ -21,8 +23,9 @@ import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
 import org.apache.thrift.protocol.*;
 
-public class Field implements TBase, java.io.Serializable, Cloneable, Comparable<Field> {
+public class Field implements TBase<Field._Fields>, java.io.Serializable, Cloneable, Comparable<Field> {
   private static final TStruct STRUCT_DESC = new TStruct("Field");
+
   private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)1);
   private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)2);
   private static final TField STORE_FIELD_DESC = new TField("store", TType.BOOL, (short)3);
@@ -39,48 +42,96 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
    * 
    * @see Analyzer
    */
-  public int analyzer;
-  public static final int KEY = 1;
-  public static final int VALUE = 2;
-  public static final int STORE = 3;
-  public static final int WEIGHT = 4;
-  public static final int SORTABLE = 5;
-  public static final int ANALYZER = 6;
+  public Analyzer analyzer;
+
+  /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+  public enum _Fields implements TFieldIdEnum {
+    KEY((short)1, "key"),
+    VALUE((short)2, "value"),
+    STORE((short)3, "store"),
+    WEIGHT((short)4, "weight"),
+    SORTABLE((short)5, "sortable"),
+    /**
+     * 
+     * @see Analyzer
+     */
+    ANALYZER((short)6, "analyzer");
+
+    private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+    private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+    static {
+      for (_Fields field : EnumSet.allOf(_Fields.class)) {
+        byId.put((int)field._thriftId, field);
+        byName.put(field.getFieldName(), field);
+      }
+    }
+
+    /**
+     * Find the _Fields constant that matches fieldId, or null if its not found.
+     */
+    public static _Fields findByThriftId(int fieldId) {
+      return byId.get(fieldId);
+    }
+
+    /**
+     * Find the _Fields constant that matches fieldId, throwing an exception
+     * if it is not found.
+     */
+    public static _Fields findByThriftIdOrThrow(int fieldId) {
+      _Fields fields = findByThriftId(fieldId);
+      if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+      return fields;
+    }
+
+    /**
+     * Find the _Fields constant that matches name, or null if its not found.
+     */
+    public static _Fields findByName(String name) {
+      return byName.get(name);
+    }
+
+    private final short _thriftId;
+    private final String _fieldName;
+
+    _Fields(short thriftId, String fieldName) {
+      _thriftId = thriftId;
+      _fieldName = fieldName;
+    }
+
+    public short getThriftFieldId() {
+      return _thriftId;
+    }
+
+    public String getFieldName() {
+      return _fieldName;
+    }
+  }
 
   // isset id assignments
   private static final int __STORE_ISSET_ID = 0;
   private static final int __WEIGHT_ISSET_ID = 1;
   private static final int __SORTABLE_ISSET_ID = 2;
-  private static final int __ANALYZER_ISSET_ID = 3;
-  private BitSet __isset_bit_vector = new BitSet(4);
+  private BitSet __isset_bit_vector = new BitSet(3);
 
-  public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-    put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+  public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+    put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    put(VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
+    put(_Fields.VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    put(STORE, new FieldMetaData("store", TFieldRequirementType.DEFAULT, 
+    put(_Fields.STORE, new FieldMetaData("store", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
-    put(WEIGHT, new FieldMetaData("weight", TFieldRequirementType.DEFAULT, 
+    put(_Fields.WEIGHT, new FieldMetaData("weight", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    put(SORTABLE, new FieldMetaData("sortable", TFieldRequirementType.DEFAULT, 
+    put(_Fields.SORTABLE, new FieldMetaData("sortable", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.BOOL)));
-    put(ANALYZER, new FieldMetaData("analyzer", TFieldRequirementType.DEFAULT, 
-        new FieldValueMetaData(TType.I32)));
+    put(_Fields.ANALYZER, new FieldMetaData("analyzer", TFieldRequirementType.DEFAULT, 
+        new EnumMetaData(TType.ENUM, Analyzer.class)));
   }});
 
   static {
     FieldMetaData.addStructMetaDataMap(Field.class, metaDataMap);
   }
-
-  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-    put("key", new Integer(KEY));
-    put("value", new Integer(VALUE));
-    put("store", new Integer(STORE));
-    put("weight", new Integer(WEIGHT));
-    put("sortable", new Integer(SORTABLE));
-    put("analyzer", new Integer(ANALYZER));
-  }});
 
   public Field() {
     this.store = true;
@@ -89,7 +140,7 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
 
     this.sortable = false;
 
-    this.analyzer = 1;
+    this.analyzer = Analyzer.STANDARD;
 
   }
 
@@ -99,7 +150,7 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     boolean store,
     int weight,
     boolean sortable,
-    int analyzer)
+    Analyzer analyzer)
   {
     this();
     this.key = key;
@@ -111,7 +162,6 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     this.sortable = sortable;
     setSortableIsSet(true);
     this.analyzer = analyzer;
-    setAnalyzerIsSet(true);
   }
 
   /**
@@ -129,7 +179,9 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     this.store = other.store;
     this.weight = other.weight;
     this.sortable = other.sortable;
-    this.analyzer = other.analyzer;
+    if (other.isSetAnalyzer()) {
+      this.analyzer = other.analyzer;
+    }
   }
 
   public Field deepCopy() {
@@ -154,7 +206,7 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     this.key = null;
   }
 
-  // Returns true if field key is set (has been asigned a value) and false otherwise
+  /** Returns true if field key is set (has been asigned a value) and false otherwise */
   public boolean isSetKey() {
     return this.key != null;
   }
@@ -178,7 +230,7 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     this.value = null;
   }
 
-  // Returns true if field value is set (has been asigned a value) and false otherwise
+  /** Returns true if field value is set (has been asigned a value) and false otherwise */
   public boolean isSetValue() {
     return this.value != null;
   }
@@ -203,7 +255,7 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     __isset_bit_vector.clear(__STORE_ISSET_ID);
   }
 
-  // Returns true if field store is set (has been asigned a value) and false otherwise
+  /** Returns true if field store is set (has been asigned a value) and false otherwise */
   public boolean isSetStore() {
     return __isset_bit_vector.get(__STORE_ISSET_ID);
   }
@@ -226,7 +278,7 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     __isset_bit_vector.clear(__WEIGHT_ISSET_ID);
   }
 
-  // Returns true if field weight is set (has been asigned a value) and false otherwise
+  /** Returns true if field weight is set (has been asigned a value) and false otherwise */
   public boolean isSetWeight() {
     return __isset_bit_vector.get(__WEIGHT_ISSET_ID);
   }
@@ -249,7 +301,7 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     __isset_bit_vector.clear(__SORTABLE_ISSET_ID);
   }
 
-  // Returns true if field sortable is set (has been asigned a value) and false otherwise
+  /** Returns true if field sortable is set (has been asigned a value) and false otherwise */
   public boolean isSetSortable() {
     return __isset_bit_vector.get(__SORTABLE_ISSET_ID);
   }
@@ -262,7 +314,7 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
    * 
    * @see Analyzer
    */
-  public int getAnalyzer() {
+  public Analyzer getAnalyzer() {
     return this.analyzer;
   }
 
@@ -270,27 +322,28 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
    * 
    * @see Analyzer
    */
-  public Field setAnalyzer(int analyzer) {
+  public Field setAnalyzer(Analyzer analyzer) {
     this.analyzer = analyzer;
-    setAnalyzerIsSet(true);
     return this;
   }
 
   public void unsetAnalyzer() {
-    __isset_bit_vector.clear(__ANALYZER_ISSET_ID);
+    this.analyzer = null;
   }
 
-  // Returns true if field analyzer is set (has been asigned a value) and false otherwise
+  /** Returns true if field analyzer is set (has been asigned a value) and false otherwise */
   public boolean isSetAnalyzer() {
-    return __isset_bit_vector.get(__ANALYZER_ISSET_ID);
+    return this.analyzer != null;
   }
 
   public void setAnalyzerIsSet(boolean value) {
-    __isset_bit_vector.set(__ANALYZER_ISSET_ID, value);
+    if (!value) {
+      this.analyzer = null;
+    }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
-    switch (fieldID) {
+  public void setFieldValue(_Fields field, Object value) {
+    switch (field) {
     case KEY:
       if (value == null) {
         unsetKey();
@@ -335,17 +388,19 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
       if (value == null) {
         unsetAnalyzer();
       } else {
-        setAnalyzer((Integer)value);
+        setAnalyzer((Analyzer)value);
       }
       break;
 
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
   }
 
-  public Object getFieldValue(int fieldID) {
-    switch (fieldID) {
+  public void setFieldValue(int fieldID, Object value) {
+    setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+  }
+
+  public Object getFieldValue(_Fields field) {
+    switch (field) {
     case KEY:
       return getKey();
 
@@ -364,14 +419,17 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     case ANALYZER:
       return getAnalyzer();
 
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
+    throw new IllegalStateException();
   }
 
-  // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
+  public Object getFieldValue(int fieldId) {
+    return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+  }
+
+  /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+  public boolean isSet(_Fields field) {
+    switch (field) {
     case KEY:
       return isSetKey();
     case VALUE:
@@ -384,9 +442,12 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
       return isSetSortable();
     case ANALYZER:
       return isSetAnalyzer();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
+    throw new IllegalStateException();
+  }
+
+  public boolean isSet(int fieldID) {
+    return isSet(_Fields.findByThriftIdOrThrow(fieldID));
   }
 
   @Override
@@ -447,12 +508,12 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
         return false;
     }
 
-    boolean this_present_analyzer = true;
-    boolean that_present_analyzer = true;
+    boolean this_present_analyzer = true && this.isSetAnalyzer();
+    boolean that_present_analyzer = true && that.isSetAnalyzer();
     if (this_present_analyzer || that_present_analyzer) {
       if (!(this_present_analyzer && that_present_analyzer))
         return false;
-      if (this.analyzer != that.analyzer)
+      if (!this.analyzer.equals(that.analyzer))
         return false;
     }
 
@@ -472,53 +533,59 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     int lastComparison = 0;
     Field typedOther = (Field)other;
 
-    lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+    lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+    if (isSetKey()) {      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetValue()).compareTo(typedOther.isSetValue());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetValue()).compareTo(isSetValue());
+    if (isSetValue()) {      lastComparison = TBaseHelper.compareTo(value, typedOther.value);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetStore()).compareTo(typedOther.isSetStore());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(value, typedOther.value);
+    if (isSetStore()) {      lastComparison = TBaseHelper.compareTo(store, typedOther.store);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetWeight()).compareTo(typedOther.isSetWeight());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetStore()).compareTo(isSetStore());
+    if (isSetWeight()) {      lastComparison = TBaseHelper.compareTo(weight, typedOther.weight);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetSortable()).compareTo(typedOther.isSetSortable());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(store, typedOther.store);
+    if (isSetSortable()) {      lastComparison = TBaseHelper.compareTo(sortable, typedOther.sortable);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetAnalyzer()).compareTo(typedOther.isSetAnalyzer());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetWeight()).compareTo(isSetWeight());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(weight, typedOther.weight);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetSortable()).compareTo(isSetSortable());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(sortable, typedOther.sortable);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetAnalyzer()).compareTo(isSetAnalyzer());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(analyzer, typedOther.analyzer);
-    if (lastComparison != 0) {
-      return lastComparison;
+    if (isSetAnalyzer()) {      lastComparison = TBaseHelper.compareTo(analyzer, typedOther.analyzer);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
     }
     return 0;
   }
@@ -532,23 +599,22 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
       if (field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
-      {
-        case KEY:
+      switch (field.id) {
+        case 1: // KEY
           if (field.type == TType.STRING) {
             this.key = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case VALUE:
+        case 2: // VALUE
           if (field.type == TType.STRING) {
             this.value = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case STORE:
+        case 3: // STORE
           if (field.type == TType.BOOL) {
             this.store = iprot.readBool();
             setStoreIsSet(true);
@@ -556,7 +622,7 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case WEIGHT:
+        case 4: // WEIGHT
           if (field.type == TType.I32) {
             this.weight = iprot.readI32();
             setWeightIsSet(true);
@@ -564,7 +630,7 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case SORTABLE:
+        case 5: // SORTABLE
           if (field.type == TType.BOOL) {
             this.sortable = iprot.readBool();
             setSortableIsSet(true);
@@ -572,22 +638,19 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case ANALYZER:
+        case 6: // ANALYZER
           if (field.type == TType.I32) {
-            this.analyzer = iprot.readI32();
-            setAnalyzerIsSet(true);
+            this.analyzer = Analyzer.findByValue(iprot.readI32());
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
         default:
           TProtocolUtil.skip(iprot, field.type);
-          break;
       }
       iprot.readFieldEnd();
     }
     iprot.readStructEnd();
-
 
     // check for required fields of primitive type, which can't be checked in the validate method
     validate();
@@ -616,9 +679,11 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     oprot.writeFieldBegin(SORTABLE_FIELD_DESC);
     oprot.writeBool(this.sortable);
     oprot.writeFieldEnd();
-    oprot.writeFieldBegin(ANALYZER_FIELD_DESC);
-    oprot.writeI32(this.analyzer);
-    oprot.writeFieldEnd();
+    if (this.analyzer != null) {
+      oprot.writeFieldBegin(ANALYZER_FIELD_DESC);
+      oprot.writeI32(this.analyzer.getValue());
+      oprot.writeFieldEnd();
+    }
     oprot.writeFieldStop();
     oprot.writeStructEnd();
   }
@@ -657,14 +722,10 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
     first = false;
     if (!first) sb.append(", ");
     sb.append("analyzer:");
-    String analyzer_name = Analyzer.VALUES_TO_NAMES.get(this.analyzer);
-    if (analyzer_name != null) {
-      sb.append(analyzer_name);
-      sb.append(" (");
-    }
-    sb.append(this.analyzer);
-    if (analyzer_name != null) {
-      sb.append(")");
+    if (this.analyzer == null) {
+      sb.append("null");
+    } else {
+      sb.append(this.analyzer);
     }
     first = false;
     sb.append(")");
@@ -673,10 +734,6 @@ public class Field implements TBase, java.io.Serializable, Cloneable, Comparable
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
-    if (isSetAnalyzer() && !Analyzer.VALID_VALUES.contains(analyzer)){
-      throw new TProtocolException("The field 'analyzer' has been assigned the invalid value " + analyzer);
-    }
   }
 
 }

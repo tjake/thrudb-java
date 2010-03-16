@@ -1,7 +1,6 @@
 package org.thrudb.thrift;
 
 import org.apache.log4j.Logger;
-import org.apache.thrift.TApplicationException;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;

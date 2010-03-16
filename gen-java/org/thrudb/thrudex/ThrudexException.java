@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
@@ -21,27 +23,78 @@ import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
 import org.apache.thrift.protocol.*;
 
-public class ThrudexException extends Exception implements TBase, java.io.Serializable, Cloneable, Comparable<ThrudexException> {
+public class ThrudexException extends Exception implements TBase<ThrudexException._Fields>, java.io.Serializable, Cloneable, Comparable<ThrudexException> {
   private static final TStruct STRUCT_DESC = new TStruct("ThrudexException");
+
   private static final TField WHAT_FIELD_DESC = new TField("what", TType.STRING, (short)1);
 
   public String what;
-  public static final int WHAT = 1;
+
+  /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+  public enum _Fields implements TFieldIdEnum {
+    WHAT((short)1, "what");
+
+    private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+    private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+    static {
+      for (_Fields field : EnumSet.allOf(_Fields.class)) {
+        byId.put((int)field._thriftId, field);
+        byName.put(field.getFieldName(), field);
+      }
+    }
+
+    /**
+     * Find the _Fields constant that matches fieldId, or null if its not found.
+     */
+    public static _Fields findByThriftId(int fieldId) {
+      return byId.get(fieldId);
+    }
+
+    /**
+     * Find the _Fields constant that matches fieldId, throwing an exception
+     * if it is not found.
+     */
+    public static _Fields findByThriftIdOrThrow(int fieldId) {
+      _Fields fields = findByThriftId(fieldId);
+      if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+      return fields;
+    }
+
+    /**
+     * Find the _Fields constant that matches name, or null if its not found.
+     */
+    public static _Fields findByName(String name) {
+      return byName.get(name);
+    }
+
+    private final short _thriftId;
+    private final String _fieldName;
+
+    _Fields(short thriftId, String fieldName) {
+      _thriftId = thriftId;
+      _fieldName = fieldName;
+    }
+
+    public short getThriftFieldId() {
+      return _thriftId;
+    }
+
+    public String getFieldName() {
+      return _fieldName;
+    }
+  }
 
   // isset id assignments
 
-  public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-    put(WHAT, new FieldMetaData("what", TFieldRequirementType.DEFAULT, 
+  public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+    put(_Fields.WHAT, new FieldMetaData("what", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
   }});
 
   static {
     FieldMetaData.addStructMetaDataMap(ThrudexException.class, metaDataMap);
   }
-
-  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-    put("what", new Integer(WHAT));
-  }});
 
   public ThrudexException() {
   }
@@ -84,7 +137,7 @@ public class ThrudexException extends Exception implements TBase, java.io.Serial
     this.what = null;
   }
 
-  // Returns true if field what is set (has been asigned a value) and false otherwise
+  /** Returns true if field what is set (has been asigned a value) and false otherwise */
   public boolean isSetWhat() {
     return this.what != null;
   }
@@ -95,8 +148,8 @@ public class ThrudexException extends Exception implements TBase, java.io.Serial
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
-    switch (fieldID) {
+  public void setFieldValue(_Fields field, Object value) {
+    switch (field) {
     case WHAT:
       if (value == null) {
         unsetWhat();
@@ -105,29 +158,37 @@ public class ThrudexException extends Exception implements TBase, java.io.Serial
       }
       break;
 
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
   }
 
-  public Object getFieldValue(int fieldID) {
-    switch (fieldID) {
+  public void setFieldValue(int fieldID, Object value) {
+    setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+  }
+
+  public Object getFieldValue(_Fields field) {
+    switch (field) {
     case WHAT:
       return getWhat();
 
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
+    throw new IllegalStateException();
   }
 
-  // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
+  public Object getFieldValue(int fieldId) {
+    return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+  }
+
+  /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+  public boolean isSet(_Fields field) {
+    switch (field) {
     case WHAT:
       return isSetWhat();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
+    throw new IllegalStateException();
+  }
+
+  public boolean isSet(int fieldID) {
+    return isSet(_Fields.findByThriftIdOrThrow(fieldID));
   }
 
   @Override
@@ -168,13 +229,14 @@ public class ThrudexException extends Exception implements TBase, java.io.Serial
     int lastComparison = 0;
     ThrudexException typedOther = (ThrudexException)other;
 
-    lastComparison = Boolean.valueOf(isSetWhat()).compareTo(isSetWhat());
+    lastComparison = Boolean.valueOf(isSetWhat()).compareTo(typedOther.isSetWhat());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(what, typedOther.what);
-    if (lastComparison != 0) {
-      return lastComparison;
+    if (isSetWhat()) {      lastComparison = TBaseHelper.compareTo(what, typedOther.what);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
     }
     return 0;
   }
@@ -188,9 +250,8 @@ public class ThrudexException extends Exception implements TBase, java.io.Serial
       if (field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
-      {
-        case WHAT:
+      switch (field.id) {
+        case 1: // WHAT
           if (field.type == TType.STRING) {
             this.what = iprot.readString();
           } else { 
@@ -199,12 +260,10 @@ public class ThrudexException extends Exception implements TBase, java.io.Serial
           break;
         default:
           TProtocolUtil.skip(iprot, field.type);
-          break;
       }
       iprot.readFieldEnd();
     }
     iprot.readStructEnd();
-
 
     // check for required fields of primitive type, which can't be checked in the validate method
     validate();
@@ -241,7 +300,6 @@ public class ThrudexException extends Exception implements TBase, java.io.Serial
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

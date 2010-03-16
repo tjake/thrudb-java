@@ -35,7 +35,7 @@ import org.thrudb.thrudex.Thrudex.Iface;
  */
 public class ThrudexLuceneHandler implements Iface {
 
-    private volatile Map<Integer, Analyzer> analyzers = new HashMap<Integer, Analyzer>();
+    private volatile Map<org.thrudb.thrudex.Analyzer, Analyzer> analyzers = new HashMap<org.thrudb.thrudex.Analyzer, Analyzer>();
     private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
     private volatile Map<String, LuceneIndex> indexMap = new HashMap<String, LuceneIndex>();
     private String indexRoot;
@@ -302,7 +302,7 @@ public class ThrudexLuceneHandler implements Iface {
         }
     }
 
-    protected Analyzer getAnalyzer(int analyzerType) throws ThrudexException {
+    protected Analyzer getAnalyzer(org.thrudb.thrudex.Analyzer analyzerType) throws ThrudexException {
         Analyzer analyzer = analyzers.get(analyzerType);
         if (analyzer == null) {
 
@@ -313,22 +313,22 @@ public class ThrudexLuceneHandler implements Iface {
                     return analyzer;
 
                 switch (analyzerType) {
-                case org.thrudb.thrudex.Analyzer.STANDARD:
+                case STANDARD:
                     analyzer = new StandardAnalyzer();
                     break;
-                case org.thrudb.thrudex.Analyzer.KEYWORD:
+                case KEYWORD:
                     analyzer = new KeywordAnalyzer();
                     break;
-                case org.thrudb.thrudex.Analyzer.SIMPLE:
+                case SIMPLE:
                     analyzer = new SimpleAnalyzer();
                     break;
-                case org.thrudb.thrudex.Analyzer.STOP:
+                case STOP:
                     analyzer = new StopAnalyzer();
                     break;
-                case org.thrudb.thrudex.Analyzer.WHITESPACE:
+                case WHITESPACE:
                     analyzer = new WhitespaceAnalyzer();
                     break;
-                case org.thrudb.thrudex.Analyzer.CJK:
+                case CJK:
                     analyzer = new CJKAnalyzer();
                     break;
                 default:

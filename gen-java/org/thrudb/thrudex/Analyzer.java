@@ -6,35 +6,51 @@
 package org.thrudb.thrudex;
 
 
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
-import org.apache.thrift.IntRangeSet;
 import java.util.Map;
 import java.util.HashMap;
+import org.apache.thrift.TEnum;
 
-public class Analyzer {
-  public static final int STANDARD = 1;
-  public static final int KEYWORD = 2;
-  public static final int SIMPLE = 3;
-  public static final int STOP = 4;
-  public static final int WHITESPACE = 5;
-  public static final int CJK = 6;
+public enum Analyzer implements TEnum {
+  STANDARD(1),
+  KEYWORD(2),
+  SIMPLE(3),
+  STOP(4),
+  WHITESPACE(5),
+  CJK(6);
 
-  public static final IntRangeSet VALID_VALUES = new IntRangeSet(
-    STANDARD, 
-    KEYWORD, 
-    SIMPLE, 
-    STOP, 
-    WHITESPACE, 
-    CJK );
+  private final int value;
 
-  public static final Map<Integer, String> VALUES_TO_NAMES = new HashMap<Integer, String>() {{
-    put(STANDARD, "STANDARD");
-    put(KEYWORD, "KEYWORD");
-    put(SIMPLE, "SIMPLE");
-    put(STOP, "STOP");
-    put(WHITESPACE, "WHITESPACE");
-    put(CJK, "CJK");
-  }};
+  private Analyzer(int value) {
+    this.value = value;
+  }
+
+  /**
+   * Get the integer value of this enum value, as defined in the Thrift IDL.
+   */
+  public int getValue() {
+    return value;
+  }
+
+  /**
+   * Find a the enum type by its integer value, as defined in the Thrift IDL.
+   * @return null if the value is not found.
+   */
+  public static Analyzer findByValue(int value) { 
+    switch (value) {
+      case 1:
+        return STANDARD;
+      case 2:
+        return KEYWORD;
+      case 3:
+        return SIMPLE;
+      case 4:
+        return STOP;
+      case 5:
+        return WHITESPACE;
+      case 6:
+        return CJK;
+      default:
+        return null;
+    }
+  }
 }

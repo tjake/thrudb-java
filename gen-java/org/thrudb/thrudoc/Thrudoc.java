@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
@@ -925,7 +927,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         create_bucket_args args = new create_bucket_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("create_bucket", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         create_bucket_result result = new create_bucket_result();
         try {
@@ -953,7 +965,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         delete_bucket_args args = new delete_bucket_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("delete_bucket", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         delete_bucket_result result = new delete_bucket_result();
         try {
@@ -981,7 +1003,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         get_bucket_list_args args = new get_bucket_list_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("get_bucket_list", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         get_bucket_list_result result = new get_bucket_list_result();
         try {
@@ -1009,7 +1041,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         incr_args args = new incr_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("incr", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         incr_result result = new incr_result();
         try {
@@ -1040,7 +1082,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         decr_args args = new decr_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("decr", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         decr_result result = new decr_result();
         try {
@@ -1071,7 +1123,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         put_args args = new put_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("put", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         put_result result = new put_result();
         try {
@@ -1101,7 +1163,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         get_args args = new get_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("get", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         get_result result = new get_result();
         try {
@@ -1131,7 +1203,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         remove_args args = new remove_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("remove", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         remove_result result = new remove_result();
         try {
@@ -1161,7 +1243,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         push_front_args args = new push_front_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("push_front", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         push_front_result result = new push_front_result();
         try {
@@ -1191,7 +1283,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         push_back_args args = new push_back_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("push_back", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         push_back_result result = new push_back_result();
         try {
@@ -1221,7 +1323,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         pop_front_args args = new pop_front_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("pop_front", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         pop_front_result result = new pop_front_result();
         try {
@@ -1251,7 +1363,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         pop_back_args args = new pop_back_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("pop_back", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         pop_back_result result = new pop_back_result();
         try {
@@ -1281,7 +1403,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         remove_at_args args = new remove_at_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("remove_at", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         remove_at_result result = new remove_at_result();
         try {
@@ -1311,7 +1443,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         insert_at_args args = new insert_at_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("insert_at", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         insert_at_result result = new insert_at_result();
         try {
@@ -1341,7 +1483,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         replace_at_args args = new replace_at_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("replace_at", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         replace_at_result result = new replace_at_result();
         try {
@@ -1371,7 +1523,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         retrieve_at_args args = new retrieve_at_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("retrieve_at", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         retrieve_at_result result = new retrieve_at_result();
         try {
@@ -1401,7 +1563,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         range_args args = new range_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("range", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         range_result result = new range_result();
         try {
@@ -1431,7 +1603,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         length_args args = new length_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("length", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         length_result result = new length_result();
         try {
@@ -1462,7 +1644,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         scan_args args = new scan_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("scan", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         scan_result result = new scan_result();
         try {
@@ -1492,7 +1684,17 @@ public class Thrudoc {
       public void process(int seqid, TProtocol iprot, TProtocol oprot) throws TException
       {
         admin_args args = new admin_args();
-        args.read(iprot);
+        try {
+          args.read(iprot);
+        } catch (TProtocolException e) {
+          iprot.readMessageEnd();
+          TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
+          oprot.writeMessageBegin(new TMessage("admin", TMessageType.EXCEPTION, seqid));
+          x.write(oprot);
+          oprot.writeMessageEnd();
+          oprot.getTransport().flush();
+          return;
+        }
         iprot.readMessageEnd();
         admin_result result = new admin_result();
         try {
@@ -1518,27 +1720,78 @@ public class Thrudoc {
 
   }
 
-  public static class create_bucket_args implements TBase, java.io.Serializable, Cloneable, Comparable<create_bucket_args>   {
+  public static class create_bucket_args implements TBase<create_bucket_args._Fields>, java.io.Serializable, Cloneable, Comparable<create_bucket_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("create_bucket_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
 
     public String bucket;
-    public static final int BUCKET = 1;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(create_bucket_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-    }});
 
     public create_bucket_args() {
     }
@@ -1581,7 +1834,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -1592,8 +1845,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -1602,29 +1855,37 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -1665,13 +1926,14 @@ public class Thrudoc {
       int lastComparison = 0;
       create_bucket_args typedOther = (create_bucket_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -1685,9 +1947,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
@@ -1696,12 +1957,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -1738,32 +1997,82 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class create_bucket_result implements TBase, java.io.Serializable, Cloneable, Comparable<create_bucket_result>   {
+  public static class create_bucket_result implements TBase<create_bucket_result._Fields>, java.io.Serializable, Cloneable, Comparable<create_bucket_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("create_bucket_result");
+
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
 
     public ThrudocException ex1;
-    public static final int EX1 = 1;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      EX1((short)1, "ex1");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(create_bucket_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("ex1", new Integer(EX1));
-    }});
 
     public create_bucket_result() {
     }
@@ -1806,7 +2115,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -1817,8 +2126,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case EX1:
         if (value == null) {
           unsetEx1();
@@ -1827,29 +2136,37 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case EX1:
         return getEx1();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case EX1:
         return isSetEx1();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -1890,13 +2207,14 @@ public class Thrudoc {
       int lastComparison = 0;
       create_bucket_result typedOther = (create_bucket_result)other;
 
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -1910,9 +2228,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case EX1:
+        switch (field.id) {
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -1922,12 +2239,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -1963,32 +2278,82 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class delete_bucket_args implements TBase, java.io.Serializable, Cloneable, Comparable<delete_bucket_args>   {
+  public static class delete_bucket_args implements TBase<delete_bucket_args._Fields>, java.io.Serializable, Cloneable, Comparable<delete_bucket_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("delete_bucket_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
 
     public String bucket;
-    public static final int BUCKET = 1;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(delete_bucket_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-    }});
 
     public delete_bucket_args() {
     }
@@ -2031,7 +2396,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -2042,8 +2407,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -2052,29 +2417,37 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -2115,13 +2488,14 @@ public class Thrudoc {
       int lastComparison = 0;
       delete_bucket_args typedOther = (delete_bucket_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -2135,9 +2509,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
@@ -2146,12 +2519,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -2188,32 +2559,82 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class delete_bucket_result implements TBase, java.io.Serializable, Cloneable, Comparable<delete_bucket_result>   {
+  public static class delete_bucket_result implements TBase<delete_bucket_result._Fields>, java.io.Serializable, Cloneable, Comparable<delete_bucket_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("delete_bucket_result");
+
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
 
     public ThrudocException ex1;
-    public static final int EX1 = 1;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      EX1((short)1, "ex1");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(delete_bucket_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("ex1", new Integer(EX1));
-    }});
 
     public delete_bucket_result() {
     }
@@ -2256,7 +2677,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -2267,8 +2688,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case EX1:
         if (value == null) {
           unsetEx1();
@@ -2277,29 +2698,37 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case EX1:
         return getEx1();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case EX1:
         return isSetEx1();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -2340,13 +2769,14 @@ public class Thrudoc {
       int lastComparison = 0;
       delete_bucket_result typedOther = (delete_bucket_result)other;
 
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -2360,9 +2790,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case EX1:
+        switch (field.id) {
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -2372,12 +2801,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -2413,23 +2840,75 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class get_bucket_list_args implements TBase, java.io.Serializable, Cloneable, Comparable<get_bucket_list_args>   {
+  public static class get_bucket_list_args implements TBase<get_bucket_list_args._Fields>, java.io.Serializable, Cloneable, Comparable<get_bucket_list_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("get_bucket_list_args");
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
+
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+;
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(get_bucket_list_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-    }});
 
     public get_bucket_list_args() {
     }
@@ -2449,26 +2928,34 @@ public class Thrudoc {
       return new get_bucket_list_args(this);
     }
 
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
+      }
+    }
+
     public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
+      }
+      throw new IllegalStateException();
+    }
+
     public boolean isSet(int fieldID) {
-      switch (fieldID) {
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
-      }
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -2512,16 +2999,13 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
+        switch (field.id) {
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -2546,39 +3030,88 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class get_bucket_list_result implements TBase, java.io.Serializable, Cloneable   {
+  public static class get_bucket_list_result implements TBase<get_bucket_list_result._Fields>, java.io.Serializable, Cloneable   {
     private static final TStruct STRUCT_DESC = new TStruct("get_bucket_list_result");
+
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.SET, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
 
     public Set<String> success;
     public ThrudocException ex1;
-    public static final int SUCCESS = 0;
-    public static final int EX1 = 1;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX1((short)1, "ex1");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
           new SetMetaData(TType.SET, 
               new FieldValueMetaData(TType.STRING))));
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(get_bucket_list_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("success", new Integer(SUCCESS));
-      put("ex1", new Integer(EX1));
-    }});
 
     public get_bucket_list_result() {
     }
@@ -2645,7 +3178,7 @@ public class Thrudoc {
       this.success = null;
     }
 
-    // Returns true if field success is set (has been asigned a value) and false otherwise
+    /** Returns true if field success is set (has been asigned a value) and false otherwise */
     public boolean isSetSuccess() {
       return this.success != null;
     }
@@ -2669,7 +3202,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -2680,8 +3213,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case SUCCESS:
         if (value == null) {
           unsetSuccess();
@@ -2698,34 +3231,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return getSuccess();
 
       case EX1:
         return getEx1();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return isSetSuccess();
       case EX1:
         return isSetEx1();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -2776,9 +3317,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case SUCCESS:
+        switch (field.id) {
+          case 0: // SUCCESS
             if (field.type == TType.SET) {
               {
                 TSet _set0 = iprot.readSetBegin();
@@ -2795,7 +3335,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX1:
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -2805,12 +3345,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -2865,13 +3403,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class incr_args implements TBase, java.io.Serializable, Cloneable, Comparable<incr_args>   {
+  public static class incr_args implements TBase<incr_args._Fields>, java.io.Serializable, Cloneable, Comparable<incr_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("incr_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField AMOUNT_FIELD_DESC = new TField("amount", TType.I32, (short)3);
@@ -2879,32 +3417,80 @@ public class Thrudoc {
     public String bucket;
     public String key;
     public int amount;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
-    public static final int AMOUNT = 3;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key"),
+      AMOUNT((short)3, "amount");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
     private static final int __AMOUNT_ISSET_ID = 0;
     private BitSet __isset_bit_vector = new BitSet(1);
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(AMOUNT, new FieldMetaData("amount", TFieldRequirementType.DEFAULT, 
+      put(_Fields.AMOUNT, new FieldMetaData("amount", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.I32)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(incr_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-      put("amount", new Integer(AMOUNT));
-    }});
 
     public incr_args() {
       this.amount = 1;
@@ -2960,7 +3546,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -2984,7 +3570,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -3009,7 +3595,7 @@ public class Thrudoc {
       __isset_bit_vector.clear(__AMOUNT_ISSET_ID);
     }
 
-    // Returns true if field amount is set (has been asigned a value) and false otherwise
+    /** Returns true if field amount is set (has been asigned a value) and false otherwise */
     public boolean isSetAmount() {
       return __isset_bit_vector.get(__AMOUNT_ISSET_ID);
     }
@@ -3018,8 +3604,8 @@ public class Thrudoc {
       __isset_bit_vector.set(__AMOUNT_ISSET_ID, value);
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -3044,13 +3630,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
@@ -3060,23 +3648,29 @@ public class Thrudoc {
       case AMOUNT:
         return new Integer(getAmount());
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
         return isSetKey();
       case AMOUNT:
         return isSetAmount();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -3135,29 +3729,32 @@ public class Thrudoc {
       int lastComparison = 0;
       incr_args typedOther = (incr_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetAmount()).compareTo(typedOther.isSetAmount());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetAmount()).compareTo(isSetAmount());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(amount, typedOther.amount);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetAmount()) {        lastComparison = TBaseHelper.compareTo(amount, typedOther.amount);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -3171,23 +3768,22 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case AMOUNT:
+          case 3: // AMOUNT
             if (field.type == TType.I32) {
               this.amount = iprot.readI32();
               setAmountIsSet(true);
@@ -3197,12 +3793,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -3259,13 +3853,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class incr_result implements TBase, java.io.Serializable, Cloneable, Comparable<incr_result>   {
+  public static class incr_result implements TBase<incr_result._Fields>, java.io.Serializable, Cloneable, Comparable<incr_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("incr_result");
+
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.I32, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
@@ -3273,32 +3867,80 @@ public class Thrudoc {
     public int success;
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int SUCCESS = 0;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
     private static final int __SUCCESS_ISSET_ID = 0;
     private BitSet __isset_bit_vector = new BitSet(1);
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.I32)));
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(incr_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("success", new Integer(SUCCESS));
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public incr_result() {
     }
@@ -3353,7 +3995,7 @@ public class Thrudoc {
       __isset_bit_vector.clear(__SUCCESS_ISSET_ID);
     }
 
-    // Returns true if field success is set (has been asigned a value) and false otherwise
+    /** Returns true if field success is set (has been asigned a value) and false otherwise */
     public boolean isSetSuccess() {
       return __isset_bit_vector.get(__SUCCESS_ISSET_ID);
     }
@@ -3375,7 +4017,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -3399,7 +4041,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -3410,8 +4052,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case SUCCESS:
         if (value == null) {
           unsetSuccess();
@@ -3436,13 +4078,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return new Integer(getSuccess());
 
@@ -3452,23 +4096,29 @@ public class Thrudoc {
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return isSetSuccess();
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -3527,29 +4177,32 @@ public class Thrudoc {
       int lastComparison = 0;
       incr_result typedOther = (incr_result)other;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (isSetSuccess()) {        lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -3563,9 +4216,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case SUCCESS:
+        switch (field.id) {
+          case 0: // SUCCESS
             if (field.type == TType.I32) {
               this.success = iprot.readI32();
               setSuccessIsSet(true);
@@ -3573,7 +4225,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX1:
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -3581,7 +4233,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -3591,12 +4243,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -3652,13 +4302,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class decr_args implements TBase, java.io.Serializable, Cloneable, Comparable<decr_args>   {
+  public static class decr_args implements TBase<decr_args._Fields>, java.io.Serializable, Cloneable, Comparable<decr_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("decr_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField AMOUNT_FIELD_DESC = new TField("amount", TType.I32, (short)3);
@@ -3666,32 +4316,80 @@ public class Thrudoc {
     public String bucket;
     public String key;
     public int amount;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
-    public static final int AMOUNT = 3;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key"),
+      AMOUNT((short)3, "amount");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
     private static final int __AMOUNT_ISSET_ID = 0;
     private BitSet __isset_bit_vector = new BitSet(1);
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(AMOUNT, new FieldMetaData("amount", TFieldRequirementType.DEFAULT, 
+      put(_Fields.AMOUNT, new FieldMetaData("amount", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.I32)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(decr_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-      put("amount", new Integer(AMOUNT));
-    }});
 
     public decr_args() {
       this.amount = 1;
@@ -3747,7 +4445,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -3771,7 +4469,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -3796,7 +4494,7 @@ public class Thrudoc {
       __isset_bit_vector.clear(__AMOUNT_ISSET_ID);
     }
 
-    // Returns true if field amount is set (has been asigned a value) and false otherwise
+    /** Returns true if field amount is set (has been asigned a value) and false otherwise */
     public boolean isSetAmount() {
       return __isset_bit_vector.get(__AMOUNT_ISSET_ID);
     }
@@ -3805,8 +4503,8 @@ public class Thrudoc {
       __isset_bit_vector.set(__AMOUNT_ISSET_ID, value);
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -3831,13 +4529,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
@@ -3847,23 +4547,29 @@ public class Thrudoc {
       case AMOUNT:
         return new Integer(getAmount());
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
         return isSetKey();
       case AMOUNT:
         return isSetAmount();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -3922,29 +4628,32 @@ public class Thrudoc {
       int lastComparison = 0;
       decr_args typedOther = (decr_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetAmount()).compareTo(typedOther.isSetAmount());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetAmount()).compareTo(isSetAmount());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(amount, typedOther.amount);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetAmount()) {        lastComparison = TBaseHelper.compareTo(amount, typedOther.amount);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -3958,23 +4667,22 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case AMOUNT:
+          case 3: // AMOUNT
             if (field.type == TType.I32) {
               this.amount = iprot.readI32();
               setAmountIsSet(true);
@@ -3984,12 +4692,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -4046,13 +4752,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class decr_result implements TBase, java.io.Serializable, Cloneable, Comparable<decr_result>   {
+  public static class decr_result implements TBase<decr_result._Fields>, java.io.Serializable, Cloneable, Comparable<decr_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("decr_result");
+
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.I32, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
@@ -4060,32 +4766,80 @@ public class Thrudoc {
     public int success;
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int SUCCESS = 0;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
     private static final int __SUCCESS_ISSET_ID = 0;
     private BitSet __isset_bit_vector = new BitSet(1);
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.I32)));
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(decr_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("success", new Integer(SUCCESS));
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public decr_result() {
     }
@@ -4140,7 +4894,7 @@ public class Thrudoc {
       __isset_bit_vector.clear(__SUCCESS_ISSET_ID);
     }
 
-    // Returns true if field success is set (has been asigned a value) and false otherwise
+    /** Returns true if field success is set (has been asigned a value) and false otherwise */
     public boolean isSetSuccess() {
       return __isset_bit_vector.get(__SUCCESS_ISSET_ID);
     }
@@ -4162,7 +4916,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -4186,7 +4940,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -4197,8 +4951,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case SUCCESS:
         if (value == null) {
           unsetSuccess();
@@ -4223,13 +4977,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return new Integer(getSuccess());
 
@@ -4239,23 +4995,29 @@ public class Thrudoc {
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return isSetSuccess();
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -4314,29 +5076,32 @@ public class Thrudoc {
       int lastComparison = 0;
       decr_result typedOther = (decr_result)other;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (isSetSuccess()) {        lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -4350,9 +5115,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case SUCCESS:
+        switch (field.id) {
+          case 0: // SUCCESS
             if (field.type == TType.I32) {
               this.success = iprot.readI32();
               setSuccessIsSet(true);
@@ -4360,7 +5124,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX1:
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -4368,7 +5132,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -4378,12 +5142,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -4439,13 +5201,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class put_args implements TBase, java.io.Serializable, Cloneable, Comparable<put_args>   {
+  public static class put_args implements TBase<put_args._Fields>, java.io.Serializable, Cloneable, Comparable<put_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("put_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)3);
@@ -4453,30 +5215,78 @@ public class Thrudoc {
     public String bucket;
     public String key;
     public byte[] value;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
-    public static final int VALUE = 3;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key"),
+      VALUE((short)3, "value");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
+      put(_Fields.VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(put_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-      put("value", new Integer(VALUE));
-    }});
 
     public put_args() {
     }
@@ -4530,7 +5340,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -4554,7 +5364,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -4578,7 +5388,7 @@ public class Thrudoc {
       this.value = null;
     }
 
-    // Returns true if field value is set (has been asigned a value) and false otherwise
+    /** Returns true if field value is set (has been asigned a value) and false otherwise */
     public boolean isSetValue() {
       return this.value != null;
     }
@@ -4589,8 +5399,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -4615,13 +5425,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
@@ -4631,23 +5443,29 @@ public class Thrudoc {
       case VALUE:
         return getValue();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
         return isSetKey();
       case VALUE:
         return isSetValue();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -4706,29 +5524,32 @@ public class Thrudoc {
       int lastComparison = 0;
       put_args typedOther = (put_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetValue()).compareTo(typedOther.isSetValue());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetValue()).compareTo(isSetValue());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(value, typedOther.value);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetValue()) {        lastComparison = TBaseHelper.compareTo(value, typedOther.value);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -4742,23 +5563,22 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case VALUE:
+          case 3: // VALUE
             if (field.type == TType.STRING) {
               this.value = iprot.readBinary();
             } else { 
@@ -4767,12 +5587,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -4840,38 +5658,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class put_result implements TBase, java.io.Serializable, Cloneable, Comparable<put_result>   {
+  public static class put_result implements TBase<put_result._Fields>, java.io.Serializable, Cloneable, Comparable<put_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("put_result");
+
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(put_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public put_result() {
     }
@@ -4919,7 +5786,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -4943,7 +5810,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -4954,8 +5821,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case EX1:
         if (value == null) {
           unsetEx1();
@@ -4972,34 +5839,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case EX1:
         return getEx1();
 
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -5049,21 +5924,23 @@ public class Thrudoc {
       int lastComparison = 0;
       put_result typedOther = (put_result)other;
 
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -5077,9 +5954,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case EX1:
+        switch (field.id) {
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -5087,7 +5963,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -5097,12 +5973,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -5150,38 +6024,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class get_args implements TBase, java.io.Serializable, Cloneable, Comparable<get_args>   {
+  public static class get_args implements TBase<get_args._Fields>, java.io.Serializable, Cloneable, Comparable<get_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("get_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
 
     public String bucket;
     public String key;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(get_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-    }});
 
     public get_args() {
     }
@@ -5229,7 +6152,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -5253,7 +6176,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -5264,8 +6187,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -5282,34 +6205,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
       case KEY:
         return getKey();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
         return isSetKey();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -5359,21 +6290,23 @@ public class Thrudoc {
       int lastComparison = 0;
       get_args typedOther = (get_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -5387,16 +6320,15 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
@@ -5405,12 +6337,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -5460,13 +6390,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class get_result implements TBase, java.io.Serializable, Cloneable, Comparable<get_result>   {
+  public static class get_result implements TBase<get_result._Fields>, java.io.Serializable, Cloneable, Comparable<get_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("get_result");
+
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
@@ -5474,30 +6404,78 @@ public class Thrudoc {
     public byte[] success;
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int SUCCESS = 0;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(get_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("success", new Integer(SUCCESS));
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public get_result() {
     }
@@ -5551,7 +6529,7 @@ public class Thrudoc {
       this.success = null;
     }
 
-    // Returns true if field success is set (has been asigned a value) and false otherwise
+    /** Returns true if field success is set (has been asigned a value) and false otherwise */
     public boolean isSetSuccess() {
       return this.success != null;
     }
@@ -5575,7 +6553,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -5599,7 +6577,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -5610,8 +6588,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case SUCCESS:
         if (value == null) {
           unsetSuccess();
@@ -5636,13 +6614,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return getSuccess();
 
@@ -5652,23 +6632,29 @@ public class Thrudoc {
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return isSetSuccess();
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -5727,29 +6713,32 @@ public class Thrudoc {
       int lastComparison = 0;
       get_result typedOther = (get_result)other;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (isSetSuccess()) {        lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -5763,16 +6752,15 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case SUCCESS:
+        switch (field.id) {
+          case 0: // SUCCESS
             if (field.type == TType.STRING) {
               this.success = iprot.readBinary();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX1:
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -5780,7 +6768,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -5790,12 +6778,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -5860,38 +6846,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class remove_args implements TBase, java.io.Serializable, Cloneable, Comparable<remove_args>   {
+  public static class remove_args implements TBase<remove_args._Fields>, java.io.Serializable, Cloneable, Comparable<remove_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("remove_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
 
     public String bucket;
     public String key;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(remove_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-    }});
 
     public remove_args() {
     }
@@ -5939,7 +6974,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -5963,7 +6998,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -5974,8 +7009,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -5992,34 +7027,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
       case KEY:
         return getKey();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
         return isSetKey();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -6069,21 +7112,23 @@ public class Thrudoc {
       int lastComparison = 0;
       remove_args typedOther = (remove_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -6097,16 +7142,15 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
@@ -6115,12 +7159,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -6170,38 +7212,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class remove_result implements TBase, java.io.Serializable, Cloneable, Comparable<remove_result>   {
+  public static class remove_result implements TBase<remove_result._Fields>, java.io.Serializable, Cloneable, Comparable<remove_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("remove_result");
+
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(remove_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public remove_result() {
     }
@@ -6249,7 +7340,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -6273,7 +7364,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -6284,8 +7375,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case EX1:
         if (value == null) {
           unsetEx1();
@@ -6302,34 +7393,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case EX1:
         return getEx1();
 
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -6379,21 +7478,23 @@ public class Thrudoc {
       int lastComparison = 0;
       remove_result typedOther = (remove_result)other;
 
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -6407,9 +7508,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case EX1:
+        switch (field.id) {
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -6417,7 +7517,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -6427,12 +7527,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -6480,13 +7578,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class push_front_args implements TBase, java.io.Serializable, Cloneable, Comparable<push_front_args>   {
+  public static class push_front_args implements TBase<push_front_args._Fields>, java.io.Serializable, Cloneable, Comparable<push_front_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("push_front_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)3);
@@ -6494,30 +7592,78 @@ public class Thrudoc {
     public String bucket;
     public String key;
     public byte[] value;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
-    public static final int VALUE = 3;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key"),
+      VALUE((short)3, "value");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
+      put(_Fields.VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(push_front_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-      put("value", new Integer(VALUE));
-    }});
 
     public push_front_args() {
     }
@@ -6571,7 +7717,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -6595,7 +7741,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -6619,7 +7765,7 @@ public class Thrudoc {
       this.value = null;
     }
 
-    // Returns true if field value is set (has been asigned a value) and false otherwise
+    /** Returns true if field value is set (has been asigned a value) and false otherwise */
     public boolean isSetValue() {
       return this.value != null;
     }
@@ -6630,8 +7776,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -6656,13 +7802,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
@@ -6672,23 +7820,29 @@ public class Thrudoc {
       case VALUE:
         return getValue();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
         return isSetKey();
       case VALUE:
         return isSetValue();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -6747,29 +7901,32 @@ public class Thrudoc {
       int lastComparison = 0;
       push_front_args typedOther = (push_front_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetValue()).compareTo(typedOther.isSetValue());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetValue()).compareTo(isSetValue());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(value, typedOther.value);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetValue()) {        lastComparison = TBaseHelper.compareTo(value, typedOther.value);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -6783,23 +7940,22 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case VALUE:
+          case 3: // VALUE
             if (field.type == TType.STRING) {
               this.value = iprot.readBinary();
             } else { 
@@ -6808,12 +7964,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -6881,38 +8035,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class push_front_result implements TBase, java.io.Serializable, Cloneable, Comparable<push_front_result>   {
+  public static class push_front_result implements TBase<push_front_result._Fields>, java.io.Serializable, Cloneable, Comparable<push_front_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("push_front_result");
+
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(push_front_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public push_front_result() {
     }
@@ -6960,7 +8163,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -6984,7 +8187,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -6995,8 +8198,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case EX1:
         if (value == null) {
           unsetEx1();
@@ -7013,34 +8216,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case EX1:
         return getEx1();
 
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -7090,21 +8301,23 @@ public class Thrudoc {
       int lastComparison = 0;
       push_front_result typedOther = (push_front_result)other;
 
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -7118,9 +8331,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case EX1:
+        switch (field.id) {
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -7128,7 +8340,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -7138,12 +8350,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -7191,13 +8401,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class push_back_args implements TBase, java.io.Serializable, Cloneable, Comparable<push_back_args>   {
+  public static class push_back_args implements TBase<push_back_args._Fields>, java.io.Serializable, Cloneable, Comparable<push_back_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("push_back_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)3);
@@ -7205,30 +8415,78 @@ public class Thrudoc {
     public String bucket;
     public String key;
     public byte[] value;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
-    public static final int VALUE = 3;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key"),
+      VALUE((short)3, "value");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
+      put(_Fields.VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(push_back_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-      put("value", new Integer(VALUE));
-    }});
 
     public push_back_args() {
     }
@@ -7282,7 +8540,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -7306,7 +8564,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -7330,7 +8588,7 @@ public class Thrudoc {
       this.value = null;
     }
 
-    // Returns true if field value is set (has been asigned a value) and false otherwise
+    /** Returns true if field value is set (has been asigned a value) and false otherwise */
     public boolean isSetValue() {
       return this.value != null;
     }
@@ -7341,8 +8599,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -7367,13 +8625,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
@@ -7383,23 +8643,29 @@ public class Thrudoc {
       case VALUE:
         return getValue();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
         return isSetKey();
       case VALUE:
         return isSetValue();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -7458,29 +8724,32 @@ public class Thrudoc {
       int lastComparison = 0;
       push_back_args typedOther = (push_back_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetValue()).compareTo(typedOther.isSetValue());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetValue()).compareTo(isSetValue());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(value, typedOther.value);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetValue()) {        lastComparison = TBaseHelper.compareTo(value, typedOther.value);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -7494,23 +8763,22 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case VALUE:
+          case 3: // VALUE
             if (field.type == TType.STRING) {
               this.value = iprot.readBinary();
             } else { 
@@ -7519,12 +8787,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -7592,38 +8858,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class push_back_result implements TBase, java.io.Serializable, Cloneable, Comparable<push_back_result>   {
+  public static class push_back_result implements TBase<push_back_result._Fields>, java.io.Serializable, Cloneable, Comparable<push_back_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("push_back_result");
+
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(push_back_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public push_back_result() {
     }
@@ -7671,7 +8986,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -7695,7 +9010,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -7706,8 +9021,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case EX1:
         if (value == null) {
           unsetEx1();
@@ -7724,34 +9039,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case EX1:
         return getEx1();
 
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -7801,21 +9124,23 @@ public class Thrudoc {
       int lastComparison = 0;
       push_back_result typedOther = (push_back_result)other;
 
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -7829,9 +9154,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case EX1:
+        switch (field.id) {
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -7839,7 +9163,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -7849,12 +9173,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -7902,38 +9224,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class pop_front_args implements TBase, java.io.Serializable, Cloneable, Comparable<pop_front_args>   {
+  public static class pop_front_args implements TBase<pop_front_args._Fields>, java.io.Serializable, Cloneable, Comparable<pop_front_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("pop_front_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
 
     public String bucket;
     public String key;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(pop_front_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-    }});
 
     public pop_front_args() {
     }
@@ -7981,7 +9352,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -8005,7 +9376,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -8016,8 +9387,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -8034,34 +9405,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
       case KEY:
         return getKey();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
         return isSetKey();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -8111,21 +9490,23 @@ public class Thrudoc {
       int lastComparison = 0;
       pop_front_args typedOther = (pop_front_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -8139,16 +9520,15 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
@@ -8157,12 +9537,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -8212,13 +9590,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class pop_front_result implements TBase, java.io.Serializable, Cloneable, Comparable<pop_front_result>   {
+  public static class pop_front_result implements TBase<pop_front_result._Fields>, java.io.Serializable, Cloneable, Comparable<pop_front_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("pop_front_result");
+
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
@@ -8226,30 +9604,78 @@ public class Thrudoc {
     public byte[] success;
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int SUCCESS = 0;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(pop_front_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("success", new Integer(SUCCESS));
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public pop_front_result() {
     }
@@ -8303,7 +9729,7 @@ public class Thrudoc {
       this.success = null;
     }
 
-    // Returns true if field success is set (has been asigned a value) and false otherwise
+    /** Returns true if field success is set (has been asigned a value) and false otherwise */
     public boolean isSetSuccess() {
       return this.success != null;
     }
@@ -8327,7 +9753,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -8351,7 +9777,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -8362,8 +9788,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case SUCCESS:
         if (value == null) {
           unsetSuccess();
@@ -8388,13 +9814,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return getSuccess();
 
@@ -8404,23 +9832,29 @@ public class Thrudoc {
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return isSetSuccess();
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -8479,29 +9913,32 @@ public class Thrudoc {
       int lastComparison = 0;
       pop_front_result typedOther = (pop_front_result)other;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (isSetSuccess()) {        lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -8515,16 +9952,15 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case SUCCESS:
+        switch (field.id) {
+          case 0: // SUCCESS
             if (field.type == TType.STRING) {
               this.success = iprot.readBinary();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX1:
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -8532,7 +9968,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -8542,12 +9978,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -8612,38 +10046,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class pop_back_args implements TBase, java.io.Serializable, Cloneable, Comparable<pop_back_args>   {
+  public static class pop_back_args implements TBase<pop_back_args._Fields>, java.io.Serializable, Cloneable, Comparable<pop_back_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("pop_back_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
 
     public String bucket;
     public String key;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(pop_back_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-    }});
 
     public pop_back_args() {
     }
@@ -8691,7 +10174,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -8715,7 +10198,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -8726,8 +10209,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -8744,34 +10227,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
       case KEY:
         return getKey();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
         return isSetKey();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -8821,21 +10312,23 @@ public class Thrudoc {
       int lastComparison = 0;
       pop_back_args typedOther = (pop_back_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -8849,16 +10342,15 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
@@ -8867,12 +10359,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -8922,13 +10412,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class pop_back_result implements TBase, java.io.Serializable, Cloneable, Comparable<pop_back_result>   {
+  public static class pop_back_result implements TBase<pop_back_result._Fields>, java.io.Serializable, Cloneable, Comparable<pop_back_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("pop_back_result");
+
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
@@ -8936,30 +10426,78 @@ public class Thrudoc {
     public byte[] success;
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int SUCCESS = 0;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(pop_back_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("success", new Integer(SUCCESS));
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public pop_back_result() {
     }
@@ -9013,7 +10551,7 @@ public class Thrudoc {
       this.success = null;
     }
 
-    // Returns true if field success is set (has been asigned a value) and false otherwise
+    /** Returns true if field success is set (has been asigned a value) and false otherwise */
     public boolean isSetSuccess() {
       return this.success != null;
     }
@@ -9037,7 +10575,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -9061,7 +10599,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -9072,8 +10610,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case SUCCESS:
         if (value == null) {
           unsetSuccess();
@@ -9098,13 +10636,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return getSuccess();
 
@@ -9114,23 +10654,29 @@ public class Thrudoc {
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return isSetSuccess();
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -9189,29 +10735,32 @@ public class Thrudoc {
       int lastComparison = 0;
       pop_back_result typedOther = (pop_back_result)other;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (isSetSuccess()) {        lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -9225,16 +10774,15 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case SUCCESS:
+        switch (field.id) {
+          case 0: // SUCCESS
             if (field.type == TType.STRING) {
               this.success = iprot.readBinary();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX1:
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -9242,7 +10790,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -9252,12 +10800,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -9322,13 +10868,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class remove_at_args implements TBase, java.io.Serializable, Cloneable, Comparable<remove_at_args>   {
+  public static class remove_at_args implements TBase<remove_at_args._Fields>, java.io.Serializable, Cloneable, Comparable<remove_at_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("remove_at_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField POS_FIELD_DESC = new TField("pos", TType.I32, (short)3);
@@ -9336,32 +10882,80 @@ public class Thrudoc {
     public String bucket;
     public String key;
     public int pos;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
-    public static final int POS = 3;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key"),
+      POS((short)3, "pos");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
     private static final int __POS_ISSET_ID = 0;
     private BitSet __isset_bit_vector = new BitSet(1);
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(POS, new FieldMetaData("pos", TFieldRequirementType.DEFAULT, 
+      put(_Fields.POS, new FieldMetaData("pos", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.I32)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(remove_at_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-      put("pos", new Integer(POS));
-    }});
 
     public remove_at_args() {
     }
@@ -9415,7 +11009,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -9439,7 +11033,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -9464,7 +11058,7 @@ public class Thrudoc {
       __isset_bit_vector.clear(__POS_ISSET_ID);
     }
 
-    // Returns true if field pos is set (has been asigned a value) and false otherwise
+    /** Returns true if field pos is set (has been asigned a value) and false otherwise */
     public boolean isSetPos() {
       return __isset_bit_vector.get(__POS_ISSET_ID);
     }
@@ -9473,8 +11067,8 @@ public class Thrudoc {
       __isset_bit_vector.set(__POS_ISSET_ID, value);
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -9499,13 +11093,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
@@ -9515,23 +11111,29 @@ public class Thrudoc {
       case POS:
         return new Integer(getPos());
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
         return isSetKey();
       case POS:
         return isSetPos();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -9590,29 +11192,32 @@ public class Thrudoc {
       int lastComparison = 0;
       remove_at_args typedOther = (remove_at_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetPos()).compareTo(typedOther.isSetPos());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetPos()).compareTo(isSetPos());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(pos, typedOther.pos);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetPos()) {        lastComparison = TBaseHelper.compareTo(pos, typedOther.pos);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -9626,23 +11231,22 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case POS:
+          case 3: // POS
             if (field.type == TType.I32) {
               this.pos = iprot.readI32();
               setPosIsSet(true);
@@ -9652,12 +11256,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -9714,13 +11316,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class remove_at_result implements TBase, java.io.Serializable, Cloneable, Comparable<remove_at_result>   {
+  public static class remove_at_result implements TBase<remove_at_result._Fields>, java.io.Serializable, Cloneable, Comparable<remove_at_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("remove_at_result");
+
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
@@ -9728,30 +11330,78 @@ public class Thrudoc {
     public byte[] success;
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int SUCCESS = 0;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(remove_at_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("success", new Integer(SUCCESS));
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public remove_at_result() {
     }
@@ -9805,7 +11455,7 @@ public class Thrudoc {
       this.success = null;
     }
 
-    // Returns true if field success is set (has been asigned a value) and false otherwise
+    /** Returns true if field success is set (has been asigned a value) and false otherwise */
     public boolean isSetSuccess() {
       return this.success != null;
     }
@@ -9829,7 +11479,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -9853,7 +11503,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -9864,8 +11514,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case SUCCESS:
         if (value == null) {
           unsetSuccess();
@@ -9890,13 +11540,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return getSuccess();
 
@@ -9906,23 +11558,29 @@ public class Thrudoc {
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return isSetSuccess();
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -9981,29 +11639,32 @@ public class Thrudoc {
       int lastComparison = 0;
       remove_at_result typedOther = (remove_at_result)other;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (isSetSuccess()) {        lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -10017,16 +11678,15 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case SUCCESS:
+        switch (field.id) {
+          case 0: // SUCCESS
             if (field.type == TType.STRING) {
               this.success = iprot.readBinary();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX1:
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -10034,7 +11694,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -10044,12 +11704,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -10114,13 +11772,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class insert_at_args implements TBase, java.io.Serializable, Cloneable, Comparable<insert_at_args>   {
+  public static class insert_at_args implements TBase<insert_at_args._Fields>, java.io.Serializable, Cloneable, Comparable<insert_at_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("insert_at_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)3);
@@ -10130,36 +11788,83 @@ public class Thrudoc {
     public String key;
     public byte[] value;
     public int pos;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
-    public static final int VALUE = 3;
-    public static final int POS = 4;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key"),
+      VALUE((short)3, "value"),
+      POS((short)4, "pos");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
     private static final int __POS_ISSET_ID = 0;
     private BitSet __isset_bit_vector = new BitSet(1);
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
+      put(_Fields.VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(POS, new FieldMetaData("pos", TFieldRequirementType.DEFAULT, 
+      put(_Fields.POS, new FieldMetaData("pos", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.I32)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(insert_at_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-      put("value", new Integer(VALUE));
-      put("pos", new Integer(POS));
-    }});
 
     public insert_at_args() {
     }
@@ -10219,7 +11924,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -10243,7 +11948,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -10267,7 +11972,7 @@ public class Thrudoc {
       this.value = null;
     }
 
-    // Returns true if field value is set (has been asigned a value) and false otherwise
+    /** Returns true if field value is set (has been asigned a value) and false otherwise */
     public boolean isSetValue() {
       return this.value != null;
     }
@@ -10292,7 +11997,7 @@ public class Thrudoc {
       __isset_bit_vector.clear(__POS_ISSET_ID);
     }
 
-    // Returns true if field pos is set (has been asigned a value) and false otherwise
+    /** Returns true if field pos is set (has been asigned a value) and false otherwise */
     public boolean isSetPos() {
       return __isset_bit_vector.get(__POS_ISSET_ID);
     }
@@ -10301,8 +12006,8 @@ public class Thrudoc {
       __isset_bit_vector.set(__POS_ISSET_ID, value);
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -10335,13 +12040,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
@@ -10354,14 +12061,17 @@ public class Thrudoc {
       case POS:
         return new Integer(getPos());
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
@@ -10370,9 +12080,12 @@ public class Thrudoc {
         return isSetValue();
       case POS:
         return isSetPos();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -10440,37 +12153,41 @@ public class Thrudoc {
       int lastComparison = 0;
       insert_at_args typedOther = (insert_at_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetValue()).compareTo(typedOther.isSetValue());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (isSetValue()) {        lastComparison = TBaseHelper.compareTo(value, typedOther.value);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetPos()).compareTo(typedOther.isSetPos());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetValue()).compareTo(isSetValue());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(value, typedOther.value);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetPos()).compareTo(isSetPos());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(pos, typedOther.pos);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetPos()) {        lastComparison = TBaseHelper.compareTo(pos, typedOther.pos);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -10484,30 +12201,29 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case VALUE:
+          case 3: // VALUE
             if (field.type == TType.STRING) {
               this.value = iprot.readBinary();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case POS:
+          case 4: // POS
             if (field.type == TType.I32) {
               this.pos = iprot.readI32();
               setPosIsSet(true);
@@ -10517,12 +12233,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -10597,38 +12311,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class insert_at_result implements TBase, java.io.Serializable, Cloneable, Comparable<insert_at_result>   {
+  public static class insert_at_result implements TBase<insert_at_result._Fields>, java.io.Serializable, Cloneable, Comparable<insert_at_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("insert_at_result");
+
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(insert_at_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public insert_at_result() {
     }
@@ -10676,7 +12439,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -10700,7 +12463,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -10711,8 +12474,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case EX1:
         if (value == null) {
           unsetEx1();
@@ -10729,34 +12492,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case EX1:
         return getEx1();
 
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -10806,21 +12577,23 @@ public class Thrudoc {
       int lastComparison = 0;
       insert_at_result typedOther = (insert_at_result)other;
 
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -10834,9 +12607,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case EX1:
+        switch (field.id) {
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -10844,7 +12616,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -10854,12 +12626,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -10907,13 +12677,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class replace_at_args implements TBase, java.io.Serializable, Cloneable, Comparable<replace_at_args>   {
+  public static class replace_at_args implements TBase<replace_at_args._Fields>, java.io.Serializable, Cloneable, Comparable<replace_at_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("replace_at_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField VALUE_FIELD_DESC = new TField("value", TType.STRING, (short)3);
@@ -10923,36 +12693,83 @@ public class Thrudoc {
     public String key;
     public byte[] value;
     public int pos;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
-    public static final int VALUE = 3;
-    public static final int POS = 4;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key"),
+      VALUE((short)3, "value"),
+      POS((short)4, "pos");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
     private static final int __POS_ISSET_ID = 0;
     private BitSet __isset_bit_vector = new BitSet(1);
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
+      put(_Fields.VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(POS, new FieldMetaData("pos", TFieldRequirementType.DEFAULT, 
+      put(_Fields.POS, new FieldMetaData("pos", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.I32)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(replace_at_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-      put("value", new Integer(VALUE));
-      put("pos", new Integer(POS));
-    }});
 
     public replace_at_args() {
     }
@@ -11012,7 +12829,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -11036,7 +12853,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -11060,7 +12877,7 @@ public class Thrudoc {
       this.value = null;
     }
 
-    // Returns true if field value is set (has been asigned a value) and false otherwise
+    /** Returns true if field value is set (has been asigned a value) and false otherwise */
     public boolean isSetValue() {
       return this.value != null;
     }
@@ -11085,7 +12902,7 @@ public class Thrudoc {
       __isset_bit_vector.clear(__POS_ISSET_ID);
     }
 
-    // Returns true if field pos is set (has been asigned a value) and false otherwise
+    /** Returns true if field pos is set (has been asigned a value) and false otherwise */
     public boolean isSetPos() {
       return __isset_bit_vector.get(__POS_ISSET_ID);
     }
@@ -11094,8 +12911,8 @@ public class Thrudoc {
       __isset_bit_vector.set(__POS_ISSET_ID, value);
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -11128,13 +12945,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
@@ -11147,14 +12966,17 @@ public class Thrudoc {
       case POS:
         return new Integer(getPos());
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
@@ -11163,9 +12985,12 @@ public class Thrudoc {
         return isSetValue();
       case POS:
         return isSetPos();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -11233,37 +13058,41 @@ public class Thrudoc {
       int lastComparison = 0;
       replace_at_args typedOther = (replace_at_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetValue()).compareTo(typedOther.isSetValue());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (isSetValue()) {        lastComparison = TBaseHelper.compareTo(value, typedOther.value);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetPos()).compareTo(typedOther.isSetPos());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetValue()).compareTo(isSetValue());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(value, typedOther.value);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetPos()).compareTo(isSetPos());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(pos, typedOther.pos);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetPos()) {        lastComparison = TBaseHelper.compareTo(pos, typedOther.pos);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -11277,30 +13106,29 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case VALUE:
+          case 3: // VALUE
             if (field.type == TType.STRING) {
               this.value = iprot.readBinary();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case POS:
+          case 4: // POS
             if (field.type == TType.I32) {
               this.pos = iprot.readI32();
               setPosIsSet(true);
@@ -11310,12 +13138,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -11390,38 +13216,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class replace_at_result implements TBase, java.io.Serializable, Cloneable, Comparable<replace_at_result>   {
+  public static class replace_at_result implements TBase<replace_at_result._Fields>, java.io.Serializable, Cloneable, Comparable<replace_at_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("replace_at_result");
+
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
 
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(replace_at_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public replace_at_result() {
     }
@@ -11469,7 +13344,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -11493,7 +13368,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -11504,8 +13379,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case EX1:
         if (value == null) {
           unsetEx1();
@@ -11522,34 +13397,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case EX1:
         return getEx1();
 
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -11599,21 +13482,23 @@ public class Thrudoc {
       int lastComparison = 0;
       replace_at_result typedOther = (replace_at_result)other;
 
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -11627,9 +13512,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case EX1:
+        switch (field.id) {
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -11637,7 +13521,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -11647,12 +13531,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -11700,13 +13582,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class retrieve_at_args implements TBase, java.io.Serializable, Cloneable, Comparable<retrieve_at_args>   {
+  public static class retrieve_at_args implements TBase<retrieve_at_args._Fields>, java.io.Serializable, Cloneable, Comparable<retrieve_at_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("retrieve_at_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField POS_FIELD_DESC = new TField("pos", TType.I32, (short)4);
@@ -11714,32 +13596,80 @@ public class Thrudoc {
     public String bucket;
     public String key;
     public int pos;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
-    public static final int POS = 4;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key"),
+      POS((short)4, "pos");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
     private static final int __POS_ISSET_ID = 0;
     private BitSet __isset_bit_vector = new BitSet(1);
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(POS, new FieldMetaData("pos", TFieldRequirementType.DEFAULT, 
+      put(_Fields.POS, new FieldMetaData("pos", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.I32)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(retrieve_at_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-      put("pos", new Integer(POS));
-    }});
 
     public retrieve_at_args() {
     }
@@ -11793,7 +13723,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -11817,7 +13747,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -11842,7 +13772,7 @@ public class Thrudoc {
       __isset_bit_vector.clear(__POS_ISSET_ID);
     }
 
-    // Returns true if field pos is set (has been asigned a value) and false otherwise
+    /** Returns true if field pos is set (has been asigned a value) and false otherwise */
     public boolean isSetPos() {
       return __isset_bit_vector.get(__POS_ISSET_ID);
     }
@@ -11851,8 +13781,8 @@ public class Thrudoc {
       __isset_bit_vector.set(__POS_ISSET_ID, value);
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -11877,13 +13807,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
@@ -11893,23 +13825,29 @@ public class Thrudoc {
       case POS:
         return new Integer(getPos());
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
         return isSetKey();
       case POS:
         return isSetPos();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -11968,29 +13906,32 @@ public class Thrudoc {
       int lastComparison = 0;
       retrieve_at_args typedOther = (retrieve_at_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetPos()).compareTo(typedOther.isSetPos());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetPos()).compareTo(isSetPos());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(pos, typedOther.pos);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetPos()) {        lastComparison = TBaseHelper.compareTo(pos, typedOther.pos);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -12004,23 +13945,22 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case POS:
+          case 4: // POS
             if (field.type == TType.I32) {
               this.pos = iprot.readI32();
               setPosIsSet(true);
@@ -12030,12 +13970,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -12092,13 +14030,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class retrieve_at_result implements TBase, java.io.Serializable, Cloneable, Comparable<retrieve_at_result>   {
+  public static class retrieve_at_result implements TBase<retrieve_at_result._Fields>, java.io.Serializable, Cloneable, Comparable<retrieve_at_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("retrieve_at_result");
+
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
@@ -12106,30 +14044,78 @@ public class Thrudoc {
     public byte[] success;
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int SUCCESS = 0;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(retrieve_at_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("success", new Integer(SUCCESS));
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public retrieve_at_result() {
     }
@@ -12183,7 +14169,7 @@ public class Thrudoc {
       this.success = null;
     }
 
-    // Returns true if field success is set (has been asigned a value) and false otherwise
+    /** Returns true if field success is set (has been asigned a value) and false otherwise */
     public boolean isSetSuccess() {
       return this.success != null;
     }
@@ -12207,7 +14193,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -12231,7 +14217,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -12242,8 +14228,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case SUCCESS:
         if (value == null) {
           unsetSuccess();
@@ -12268,13 +14254,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return getSuccess();
 
@@ -12284,23 +14272,29 @@ public class Thrudoc {
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return isSetSuccess();
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -12359,29 +14353,32 @@ public class Thrudoc {
       int lastComparison = 0;
       retrieve_at_result typedOther = (retrieve_at_result)other;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (isSetSuccess()) {        lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -12395,16 +14392,15 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case SUCCESS:
+        switch (field.id) {
+          case 0: // SUCCESS
             if (field.type == TType.STRING) {
               this.success = iprot.readBinary();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX1:
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -12412,7 +14408,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -12422,12 +14418,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -12492,13 +14486,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class range_args implements TBase, java.io.Serializable, Cloneable, Comparable<range_args>   {
+  public static class range_args implements TBase<range_args._Fields>, java.io.Serializable, Cloneable, Comparable<range_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("range_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
     private static final TField START_FIELD_DESC = new TField("start", TType.I32, (short)3);
@@ -12508,37 +14502,84 @@ public class Thrudoc {
     public String key;
     public int start;
     public int end;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
-    public static final int START = 3;
-    public static final int END = 4;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key"),
+      START((short)3, "start"),
+      END((short)4, "end");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
     private static final int __START_ISSET_ID = 0;
     private static final int __END_ISSET_ID = 1;
     private BitSet __isset_bit_vector = new BitSet(2);
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(START, new FieldMetaData("start", TFieldRequirementType.DEFAULT, 
+      put(_Fields.START, new FieldMetaData("start", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.I32)));
-      put(END, new FieldMetaData("end", TFieldRequirementType.DEFAULT, 
+      put(_Fields.END, new FieldMetaData("end", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.I32)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(range_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-      put("start", new Integer(START));
-      put("end", new Integer(END));
-    }});
 
     public range_args() {
     }
@@ -12596,7 +14637,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -12620,7 +14661,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -12645,7 +14686,7 @@ public class Thrudoc {
       __isset_bit_vector.clear(__START_ISSET_ID);
     }
 
-    // Returns true if field start is set (has been asigned a value) and false otherwise
+    /** Returns true if field start is set (has been asigned a value) and false otherwise */
     public boolean isSetStart() {
       return __isset_bit_vector.get(__START_ISSET_ID);
     }
@@ -12668,7 +14709,7 @@ public class Thrudoc {
       __isset_bit_vector.clear(__END_ISSET_ID);
     }
 
-    // Returns true if field end is set (has been asigned a value) and false otherwise
+    /** Returns true if field end is set (has been asigned a value) and false otherwise */
     public boolean isSetEnd() {
       return __isset_bit_vector.get(__END_ISSET_ID);
     }
@@ -12677,8 +14718,8 @@ public class Thrudoc {
       __isset_bit_vector.set(__END_ISSET_ID, value);
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -12711,13 +14752,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
@@ -12730,14 +14773,17 @@ public class Thrudoc {
       case END:
         return new Integer(getEnd());
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
@@ -12746,9 +14792,12 @@ public class Thrudoc {
         return isSetStart();
       case END:
         return isSetEnd();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -12816,37 +14865,41 @@ public class Thrudoc {
       int lastComparison = 0;
       range_args typedOther = (range_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetStart()).compareTo(typedOther.isSetStart());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+      if (isSetStart()) {        lastComparison = TBaseHelper.compareTo(start, typedOther.start);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEnd()).compareTo(typedOther.isSetEnd());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetStart()).compareTo(isSetStart());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(start, typedOther.start);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetEnd()).compareTo(isSetEnd());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(end, typedOther.end);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEnd()) {        lastComparison = TBaseHelper.compareTo(end, typedOther.end);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -12860,23 +14913,22 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case START:
+          case 3: // START
             if (field.type == TType.I32) {
               this.start = iprot.readI32();
               setStartIsSet(true);
@@ -12884,7 +14936,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case END:
+          case 4: // END
             if (field.type == TType.I32) {
               this.end = iprot.readI32();
               setEndIsSet(true);
@@ -12894,12 +14946,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -12963,13 +15013,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class range_result implements TBase, java.io.Serializable, Cloneable, Comparable<range_result>   {
+  public static class range_result implements TBase<range_result._Fields>, java.io.Serializable, Cloneable, Comparable<range_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("range_result");
+
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.LIST, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
@@ -12977,31 +15027,79 @@ public class Thrudoc {
     public List<byte[]> success;
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int SUCCESS = 0;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
           new ListMetaData(TType.LIST, 
               new FieldValueMetaData(TType.STRING))));
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(range_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("success", new Integer(SUCCESS));
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public range_result() {
     }
@@ -13075,7 +15173,7 @@ public class Thrudoc {
       this.success = null;
     }
 
-    // Returns true if field success is set (has been asigned a value) and false otherwise
+    /** Returns true if field success is set (has been asigned a value) and false otherwise */
     public boolean isSetSuccess() {
       return this.success != null;
     }
@@ -13099,7 +15197,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -13123,7 +15221,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -13134,8 +15232,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case SUCCESS:
         if (value == null) {
           unsetSuccess();
@@ -13160,13 +15258,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return getSuccess();
 
@@ -13176,23 +15276,29 @@ public class Thrudoc {
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return isSetSuccess();
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -13251,29 +15357,32 @@ public class Thrudoc {
       int lastComparison = 0;
       range_result typedOther = (range_result)other;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (isSetSuccess()) {        lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -13287,9 +15396,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case SUCCESS:
+        switch (field.id) {
+          case 0: // SUCCESS
             if (field.type == TType.LIST) {
               {
                 TList _list4 = iprot.readListBegin();
@@ -13306,7 +15414,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX1:
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -13314,7 +15422,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -13324,12 +15432,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -13396,38 +15502,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class length_args implements TBase, java.io.Serializable, Cloneable, Comparable<length_args>   {
+  public static class length_args implements TBase<length_args._Fields>, java.io.Serializable, Cloneable, Comparable<length_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("length_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField KEY_FIELD_DESC = new TField("key", TType.STRING, (short)2);
 
     public String bucket;
     public String key;
-    public static final int BUCKET = 1;
-    public static final int KEY = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      KEY((short)2, "key");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(length_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("key", new Integer(KEY));
-    }});
 
     public length_args() {
     }
@@ -13475,7 +15630,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -13499,7 +15654,7 @@ public class Thrudoc {
       this.key = null;
     }
 
-    // Returns true if field key is set (has been asigned a value) and false otherwise
+    /** Returns true if field key is set (has been asigned a value) and false otherwise */
     public boolean isSetKey() {
       return this.key != null;
     }
@@ -13510,8 +15665,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -13528,34 +15683,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
       case KEY:
         return getKey();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case KEY:
         return isSetKey();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -13605,21 +15768,23 @@ public class Thrudoc {
       int lastComparison = 0;
       length_args typedOther = (length_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetKey()).compareTo(typedOther.isSetKey());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetKey()).compareTo(isSetKey());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(key, typedOther.key);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetKey()) {        lastComparison = TBaseHelper.compareTo(key, typedOther.key);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -13633,16 +15798,15 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case KEY:
+          case 2: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
             } else { 
@@ -13651,12 +15815,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -13706,13 +15868,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class length_result implements TBase, java.io.Serializable, Cloneable, Comparable<length_result>   {
+  public static class length_result implements TBase<length_result._Fields>, java.io.Serializable, Cloneable, Comparable<length_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("length_result");
+
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.I32, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
@@ -13720,32 +15882,80 @@ public class Thrudoc {
     public int success;
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int SUCCESS = 0;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
     private static final int __SUCCESS_ISSET_ID = 0;
     private BitSet __isset_bit_vector = new BitSet(1);
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.I32)));
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(length_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("success", new Integer(SUCCESS));
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public length_result() {
     }
@@ -13800,7 +16010,7 @@ public class Thrudoc {
       __isset_bit_vector.clear(__SUCCESS_ISSET_ID);
     }
 
-    // Returns true if field success is set (has been asigned a value) and false otherwise
+    /** Returns true if field success is set (has been asigned a value) and false otherwise */
     public boolean isSetSuccess() {
       return __isset_bit_vector.get(__SUCCESS_ISSET_ID);
     }
@@ -13822,7 +16032,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -13846,7 +16056,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -13857,8 +16067,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case SUCCESS:
         if (value == null) {
           unsetSuccess();
@@ -13883,13 +16093,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return new Integer(getSuccess());
 
@@ -13899,23 +16111,29 @@ public class Thrudoc {
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return isSetSuccess();
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -13974,29 +16192,32 @@ public class Thrudoc {
       int lastComparison = 0;
       length_result typedOther = (length_result)other;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (isSetSuccess()) {        lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -14010,9 +16231,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case SUCCESS:
+        switch (field.id) {
+          case 0: // SUCCESS
             if (field.type == TType.I32) {
               this.success = iprot.readI32();
               setSuccessIsSet(true);
@@ -14020,7 +16240,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX1:
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -14028,7 +16248,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -14038,12 +16258,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -14099,13 +16317,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class scan_args implements TBase, java.io.Serializable, Cloneable, Comparable<scan_args>   {
+  public static class scan_args implements TBase<scan_args._Fields>, java.io.Serializable, Cloneable, Comparable<scan_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("scan_args");
+
     private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
     private static final TField SEED_FIELD_DESC = new TField("seed", TType.STRING, (short)2);
     private static final TField LIMIT_FIELD_DESC = new TField("limit", TType.I32, (short)3);
@@ -14113,32 +16331,80 @@ public class Thrudoc {
     public String bucket;
     public String seed;
     public int limit;
-    public static final int BUCKET = 1;
-    public static final int SEED = 2;
-    public static final int LIMIT = 3;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      BUCKET((short)1, "bucket"),
+      SEED((short)2, "seed"),
+      LIMIT((short)3, "limit");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
     private static final int __LIMIT_ISSET_ID = 0;
     private BitSet __isset_bit_vector = new BitSet(1);
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(SEED, new FieldMetaData("seed", TFieldRequirementType.DEFAULT, 
+      put(_Fields.SEED, new FieldMetaData("seed", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(LIMIT, new FieldMetaData("limit", TFieldRequirementType.DEFAULT, 
+      put(_Fields.LIMIT, new FieldMetaData("limit", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.I32)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(scan_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("bucket", new Integer(BUCKET));
-      put("seed", new Integer(SEED));
-      put("limit", new Integer(LIMIT));
-    }});
 
     public scan_args() {
     }
@@ -14192,7 +16458,7 @@ public class Thrudoc {
       this.bucket = null;
     }
 
-    // Returns true if field bucket is set (has been asigned a value) and false otherwise
+    /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
     public boolean isSetBucket() {
       return this.bucket != null;
     }
@@ -14216,7 +16482,7 @@ public class Thrudoc {
       this.seed = null;
     }
 
-    // Returns true if field seed is set (has been asigned a value) and false otherwise
+    /** Returns true if field seed is set (has been asigned a value) and false otherwise */
     public boolean isSetSeed() {
       return this.seed != null;
     }
@@ -14241,7 +16507,7 @@ public class Thrudoc {
       __isset_bit_vector.clear(__LIMIT_ISSET_ID);
     }
 
-    // Returns true if field limit is set (has been asigned a value) and false otherwise
+    /** Returns true if field limit is set (has been asigned a value) and false otherwise */
     public boolean isSetLimit() {
       return __isset_bit_vector.get(__LIMIT_ISSET_ID);
     }
@@ -14250,8 +16516,8 @@ public class Thrudoc {
       __isset_bit_vector.set(__LIMIT_ISSET_ID, value);
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case BUCKET:
         if (value == null) {
           unsetBucket();
@@ -14276,13 +16542,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case BUCKET:
         return getBucket();
 
@@ -14292,23 +16560,29 @@ public class Thrudoc {
       case LIMIT:
         return new Integer(getLimit());
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case BUCKET:
         return isSetBucket();
       case SEED:
         return isSetSeed();
       case LIMIT:
         return isSetLimit();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -14367,29 +16641,32 @@ public class Thrudoc {
       int lastComparison = 0;
       scan_args typedOther = (scan_args)other;
 
-      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+      lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (isSetBucket()) {        lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetSeed()).compareTo(typedOther.isSetSeed());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetSeed()).compareTo(isSetSeed());
+      if (isSetSeed()) {        lastComparison = TBaseHelper.compareTo(seed, typedOther.seed);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetLimit()).compareTo(typedOther.isSetLimit());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(seed, typedOther.seed);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetLimit()).compareTo(isSetLimit());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(limit, typedOther.limit);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetLimit()) {        lastComparison = TBaseHelper.compareTo(limit, typedOther.limit);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -14403,23 +16680,22 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case BUCKET:
+        switch (field.id) {
+          case 1: // BUCKET
             if (field.type == TType.STRING) {
               this.bucket = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case SEED:
+          case 2: // SEED
             if (field.type == TType.STRING) {
               this.seed = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case LIMIT:
+          case 3: // LIMIT
             if (field.type == TType.I32) {
               this.limit = iprot.readI32();
               setLimitIsSet(true);
@@ -14429,12 +16705,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -14491,13 +16765,13 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class scan_result implements TBase, java.io.Serializable, Cloneable, Comparable<scan_result>   {
+  public static class scan_result implements TBase<scan_result._Fields>, java.io.Serializable, Cloneable, Comparable<scan_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("scan_result");
+
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.LIST, (short)0);
     private static final TField EX1_FIELD_DESC = new TField("ex1", TType.STRUCT, (short)1);
     private static final TField EX2_FIELD_DESC = new TField("ex2", TType.STRUCT, (short)2);
@@ -14505,31 +16779,79 @@ public class Thrudoc {
     public List<String> success;
     public ThrudocException ex1;
     public InvalidBucketException ex2;
-    public static final int SUCCESS = 0;
-    public static final int EX1 = 1;
-    public static final int EX2 = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      EX1((short)1, "ex1"),
+      EX2((short)2, "ex2");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
           new ListMetaData(TType.LIST, 
               new FieldValueMetaData(TType.STRING))));
-      put(EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX1, new FieldMetaData("ex1", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
-      put(EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
+      put(_Fields.EX2, new FieldMetaData("ex2", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(scan_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("success", new Integer(SUCCESS));
-      put("ex1", new Integer(EX1));
-      put("ex2", new Integer(EX2));
-    }});
 
     public scan_result() {
     }
@@ -14601,7 +16923,7 @@ public class Thrudoc {
       this.success = null;
     }
 
-    // Returns true if field success is set (has been asigned a value) and false otherwise
+    /** Returns true if field success is set (has been asigned a value) and false otherwise */
     public boolean isSetSuccess() {
       return this.success != null;
     }
@@ -14625,7 +16947,7 @@ public class Thrudoc {
       this.ex1 = null;
     }
 
-    // Returns true if field ex1 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex1 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx1() {
       return this.ex1 != null;
     }
@@ -14649,7 +16971,7 @@ public class Thrudoc {
       this.ex2 = null;
     }
 
-    // Returns true if field ex2 is set (has been asigned a value) and false otherwise
+    /** Returns true if field ex2 is set (has been asigned a value) and false otherwise */
     public boolean isSetEx2() {
       return this.ex2 != null;
     }
@@ -14660,8 +16982,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case SUCCESS:
         if (value == null) {
           unsetSuccess();
@@ -14686,13 +17008,15 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return getSuccess();
 
@@ -14702,23 +17026,29 @@ public class Thrudoc {
       case EX2:
         return getEx2();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return isSetSuccess();
       case EX1:
         return isSetEx1();
       case EX2:
         return isSetEx2();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -14777,29 +17107,32 @@ public class Thrudoc {
       int lastComparison = 0;
       scan_result typedOther = (scan_result)other;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (isSetSuccess()) {        lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(typedOther.isSetEx1());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetEx1()).compareTo(isSetEx1());
+      if (isSetEx1()) {        lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(typedOther.isSetEx2());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(ex1, typedOther.ex1);
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = Boolean.valueOf(isSetEx2()).compareTo(isSetEx2());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetEx2()) {        lastComparison = TBaseHelper.compareTo(ex2, typedOther.ex2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -14813,9 +17146,8 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case SUCCESS:
+        switch (field.id) {
+          case 0: // SUCCESS
             if (field.type == TType.LIST) {
               {
                 TList _list8 = iprot.readListBegin();
@@ -14832,7 +17164,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX1:
+          case 1: // EX1
             if (field.type == TType.STRUCT) {
               this.ex1 = new ThrudocException();
               this.ex1.read(iprot);
@@ -14840,7 +17172,7 @@ public class Thrudoc {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case EX2:
+          case 2: // EX2
             if (field.type == TType.STRUCT) {
               this.ex2 = new InvalidBucketException();
               this.ex2.read(iprot);
@@ -14850,12 +17182,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -14922,38 +17252,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class admin_args implements TBase, java.io.Serializable, Cloneable, Comparable<admin_args>   {
+  public static class admin_args implements TBase<admin_args._Fields>, java.io.Serializable, Cloneable, Comparable<admin_args>   {
     private static final TStruct STRUCT_DESC = new TStruct("admin_args");
+
     private static final TField OP_FIELD_DESC = new TField("op", TType.STRING, (short)1);
     private static final TField DATA_FIELD_DESC = new TField("data", TType.STRING, (short)2);
 
     public String op;
     public String data;
-    public static final int OP = 1;
-    public static final int DATA = 2;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      OP((short)1, "op"),
+      DATA((short)2, "data");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(OP, new FieldMetaData("op", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.OP, new FieldMetaData("op", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(DATA, new FieldMetaData("data", TFieldRequirementType.DEFAULT, 
+      put(_Fields.DATA, new FieldMetaData("data", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(admin_args.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("op", new Integer(OP));
-      put("data", new Integer(DATA));
-    }});
 
     public admin_args() {
     }
@@ -15001,7 +17380,7 @@ public class Thrudoc {
       this.op = null;
     }
 
-    // Returns true if field op is set (has been asigned a value) and false otherwise
+    /** Returns true if field op is set (has been asigned a value) and false otherwise */
     public boolean isSetOp() {
       return this.op != null;
     }
@@ -15025,7 +17404,7 @@ public class Thrudoc {
       this.data = null;
     }
 
-    // Returns true if field data is set (has been asigned a value) and false otherwise
+    /** Returns true if field data is set (has been asigned a value) and false otherwise */
     public boolean isSetData() {
       return this.data != null;
     }
@@ -15036,8 +17415,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case OP:
         if (value == null) {
           unsetOp();
@@ -15054,34 +17433,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case OP:
         return getOp();
 
       case DATA:
         return getData();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case OP:
         return isSetOp();
       case DATA:
         return isSetData();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -15131,21 +17518,23 @@ public class Thrudoc {
       int lastComparison = 0;
       admin_args typedOther = (admin_args)other;
 
-      lastComparison = Boolean.valueOf(isSetOp()).compareTo(isSetOp());
+      lastComparison = Boolean.valueOf(isSetOp()).compareTo(typedOther.isSetOp());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(op, typedOther.op);
+      if (isSetOp()) {        lastComparison = TBaseHelper.compareTo(op, typedOther.op);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetData()).compareTo(typedOther.isSetData());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetData()).compareTo(isSetData());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(data, typedOther.data);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetData()) {        lastComparison = TBaseHelper.compareTo(data, typedOther.data);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -15159,16 +17548,15 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case OP:
+        switch (field.id) {
+          case 1: // OP
             if (field.type == TType.STRING) {
               this.op = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case DATA:
+          case 2: // DATA
             if (field.type == TType.STRING) {
               this.data = iprot.readString();
             } else { 
@@ -15177,12 +17565,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -15232,38 +17618,87 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }
 
-  public static class admin_result implements TBase, java.io.Serializable, Cloneable, Comparable<admin_result>   {
+  public static class admin_result implements TBase<admin_result._Fields>, java.io.Serializable, Cloneable, Comparable<admin_result>   {
     private static final TStruct STRUCT_DESC = new TStruct("admin_result");
+
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRING, (short)0);
     private static final TField E_FIELD_DESC = new TField("e", TType.STRUCT, (short)1);
 
     public String success;
     public ThrudocException e;
-    public static final int SUCCESS = 0;
-    public static final int E = 1;
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      E((short)1, "e");
+
+      private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+      private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+      static {
+        for (_Fields field : EnumSet.allOf(_Fields.class)) {
+          byId.put((int)field._thriftId, field);
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        return byId.get(fieldId);
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final String _fieldName;
+
+      _Fields(short thriftId, String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public String getFieldName() {
+        return _fieldName;
+      }
+    }
 
     // isset id assignments
 
-    public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-      put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+    public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+      put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRING)));
-      put(E, new FieldMetaData("e", TFieldRequirementType.DEFAULT, 
+      put(_Fields.E, new FieldMetaData("e", TFieldRequirementType.DEFAULT, 
           new FieldValueMetaData(TType.STRUCT)));
     }});
 
     static {
       FieldMetaData.addStructMetaDataMap(admin_result.class, metaDataMap);
     }
-
-    public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-      put("success", new Integer(SUCCESS));
-      put("e", new Integer(E));
-    }});
 
     public admin_result() {
     }
@@ -15311,7 +17746,7 @@ public class Thrudoc {
       this.success = null;
     }
 
-    // Returns true if field success is set (has been asigned a value) and false otherwise
+    /** Returns true if field success is set (has been asigned a value) and false otherwise */
     public boolean isSetSuccess() {
       return this.success != null;
     }
@@ -15335,7 +17770,7 @@ public class Thrudoc {
       this.e = null;
     }
 
-    // Returns true if field e is set (has been asigned a value) and false otherwise
+    /** Returns true if field e is set (has been asigned a value) and false otherwise */
     public boolean isSetE() {
       return this.e != null;
     }
@@ -15346,8 +17781,8 @@ public class Thrudoc {
       }
     }
 
-    public void setFieldValue(int fieldID, Object value) {
-      switch (fieldID) {
+    public void setFieldValue(_Fields field, Object value) {
+      switch (field) {
       case SUCCESS:
         if (value == null) {
           unsetSuccess();
@@ -15364,34 +17799,42 @@ public class Thrudoc {
         }
         break;
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
     }
 
-    public Object getFieldValue(int fieldID) {
-      switch (fieldID) {
+    public void setFieldValue(int fieldID, Object value) {
+      setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+    }
+
+    public Object getFieldValue(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return getSuccess();
 
       case E:
         return getE();
 
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
     }
 
-    // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-    public boolean isSet(int fieldID) {
-      switch (fieldID) {
+    public Object getFieldValue(int fieldId) {
+      return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      switch (field) {
       case SUCCESS:
         return isSetSuccess();
       case E:
         return isSetE();
-      default:
-        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
       }
+      throw new IllegalStateException();
+    }
+
+    public boolean isSet(int fieldID) {
+      return isSet(_Fields.findByThriftIdOrThrow(fieldID));
     }
 
     @Override
@@ -15441,21 +17884,23 @@ public class Thrudoc {
       int lastComparison = 0;
       admin_result typedOther = (admin_result)other;
 
-      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(isSetSuccess());
+      lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+      if (isSetSuccess()) {        lastComparison = TBaseHelper.compareTo(success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetE()).compareTo(typedOther.isSetE());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      lastComparison = Boolean.valueOf(isSetE()).compareTo(isSetE());
-      if (lastComparison != 0) {
-        return lastComparison;
-      }
-      lastComparison = TBaseHelper.compareTo(e, typedOther.e);
-      if (lastComparison != 0) {
-        return lastComparison;
+      if (isSetE()) {        lastComparison = TBaseHelper.compareTo(e, typedOther.e);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
       }
       return 0;
     }
@@ -15469,16 +17914,15 @@ public class Thrudoc {
         if (field.type == TType.STOP) { 
           break;
         }
-        switch (field.id)
-        {
-          case SUCCESS:
+        switch (field.id) {
+          case 0: // SUCCESS
             if (field.type == TType.STRING) {
               this.success = iprot.readString();
             } else { 
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
-          case E:
+          case 1: // E
             if (field.type == TType.STRUCT) {
               this.e = new ThrudocException();
               this.e.read(iprot);
@@ -15488,12 +17932,10 @@ public class Thrudoc {
             break;
           default:
             TProtocolUtil.skip(iprot, field.type);
-            break;
         }
         iprot.readFieldEnd();
       }
       iprot.readStructEnd();
-
 
       // check for required fields of primitive type, which can't be checked in the validate method
       validate();
@@ -15541,7 +17983,6 @@ public class Thrudoc {
 
     public void validate() throws TException {
       // check for required fields
-      // check that fields of type enum have valid values
     }
 
   }

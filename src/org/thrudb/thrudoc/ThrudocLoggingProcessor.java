@@ -13,8 +13,6 @@ import org.thrudb.thrift.TPeekingTransport;
 import org.thrudb.thrudoc.Thrudoc.Iface;
 import org.thrudb.thrudoc.Thrudoc.Processor;
 
-import tokyocabinet.HDB;
-
 public class ThrudocLoggingProcessor extends Processor {
 
 	private Set<String> writeOps;

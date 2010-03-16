@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
@@ -21,8 +23,9 @@ import org.apache.thrift.*;
 import org.apache.thrift.meta_data.*;
 import org.apache.thrift.protocol.*;
 
-public class SearchResponse implements TBase, java.io.Serializable, Cloneable, Comparable<SearchResponse> {
+public class SearchResponse implements TBase<SearchResponse._Fields>, java.io.Serializable, Cloneable, Comparable<SearchResponse> {
   private static final TStruct STRUCT_DESC = new TStruct("SearchResponse");
+
   private static final TField TOTAL_FIELD_DESC = new TField("total", TType.I32, (short)1);
   private static final TField ELEMENTS_FIELD_DESC = new TField("elements", TType.LIST, (short)2);
   private static final TField EX_FIELD_DESC = new TField("ex", TType.STRUCT, (short)3);
@@ -30,33 +33,81 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
   public int total;
   public List<Element> elements;
   public ThrudexException ex;
-  public static final int TOTAL = 1;
-  public static final int ELEMENTS = 2;
-  public static final int EX = 3;
+
+  /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+  public enum _Fields implements TFieldIdEnum {
+    TOTAL((short)1, "total"),
+    ELEMENTS((short)2, "elements"),
+    EX((short)3, "ex");
+
+    private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+    private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+    static {
+      for (_Fields field : EnumSet.allOf(_Fields.class)) {
+        byId.put((int)field._thriftId, field);
+        byName.put(field.getFieldName(), field);
+      }
+    }
+
+    /**
+     * Find the _Fields constant that matches fieldId, or null if its not found.
+     */
+    public static _Fields findByThriftId(int fieldId) {
+      return byId.get(fieldId);
+    }
+
+    /**
+     * Find the _Fields constant that matches fieldId, throwing an exception
+     * if it is not found.
+     */
+    public static _Fields findByThriftIdOrThrow(int fieldId) {
+      _Fields fields = findByThriftId(fieldId);
+      if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+      return fields;
+    }
+
+    /**
+     * Find the _Fields constant that matches name, or null if its not found.
+     */
+    public static _Fields findByName(String name) {
+      return byName.get(name);
+    }
+
+    private final short _thriftId;
+    private final String _fieldName;
+
+    _Fields(short thriftId, String fieldName) {
+      _thriftId = thriftId;
+      _fieldName = fieldName;
+    }
+
+    public short getThriftFieldId() {
+      return _thriftId;
+    }
+
+    public String getFieldName() {
+      return _fieldName;
+    }
+  }
 
   // isset id assignments
   private static final int __TOTAL_ISSET_ID = 0;
   private BitSet __isset_bit_vector = new BitSet(1);
 
-  public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-    put(TOTAL, new FieldMetaData("total", TFieldRequirementType.DEFAULT, 
+  public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+    put(_Fields.TOTAL, new FieldMetaData("total", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.I32)));
-    put(ELEMENTS, new FieldMetaData("elements", TFieldRequirementType.DEFAULT, 
+    put(_Fields.ELEMENTS, new FieldMetaData("elements", TFieldRequirementType.DEFAULT, 
         new ListMetaData(TType.LIST, 
             new StructMetaData(TType.STRUCT, Element.class))));
-    put(EX, new FieldMetaData("ex", TFieldRequirementType.DEFAULT, 
+    put(_Fields.EX, new FieldMetaData("ex", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRUCT)));
   }});
 
   static {
     FieldMetaData.addStructMetaDataMap(SearchResponse.class, metaDataMap);
   }
-
-  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-    put("total", new Integer(TOTAL));
-    put("elements", new Integer(ELEMENTS));
-    put("ex", new Integer(EX));
-  }});
 
   public SearchResponse() {
     this.total = -1;
@@ -117,7 +168,7 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
     __isset_bit_vector.clear(__TOTAL_ISSET_ID);
   }
 
-  // Returns true if field total is set (has been asigned a value) and false otherwise
+  /** Returns true if field total is set (has been asigned a value) and false otherwise */
   public boolean isSetTotal() {
     return __isset_bit_vector.get(__TOTAL_ISSET_ID);
   }
@@ -154,7 +205,7 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
     this.elements = null;
   }
 
-  // Returns true if field elements is set (has been asigned a value) and false otherwise
+  /** Returns true if field elements is set (has been asigned a value) and false otherwise */
   public boolean isSetElements() {
     return this.elements != null;
   }
@@ -178,7 +229,7 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
     this.ex = null;
   }
 
-  // Returns true if field ex is set (has been asigned a value) and false otherwise
+  /** Returns true if field ex is set (has been asigned a value) and false otherwise */
   public boolean isSetEx() {
     return this.ex != null;
   }
@@ -189,8 +240,8 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
-    switch (fieldID) {
+  public void setFieldValue(_Fields field, Object value) {
+    switch (field) {
     case TOTAL:
       if (value == null) {
         unsetTotal();
@@ -215,13 +266,15 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
       }
       break;
 
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
   }
 
-  public Object getFieldValue(int fieldID) {
-    switch (fieldID) {
+  public void setFieldValue(int fieldID, Object value) {
+    setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+  }
+
+  public Object getFieldValue(_Fields field) {
+    switch (field) {
     case TOTAL:
       return new Integer(getTotal());
 
@@ -231,23 +284,29 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
     case EX:
       return getEx();
 
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
+    throw new IllegalStateException();
   }
 
-  // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
+  public Object getFieldValue(int fieldId) {
+    return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+  }
+
+  /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+  public boolean isSet(_Fields field) {
+    switch (field) {
     case TOTAL:
       return isSetTotal();
     case ELEMENTS:
       return isSetElements();
     case EX:
       return isSetEx();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
+    throw new IllegalStateException();
+  }
+
+  public boolean isSet(int fieldID) {
+    return isSet(_Fields.findByThriftIdOrThrow(fieldID));
   }
 
   @Override
@@ -306,29 +365,32 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
     int lastComparison = 0;
     SearchResponse typedOther = (SearchResponse)other;
 
-    lastComparison = Boolean.valueOf(isSetTotal()).compareTo(isSetTotal());
+    lastComparison = Boolean.valueOf(isSetTotal()).compareTo(typedOther.isSetTotal());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(total, typedOther.total);
+    if (isSetTotal()) {      lastComparison = TBaseHelper.compareTo(total, typedOther.total);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetElements()).compareTo(typedOther.isSetElements());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetElements()).compareTo(isSetElements());
+    if (isSetElements()) {      lastComparison = TBaseHelper.compareTo(elements, typedOther.elements);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetEx()).compareTo(typedOther.isSetEx());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(elements, typedOther.elements);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetEx()).compareTo(isSetEx());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(ex, typedOther.ex);
-    if (lastComparison != 0) {
-      return lastComparison;
+    if (isSetEx()) {      lastComparison = TBaseHelper.compareTo(ex, typedOther.ex);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
     }
     return 0;
   }
@@ -342,9 +404,8 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
       if (field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
-      {
-        case TOTAL:
+      switch (field.id) {
+        case 1: // TOTAL
           if (field.type == TType.I32) {
             this.total = iprot.readI32();
             setTotalIsSet(true);
@@ -352,7 +413,7 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case ELEMENTS:
+        case 2: // ELEMENTS
           if (field.type == TType.LIST) {
             {
               TList _list9 = iprot.readListBegin();
@@ -370,7 +431,7 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case EX:
+        case 3: // EX
           if (field.type == TType.STRUCT) {
             this.ex = new ThrudexException();
             this.ex.read(iprot);
@@ -380,12 +441,10 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
           break;
         default:
           TProtocolUtil.skip(iprot, field.type);
-          break;
       }
       iprot.readFieldEnd();
     }
     iprot.readStructEnd();
-
 
     // check for required fields of primitive type, which can't be checked in the validate method
     validate();
@@ -449,7 +508,6 @@ public class SearchResponse implements TBase, java.io.Serializable, Cloneable, C
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

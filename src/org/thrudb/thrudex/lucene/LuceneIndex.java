@@ -1,7 +1,7 @@
 package org.thrudb.thrudex.lucene;
 
-import org.apache.lucene.document.Document;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.document.Document;
 import org.thrudb.thrudex.SearchQuery;
 import org.thrudb.thrudex.SearchResponse;
 import org.thrudb.thrudex.ThrudexException;

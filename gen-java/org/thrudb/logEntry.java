@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Collections;
 import java.util.BitSet;
 import java.util.Arrays;
@@ -30,8 +32,9 @@ import org.apache.thrift.protocol.*;
  * @lsn     - the log sequence number of the message
  * @message - the message itself.</pre>
  */
-public class logEntry implements TBase, java.io.Serializable, Cloneable, Comparable<logEntry> {
+public class logEntry implements TBase<logEntry._Fields>, java.io.Serializable, Cloneable, Comparable<logEntry> {
   private static final TStruct STRUCT_DESC = new TStruct("logEntry");
+
   private static final TField BUCKET_FIELD_DESC = new TField("bucket", TType.STRING, (short)1);
   private static final TField LSN_FIELD_DESC = new TField("lsn", TType.STRING, (short)2);
   private static final TField MESSAGE_FIELD_DESC = new TField("message", TType.STRING, (short)3);
@@ -39,30 +42,78 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable, Compara
   public String bucket;
   public String lsn;
   public byte[] message;
-  public static final int BUCKET = 1;
-  public static final int LSN = 2;
-  public static final int MESSAGE = 3;
+
+  /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+  public enum _Fields implements TFieldIdEnum {
+    BUCKET((short)1, "bucket"),
+    LSN((short)2, "lsn"),
+    MESSAGE((short)3, "message");
+
+    private static final Map<Integer, _Fields> byId = new HashMap<Integer, _Fields>();
+    private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+    static {
+      for (_Fields field : EnumSet.allOf(_Fields.class)) {
+        byId.put((int)field._thriftId, field);
+        byName.put(field.getFieldName(), field);
+      }
+    }
+
+    /**
+     * Find the _Fields constant that matches fieldId, or null if its not found.
+     */
+    public static _Fields findByThriftId(int fieldId) {
+      return byId.get(fieldId);
+    }
+
+    /**
+     * Find the _Fields constant that matches fieldId, throwing an exception
+     * if it is not found.
+     */
+    public static _Fields findByThriftIdOrThrow(int fieldId) {
+      _Fields fields = findByThriftId(fieldId);
+      if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+      return fields;
+    }
+
+    /**
+     * Find the _Fields constant that matches name, or null if its not found.
+     */
+    public static _Fields findByName(String name) {
+      return byName.get(name);
+    }
+
+    private final short _thriftId;
+    private final String _fieldName;
+
+    _Fields(short thriftId, String fieldName) {
+      _thriftId = thriftId;
+      _fieldName = fieldName;
+    }
+
+    public short getThriftFieldId() {
+      return _thriftId;
+    }
+
+    public String getFieldName() {
+      return _fieldName;
+    }
+  }
 
   // isset id assignments
 
-  public static final Map<Integer, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new HashMap<Integer, FieldMetaData>() {{
-    put(BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
+  public static final Map<_Fields, FieldMetaData> metaDataMap = Collections.unmodifiableMap(new EnumMap<_Fields, FieldMetaData>(_Fields.class) {{
+    put(_Fields.BUCKET, new FieldMetaData("bucket", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    put(LSN, new FieldMetaData("lsn", TFieldRequirementType.DEFAULT, 
+    put(_Fields.LSN, new FieldMetaData("lsn", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
-    put(MESSAGE, new FieldMetaData("message", TFieldRequirementType.DEFAULT, 
+    put(_Fields.MESSAGE, new FieldMetaData("message", TFieldRequirementType.DEFAULT, 
         new FieldValueMetaData(TType.STRING)));
   }});
 
   static {
     FieldMetaData.addStructMetaDataMap(logEntry.class, metaDataMap);
   }
-
-  public static final Map<String, Integer> fieldNameMap = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-    put("bucket", new Integer(BUCKET));
-    put("lsn", new Integer(LSN));
-    put("message", new Integer(MESSAGE));
-  }});
 
   public logEntry() {
   }
@@ -116,7 +167,7 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable, Compara
     this.bucket = null;
   }
 
-  // Returns true if field bucket is set (has been asigned a value) and false otherwise
+  /** Returns true if field bucket is set (has been asigned a value) and false otherwise */
   public boolean isSetBucket() {
     return this.bucket != null;
   }
@@ -140,7 +191,7 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable, Compara
     this.lsn = null;
   }
 
-  // Returns true if field lsn is set (has been asigned a value) and false otherwise
+  /** Returns true if field lsn is set (has been asigned a value) and false otherwise */
   public boolean isSetLsn() {
     return this.lsn != null;
   }
@@ -164,7 +215,7 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable, Compara
     this.message = null;
   }
 
-  // Returns true if field message is set (has been asigned a value) and false otherwise
+  /** Returns true if field message is set (has been asigned a value) and false otherwise */
   public boolean isSetMessage() {
     return this.message != null;
   }
@@ -175,8 +226,8 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable, Compara
     }
   }
 
-  public void setFieldValue(int fieldID, Object value) {
-    switch (fieldID) {
+  public void setFieldValue(_Fields field, Object value) {
+    switch (field) {
     case BUCKET:
       if (value == null) {
         unsetBucket();
@@ -201,13 +252,15 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable, Compara
       }
       break;
 
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
   }
 
-  public Object getFieldValue(int fieldID) {
-    switch (fieldID) {
+  public void setFieldValue(int fieldID, Object value) {
+    setFieldValue(_Fields.findByThriftIdOrThrow(fieldID), value);
+  }
+
+  public Object getFieldValue(_Fields field) {
+    switch (field) {
     case BUCKET:
       return getBucket();
 
@@ -217,23 +270,29 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable, Compara
     case MESSAGE:
       return getMessage();
 
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
+    throw new IllegalStateException();
   }
 
-  // Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise
-  public boolean isSet(int fieldID) {
-    switch (fieldID) {
+  public Object getFieldValue(int fieldId) {
+    return getFieldValue(_Fields.findByThriftIdOrThrow(fieldId));
+  }
+
+  /** Returns true if field corresponding to fieldID is set (has been asigned a value) and false otherwise */
+  public boolean isSet(_Fields field) {
+    switch (field) {
     case BUCKET:
       return isSetBucket();
     case LSN:
       return isSetLsn();
     case MESSAGE:
       return isSetMessage();
-    default:
-      throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
+    throw new IllegalStateException();
+  }
+
+  public boolean isSet(int fieldID) {
+    return isSet(_Fields.findByThriftIdOrThrow(fieldID));
   }
 
   @Override
@@ -292,29 +351,32 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable, Compara
     int lastComparison = 0;
     logEntry typedOther = (logEntry)other;
 
-    lastComparison = Boolean.valueOf(isSetBucket()).compareTo(isSetBucket());
+    lastComparison = Boolean.valueOf(isSetBucket()).compareTo(typedOther.isSetBucket());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+    if (isSetBucket()) {      lastComparison = TBaseHelper.compareTo(bucket, typedOther.bucket);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetLsn()).compareTo(typedOther.isSetLsn());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = Boolean.valueOf(isSetLsn()).compareTo(isSetLsn());
+    if (isSetLsn()) {      lastComparison = TBaseHelper.compareTo(lsn, typedOther.lsn);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+    }
+    lastComparison = Boolean.valueOf(isSetMessage()).compareTo(typedOther.isSetMessage());
     if (lastComparison != 0) {
       return lastComparison;
     }
-    lastComparison = TBaseHelper.compareTo(lsn, typedOther.lsn);
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = Boolean.valueOf(isSetMessage()).compareTo(isSetMessage());
-    if (lastComparison != 0) {
-      return lastComparison;
-    }
-    lastComparison = TBaseHelper.compareTo(message, typedOther.message);
-    if (lastComparison != 0) {
-      return lastComparison;
+    if (isSetMessage()) {      lastComparison = TBaseHelper.compareTo(message, typedOther.message);
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
     }
     return 0;
   }
@@ -328,23 +390,22 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable, Compara
       if (field.type == TType.STOP) { 
         break;
       }
-      switch (field.id)
-      {
-        case BUCKET:
+      switch (field.id) {
+        case 1: // BUCKET
           if (field.type == TType.STRING) {
             this.bucket = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case LSN:
+        case 2: // LSN
           if (field.type == TType.STRING) {
             this.lsn = iprot.readString();
           } else { 
             TProtocolUtil.skip(iprot, field.type);
           }
           break;
-        case MESSAGE:
+        case 3: // MESSAGE
           if (field.type == TType.STRING) {
             this.message = iprot.readBinary();
           } else { 
@@ -353,12 +414,10 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable, Compara
           break;
         default:
           TProtocolUtil.skip(iprot, field.type);
-          break;
       }
       iprot.readFieldEnd();
     }
     iprot.readStructEnd();
-
 
     // check for required fields of primitive type, which can't be checked in the validate method
     validate();
@@ -426,7 +485,6 @@ public class logEntry implements TBase, java.io.Serializable, Cloneable, Compara
 
   public void validate() throws TException {
     // check for required fields
-    // check that fields of type enum have valid values
   }
 
 }

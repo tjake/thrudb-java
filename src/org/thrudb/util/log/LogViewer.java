@@ -2,8 +2,6 @@ package org.thrudb.util.log;
 
 import java.io.File;
 
-import org.apache.thrift.TException;
-
 import tokyocabinet.HDB;
 
 /**

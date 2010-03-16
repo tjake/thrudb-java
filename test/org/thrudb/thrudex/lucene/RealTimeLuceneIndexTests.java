@@ -54,7 +54,7 @@ public class RealTimeLuceneIndexTests extends TestCase {
 
 			SearchQuery search = new SearchQuery();
 			search.setIndex(INDEX_NAME);
-			search.setFieldAnalyzers(new HashMap<String,Integer>());
+			search.setFieldAnalyzers(new HashMap<String,Analyzer>());
 			//search.setToFieldAnalyzers("category", Analyzer.KEYWORD);
 			search.getFieldAnalyzers().put("category", Analyzer.KEYWORD);
 			
@@ -80,7 +80,7 @@ public class RealTimeLuceneIndexTests extends TestCase {
 		return d;
 	}
 
-	private void addField(Document doc, String key, String value, boolean store, int analyzer) {
+	private void addField(Document doc, String key, String value, boolean store, Analyzer analyzer) {
 		Field field = new Field();
 		field.setKey(key);
 		field.setValue(value);
